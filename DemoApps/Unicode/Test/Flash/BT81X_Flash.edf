@@ -1,0 +1,11 @@
+name                   : id    : start : size  : type  : stype : comp  : width : height
+
+unified.blob           : 0     : 0     : 4096  : 1     : 0     : 0     : 0     : 0    
+font_chinese_27.glyph  : 1     : 4096  : 16896 : 4     : 0     : 0     : 0     : 0    
+font_chinese_27.xfont  : 2     : 20992 : 128   : 254   : 0     : 0     : 0     : 0    
+font_english_27.glyph  : 3     : 21120 : 20736 : 4     : 0     : 0     : 0     : 0    
+font_english_27.xfont  : 4     : 41856 : 128   : 254   : 0     : 0     : 0     : 0    
+font_japanese_27.glyph : 5     : 41984 : 32768 : 4     : 0     : 0     : 0     : 0    
+font_japanese_27.xfont : 6     : 74752 : 192   : 254   : 0     : 0     : 0     : 0    
+font_kokila_27.glyph   : 7     : 74944 : 10944 : 4     : 0     : 0     : 0     : 0    
+font_kokila_27.xfont   : 8     : 85888 : 128   : 254   : 0     : 0     : 0     : 0    

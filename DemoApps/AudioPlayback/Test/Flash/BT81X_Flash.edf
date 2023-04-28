@@ -1,0 +1,10 @@
+name                                         : id    : start    : size     : type  : stype : comp  : width : height
+
+unified.blob                                 : 0     : 0        : 4096     : 1     : 0     : 0     : 0     : 0    
+background.anim.data                         : 1     : 4096     : 10525568 : 254   : 0     : 0     : 0     : 0    
+background.anim.object.flash                 : 2     : 10529664 : 832      : 254   : 0     : 0     : 0     : 0    
+pause_80x80_COMPRESSED_RGBA_ASTC_4x4_KHR.raw : 3     : 10530496 : 6400     : 2     : 37808 : 0     : 80    : 80   
+play_80x80_COMPRESSED_RGBA_ASTC_4x4_KHR.raw  : 4     : 10536896 : 6400     : 2     : 37808 : 0     : 80    : 80   
+1.raw                                        : 5     : 10543296 : 275648   : 0     : 0     : 0     : 0     : 0    
+2.raw                                        : 6     : 10818944 : 275648   : 0     : 0     : 0     : 0     : 0    
+3.raw                                        : 7     : 11094592 : 137856   : 0     : 0     : 0     : 0     : 0    

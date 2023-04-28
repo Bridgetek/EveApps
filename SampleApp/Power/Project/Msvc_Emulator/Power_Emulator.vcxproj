@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <!--# source file list-->
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT88X.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_RP2040.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_RP2040.c" />
+    <ClCompile Include="..\..\..\..\common\application\fatfs\source\diskio_ft9xx.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\fatfs\source\diskio_rp2040.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\fatfs\source\ff.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\fatfs\source\ffsystem.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\fatfs\source\ffunicode.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\FlashHelper.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Cmd.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_IO.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_State.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_Widgets.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoDl.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT81X.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT80X.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT81X.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Hal.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMU.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMUC.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT4222.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT9XX.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MPSSE.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MULTI.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_WIN32.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_FT9XX.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_FATFS.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_STDIO.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Util.c" />
+    <ClCompile Include="..\..\..\..\common\application\FileIo.c" />
+    <ClCompile Include="..\..\..\..\common\application\FileTransfer.c" />
+    <ClCompile Include="..\..\..\..\common\application\Gesture.c" />
+    <ClCompile Include="..\..\..\..\common\application\Common.c" />
+    <ClCompile Include="..\..\..\..\common\application\Logo.c" />
+    <ClCompile Include="..\..\..\..\common\application\Maths.c" />
+    <ClCompile Include="..\..\Src\Power.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--# header file list-->
+    <ClInclude Include="..\..\..\..\common\application\FlashHelper.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalDefs.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoCmd.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Cmd.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Config.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_GpuDefs.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_GpuTypes.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Hal.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalImpl.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_ILI9488.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_IntTypes.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_IntTypes_MSVC12.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_LoadFile.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_BT8XXEMU.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_FT4222.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_FT9XX.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_MPSSE.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_WIN32.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Util.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\bt8xxemu.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\bt8xxemu_inttypes.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\ftd2xx.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_DataTypes.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_Gpu.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_Gpu_Hal.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_LoadFile.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_Platform.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_CoCmd.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_Hal.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Hal_Config.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\LibFT4222.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\libMPSSE_spi.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Platform.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\WinTypes.h" />
+    <ClInclude Include="..\..\..\..\common\application\Common.h" />
+    <ClInclude Include="..\..\..\..\common\application\FileIo.h" />
+    <ClInclude Include="..\..\..\..\common\application\FileTransfer.h" />
+    <ClInclude Include="..\..\..\..\common\application\Gesture.h" />
+    <ClInclude Include="..\..\..\..\common\application\Logo.h" />
+    <ClInclude Include="..\..\..\..\common\application\Maths.h" />
+    <ClInclude Include="..\..\Hdr\Power.h" />
+    <ClInclude Include="..\..\..\..\common\application\fatfs\source\diskio.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\fatfs\source\ff.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\fatfs\source\ffconf.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_RP2040.h" />
+  </ItemGroup>
+  <!--# end header file list-->
+  <ItemGroup>
+    <!--# 2nd header file list-->
+    <None Include="..\..\..\..\common\eve_flash\BT815-unified.blob" />
+    <None Include="..\..\..\..\common\eve_flash\BT817-unified.blob" />
+    <None Include="..\..\..\..\common\eve_hal\EVE_Hal.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--# 3rd header file list-->
+    <Text Include="..\..\..\..\common\application\fatfs\CMakeLists.txt" />
+    <Text Include="..\..\..\..\common\application\fatfs\license.txt" />
+    <Text Include="..\..\..\..\common\application\fatfs\source\00history.txt" />
+    <Text Include="..\..\..\..\common\application\fatfs\source\00readme.txt" />
+    <Text Include="..\..\..\..\common\application\fatfs\source\CMakeLists.txt" />
+    <Text Include="..\..\..\..\common\application\fatfs\version.txt" />
+    <Text Include="..\..\..\..\common\eve_hal\CMakeLists.txt" />
+  </ItemGroup>
+  <!--# end header file list-->
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E48F1DA0-127C-4336-A588-60AAFBDF807A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Power_Emulator</RootNamespace>
+    <ProjectName>SAMAPP_Power_Emulator</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)/$(Configuration)</OutDir>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)/$(Configuration)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_PLATFORM_BT8XXEMU;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\common\application;..\..\..\..\common\eve_hal;..\..\..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
+      <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\common\eve_hal\Bin\Simulation\x86;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);bt8xxemu.lib;</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+        xcopy /sy  "$(ProjectDir)..\..\..\..\common\eve_hal\Bin\Simulation\x86\*.*" "$(OutDir)" || exit 0
+        echo F | xcopy /sy  "$(ProjectDir)..\..\Test\Flash\*.bin" "$(OutDir)\__Flash.bin" || exit 0
+        </Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_PLATFORM_BT8XXEMU;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\common\application;..\..\..\..\common\eve_hal;..\..\..\..\common\eve_hal\Hdr;..\..\Hdr\;..\..\..\Common\</AdditionalIncludeDirectories>
+      <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\common\eve_hal\Bin\Simulation\x86;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);bt8xxemu.lib;</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+        xcopy /sy  "$(ProjectDir)..\..\..\..\common\eve_hal\Bin\Simulation\x86\*.*" "$(OutDir)" || exit 0
+        echo F | xcopy /sy  "$(ProjectDir)..\..\Test\Flash\*.bin" "$(OutDir)\__Flash.bin" || exit 0
+        </Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,9 @@
+unified.blob           : 0     : 4096 
+font_chinese_27.glyph  : 4096  : 16896
+font_chinese_27.xfont  : 20992 : 128  
+font_english_27.glyph  : 21120 : 20736
+font_english_27.xfont  : 41856 : 128  
+font_japanese_27.glyph : 41984 : 32768
+font_japanese_27.xfont : 74752 : 192  
+font_kokila_27.glyph   : 74944 : 10944
+font_kokila_27.xfont   : 85888 : 128  
