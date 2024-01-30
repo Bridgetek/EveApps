@@ -32,12 +32,12 @@
 #include "Plugin.h"
 #include "Def.h"
 
-#include "App.h"
-#include "Event.h"
+#include "DemoEvChargePoint.h"
+#include "common.h"
 
 
 // Global variables
-extern Gpu_Hal_Context_t* g_pHalContext;
+extern Gpu_Hal_Context_t* s_pHalContext;
 
 typedef enum {
     PLUG_PREPARE = 0,
@@ -105,23 +105,23 @@ void pl_init() {
 
 void pl_drawing() {
     
-    Gpu_CoCmd_SetFont2(g_pHalContext, HF_TITLE, FontTitle.xf_addr - FontBegin.xf_addr, 0);
-    Gpu_CoCmd_SetFont2(g_pHalContext, HF_BOTTOM, FontBottom.xf_addr - FontBegin.xf_addr, 0);
+    Gpu_CoCmd_SetFont2(s_pHalContext, HF_TITLE, FontTitle.xf_addr - FontBegin.xf_addr, 0);
+    Gpu_CoCmd_SetFont2(s_pHalContext, HF_BOTTOM, FontBottom.xf_addr - FontBegin.xf_addr, 0);
 
     // Draw Text: footer
     if (page_state != PLUG_PREPARE && page_state != PLUG_END) {
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(0, 0, 0));
-        Gpu_CoCmd_Text(g_pHalContext, SCREEN_WIDTH * 0.5, Y_FOOTER, HF_BOTTOM, OPT_CENTERX, s_pleaseTouch);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+        Gpu_CoCmd_Text(s_pHalContext, SCREEN_WIDTH * 0.5, Y_FOOTER, HF_BOTTOM, OPT_CENTERX, s_pleaseTouch);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
     }
         
     // Draw Plug Male and Female
     if (page_state == PLUG_PREPARE) {
 
-    	App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(alpha_in));
-        draw_image(g_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), x, V_CENTER(PL_MALE.height));
-        draw_image(g_pHalContext, PL_FEMALE, ADDR(PL_FEMALE, PL_BEGIN), f_x, V_CENTER(PL_FEMALE.height));
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(255));
+    	App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(alpha_in));
+        draw_image(s_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), x, V_CENTER(PL_MALE.height));
+        draw_image(s_pHalContext, PL_FEMALE, ADDR(PL_FEMALE, PL_BEGIN), f_x, V_CENTER(PL_FEMALE.height));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(255));
 
         alpha_in += 5;
         if (alpha_in > 255) {
@@ -139,12 +139,12 @@ void pl_drawing() {
             }
         }
     } else if (page_state == PLUGGING) {
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(0, 0, 0));
-        Gpu_CoCmd_Text(g_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_plugIn);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+        Gpu_CoCmd_Text(s_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_plugIn);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
 
         // Male
-        draw_image(g_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), x, V_CENTER(PL_MALE.height));
+        draw_image(s_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), x, V_CENTER(PL_MALE.height));
         
         x += x_move;
         if (x >= RIGHT_STONE || x <= LEFT_STONE) {
@@ -161,7 +161,7 @@ void pl_drawing() {
             f_img = PL_FEMALE_GREEN;
         }
 
-        draw_image(g_pHalContext, f_img, ADDR(f_img, PL_BEGIN), f_x_start, V_CENTER(f_img.height));
+        draw_image(s_pHalContext, f_img, ADDR(f_img, PL_BEGIN), f_x_start, V_CENTER(f_img.height));
         if (female_ani_flag) {
             f_x_start += f_x_move;
         }
@@ -176,15 +176,15 @@ void pl_drawing() {
             female_ani_flag = FALSE;
         }
     } else if (page_state == PLUGGED) {
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_BLUE);
-        Gpu_CoCmd_Text(g_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_connected);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_BLUE);
+        Gpu_CoCmd_Text(s_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_connected);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
 
         // Male
-        draw_image(g_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), RIGHT_STONE + 48, V_CENTER(PL_MALE.height));
+        draw_image(s_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), RIGHT_STONE + 48, V_CENTER(PL_MALE.height));
 
         // Female
-        draw_image(g_pHalContext, PL_FEMALE_GREEN, ADDR(PL_FEMALE_GREEN, PL_BEGIN), SCREEN_WIDTH * 0.5, V_CENTER(PL_FEMALE_GREEN.height));
+        draw_image(s_pHalContext, PL_FEMALE_GREEN, ADDR(PL_FEMALE_GREEN, PL_BEGIN), SCREEN_WIDTH * 0.5, V_CENTER(PL_FEMALE_GREEN.height));
         
         count_frame++;
         if (count_frame >= 30) {
@@ -194,20 +194,20 @@ void pl_drawing() {
         }
     } else {
 
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(alpha_out));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(alpha_out));
 
         alpha_out -= 5;
         if (alpha_out < 0)
         	alpha_out = 0;
 
         // Male
-        draw_image(g_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), RIGHT_STONE + 48, y_ani);
+        draw_image(s_pHalContext, PL_MALE, ADDR(PL_MALE, PL_BEGIN), RIGHT_STONE + 48, y_ani);
         // Female
-        draw_image(g_pHalContext, PL_FEMALE_GREEN, ADDR(PL_FEMALE_GREEN, PL_BEGIN), SCREEN_WIDTH * 0.5, y_ani);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(255));
+        draw_image(s_pHalContext, PL_FEMALE_GREEN, ADDR(PL_FEMALE_GREEN, PL_BEGIN), SCREEN_WIDTH * 0.5, y_ani);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(255));
 
         // Car
-        draw_image(g_pHalContext, TR_CAR, ADDR(TR_CAR, TR_BEGIN), x_car, Y_CENTER(TR_CAR, 510));
+        draw_image(s_pHalContext, TR_CAR, ADDR(TR_CAR, TR_BEGIN), x_car, Y_CENTER(TR_CAR, 510));
 
         y_ani += 15;
         x_car += STEP_X;
@@ -220,7 +220,7 @@ void pl_drawing() {
 }
 
 void pl_process_event() {   
-    if (is_touch(g_pHalContext) && page_state == PLUGGING) {
+    if (Gesture_Get()->isTouch && page_state == PLUGGING) {
         page_state = PLUGGED;
     }
 }

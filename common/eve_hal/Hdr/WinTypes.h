@@ -89,29 +89,29 @@ typedef struct timeval FILETIME;
 #define FALSE 0
 #endif
 
-//
-// Modem Status Flags
-//
+/** @name Modem Status Flags */
+///@{
 #define MS_CTS_ON ((DWORD)0x0010)
 #define MS_DSR_ON ((DWORD)0x0020)
 #define MS_RING_ON ((DWORD)0x0040)
 #define MS_RLSD_ON ((DWORD)0x0080)
+///@}
 
-//
-// Error Flags
-//
+/** @name Error Flags */
+///@{
 
-#define CE_RXOVER 0x0001 // Receive Queue overflow
-#define CE_OVERRUN 0x0002 // Receive Overrun Error
-#define CE_RXPARITY 0x0004 // Receive Parity Error
-#define CE_FRAME 0x0008 // Receive Framing error
-#define CE_BREAK 0x0010 // Break Detected
-#define CE_TXFULL 0x0100 // TX Queue is full
-#define CE_PTO 0x0200 // LPTx Timeout
-#define CE_IOE 0x0400 // LPTx I/O Error
-#define CE_DNS 0x0800 // LPTx Device not selected
-#define CE_OOP 0x1000 // LPTx Out-Of-Paper
-#define CE_MODE 0x8000 // Requested mode unsupported
+#define CE_RXOVER 0x0001 /**< Receive Queue overflow */
+#define CE_OVERRUN 0x0002 /**< Receive Overrun Error */
+#define CE_RXPARITY 0x0004 /**< Receive Parity Error */
+#define CE_FRAME 0x0008 /**< Receive Framing error */
+#define CE_BREAK 0x0010 /**< Break Detected */
+#define CE_TXFULL 0x0100 /**< TX Queue is full */
+#define CE_PTO 0x0200 /**< LPTx Timeout */
+#define CE_IOE 0x0400 /**< LPTx I/O Error */
+#define CE_DNS 0x0800 /**< LPTx Device not selected */
+#define CE_OOP 0x1000 /**< LPTx Out-Of-Paper */
+#define CE_MODE 0x8000 /**< Requested mode unsupported */
+///@}
 
 #ifndef INVALID_HANDLE_VALUE
 #define INVALID_HANDLE_VALUE 0xFFFFFFFF

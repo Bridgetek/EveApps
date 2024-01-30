@@ -70,8 +70,9 @@
 void Esd_MainReady__ESD(BT8XXEMU_Emulator *emulator);
 #endif
 
-EVE_HalPlatform g_HalPlatform;
 static int s_EmulatorSerial = 0;
+/** @name Init */
+///@{
 
 /**
  * @brief Initialize HAL platform
@@ -91,13 +92,22 @@ void EVE_HalImpl_release()
 	/* no-op */
 }
 
-/* List the available devices */
+/**
+ * @brief List the available devices
+ * 
+ * @return 1
+ */
 size_t EVE_Hal_list()
 {
 	return 1;
 }
 
-/* Get info of the specified device */
+/**
+ * @brief Get info of the specified device
+ * 
+ * @param deviceInfo
+ * @param deviceIdx
+ */
 void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 {
 	memset(deviceInfo, 0, sizeof(EVE_DeviceInfo));
@@ -108,7 +118,13 @@ void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 	deviceInfo->Host = EVE_HOST_BT8XXEMU;
 }
 
-/* Check whether the context is the specified device */
+/**
+ * @brief Check whether the context is the specified device
+ * 
+ * @param phost Pointer to Hal context
+ * @param deviceIdx
+ * @return true
+ */
 bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 {
 	if (!phost)
@@ -122,6 +138,8 @@ bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
  * @brief Get the default configuration parameters
  * 
  * @param parameters EVE_Hal framework's parameters
+ * @param deviceIdx
+ * @return true
  */
 bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 {
@@ -162,6 +180,9 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		BT8XXEMU_defaults(BT8XXEMU_VERSION_API, params, EVE_shortChipId(parameters->EmulatorMode));
 		params->Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 	}
+#ifdef ESD_SIMULATION
+	params->Flags &= ~BT8XXEMU_EmulatorEnableHSFPreview;
+#endif
 	phost->EmulatorParameters = params;
 
 	if (!params->Mode)
@@ -263,10 +284,14 @@ void EVE_HalImpl_idle(EVE_HalContext *phost)
 {
 	/* no-op */
 }
+///@}
 
 /*************
 ** TRANSFER **
 *************/
+
+/** @name TRANSFER */
+///@{
 
 /**
  * @brief Start data transfer to Coprocessor
@@ -553,10 +578,14 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 	return transferred;
 #endif
 }
+///@}
 
 /************
 ** UTILITY **
 ************/
+
+/** @name UTILITY */
+///@{
 
 /**
  * @brief Send a host command to Coprocessor
@@ -636,15 +665,23 @@ void EVE_Hal_setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T numchnls, uint8_t 
 	/* no-op */
 }
 
-/* Restore platform to previously configured EVE SPI channel mode */
+/**
+ * @brief Restore platform to previously configured EVE SPI channel mode 
+ * 
+ * @param phost Pointer to Hal context
+ */
 void EVE_Hal_restoreSPI(EVE_HalContext *phost)
 {
 	/* no-op */
 }
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 
 /**
  * @brief Display GPIO pins
@@ -658,6 +695,7 @@ bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost)
 	/* no-op */
 	return true;
 }
+///@}
 
 #endif /* #if defined(BT8XXEMU_PLATFORM) */
 

@@ -69,9 +69,10 @@
 
 #define FT4222_LATENCY_TIME (2)
 
-EVE_HalPlatform g_HalPlatform;
 DWORD s_NumDevsD2XX;
 
+/** @name Init */
+///@{
 /**
  * @brief Initialize HAL platform
  * 
@@ -122,7 +123,10 @@ void EVE_HalImpl_release()
 	/* no-op */
 }
 
-/* List the available devices */
+/**
+ * @brief List the available devices
+ * 
+ */
 size_t EVE_Hal_list()
 {
 	s_NumDevsD2XX = 0;
@@ -130,7 +134,12 @@ size_t EVE_Hal_list()
 	return s_NumDevsD2XX;
 }
 
-/* Get info of the specified device */
+/**
+ * @brief Get info of the specified device 
+ * 
+ * @param deviceInfo
+ * @param deviceIdx
+ */
 void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 {
 	FT_DEVICE_LIST_INFO_NODE devInfo = { 0 };
@@ -152,7 +161,14 @@ void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 	deviceInfo->Opened = devInfo.Flags & FT_FLAGS_OPENED;
 }
 
-/* Check whether the context is the specified device */
+/**
+ * @brief Check whether the context is the specified device 
+ * 
+ * @param phost Pointer to Hal context
+ * @param deviceIdx
+ * @return true True if ok
+ * @return false False if error
+ */
 bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 {
 	FT_DEVICE_LIST_INFO_NODE devInfo = { 0 };
@@ -180,6 +196,9 @@ bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
  * @brief Get the default configuration parameters
  * 
  * @param parameters EVE_Hal framework's parameters
+ * @param deviceIdx
+ * @return true True if ok
+ * @return false False if error
  */
 bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 {
@@ -217,40 +236,45 @@ bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 	return res;
 }
 
-/***************************************************************************
-* Interface Description    : Function to compute FT4222 sys clock and divisor
-*                            to obtain user requested SPI communication clock
-*                            Available FT4222_ClockRate (FT4222 system clock):
-*                               SYS_CLK_60,
-*                               SYS_CLK_24,
-*                               SYS_CLK_48,
-*                               SYS_CLK_80
-*                            Divisors available (FT4222_SPIClock):
-*                               CLK_NONE,
-*                               CLK_DIV_2,
-*                               CLK_DIV_4,
-*                               CLK_DIV_8,
-*                               CLK_DIV_16,
-*                               CLK_DIV_32,
-*                               CLK_DIV_64,
-*                               CLK_DIV_128,
-*                               CLK_DIV_256,
-*                               CLK_DIV_512
-* Implementation           : Good performance is observed with divisors other than CLK_DIV_2
+/** @details
+****************************************************************************
+* @note
+* ## Interface Description    : 
+*                            Function to compute FT4222 sys clock and divisor
+*                            to obtain user requested SPI communication clock \n
+*                            - Available FT4222_ClockRate (FT4222 system clock): \n
+*                               SYS_CLK_60, \n
+*                               SYS_CLK_24, \n
+*                               SYS_CLK_48, \n
+*                               SYS_CLK_80 \n
+*                            - Divisors available (FT4222_SPIClock): \n
+*                               CLK_NONE, \n
+*                               CLK_DIV_2, \n
+*                               CLK_DIV_4, \n
+*                               CLK_DIV_8, \n
+*                               CLK_DIV_16, \n
+*                               CLK_DIV_32, \n
+*                               CLK_DIV_64, \n
+*                               CLK_DIV_128, \n
+*                               CLK_DIV_256, \n
+*                               CLK_DIV_512 \n
+* ## Implementation           : 
+*                            Good performance is observed with divisors other than CLK_DIV_2
 *                            and CLK_DIV_4 from test report by firmware developers.
-*                            Hence supporting the following clocks for SPI communication
-*                               5000KHz
-*                               10000KHz
-*                               15000KHz
-*                               20000KHz
-*                               30000KHz
+*                            Hence supporting the following clocks for SPI communication \n
+*                               5000KHz \n
+*                               10000KHz \n
+*                               15000KHz \n
+*                               20000KHz \n
+*                               30000KHz \n
 *                            Global variable phost->SpiClockrateKHz is
-*                            updated accodingly
-* Return Value             : bool_t
-*                               TRUE : Supported by FT4222
-*                               FALSE : Not supported by FT4222
+*                            updated accodingly \n
+* ## Return Value             : 
+*                            bool_t \n
+*                            TRUE : Supported by FT4222 \n
+*                            FALSE : Not supported by FT4222 \n
 *
-* Author                   :
+* ## Author                   :
 ****************************************************************************/
 
 /**
@@ -259,6 +283,7 @@ bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
  * @param phost Pointer to Hal context
  * @param sysclk System clock
  * @param sysdivisor SPI clock divisor
+ * @param parameters EVE_Hal framework's parameters
  * @return true True if ok
  * @return false False if error
  */
@@ -321,7 +346,6 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 	FT_STATUS status;
 	FT4222_Version pversion;
 	FT4222_ClockRate ftclk = 0;
-	uint16_t max_size = 0;
 	FT4222_ClockRate selclk = 0;
 	FT4222_SPIClock seldiv = 0;
 	/* GPIO0         , GPIO1      , GPIO2       , GPIO3         } */
@@ -386,7 +410,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		status = FT_Open(deviceIdxA, &phost->SpiHandle);
 		if (status != FT_OK)
 		{
-			eve_printf_debug("FT_Open FT4222 A failed %d\n", status);
+			eve_printf_debug("FT_Open FT4222 A failed %d\n", (int)status);
 			phost->SpiHandle = NULL;
 			ret = false;
 		}
@@ -397,7 +421,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		status = FT_Open(deviceIdxB, &phost->GpioHandle);
 		if (status != FT_OK)
 		{
-			eve_printf_debug("FT_Open FT4222 B failed %d\n", status);
+			eve_printf_debug("FT_Open FT4222 B failed %d\n", (int)status);
 			FT_Close(phost->SpiHandle);
 			phost->GpioHandle = NULL;
 			phost->SpiHandle = NULL;
@@ -411,7 +435,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		if (status != FT4222_OK)
 			eve_printf_debug("FT4222_GetVersion failed\n");
 		else
-			eve_printf_debug("SPI:chipversion = 0x%x\t dllversion = 0x%x\n", pversion.chipVersion, pversion.dllVersion);
+			eve_printf_debug("SPI:chipversion = 0x%x\t dllversion = 0x%x\n", (unsigned int)pversion.chipVersion, (unsigned int)pversion.dllVersion);
 	}
 
 	if (ret)
@@ -554,16 +578,21 @@ void EVE_HalImpl_idle(EVE_HalContext *phost)
 {
 	/* no-op */
 }
+///@}
 
 /*************
 ** TRANSFER **
 *************/
+
+/** @name TRANSFER */
+///@{
 
 static bool flush(EVE_HalContext *phost);
 
 /**
  * @brief Increase RAM_G adress
  * 
+ * @param phost Pointer to Hal context
  * @param addr Address offset
  * @param inc Number of bytes to increase
  * @return uint32_t New address in RAM_G
@@ -586,6 +615,8 @@ static inline uint32_t incrementRamGAddr(EVE_HalContext *phost, uint32_t addr, u
  * @param phost Pointer to Hal context
  * @param buffer Buffer to get result
  * @param size Number of bytes to read
+ * @return true True if ok
+ * @return false False if error
  */
 static inline bool rdBuffer(EVE_HalContext *phost, uint8_t *buffer, uint32_t size)
 {
@@ -692,6 +723,8 @@ static inline bool rdBuffer(EVE_HalContext *phost, uint8_t *buffer, uint32_t siz
  * @param phost Pointer to Hal context
  * @param buffer Data buffer to write
  * @param size Size of buffer
+ * @return true True if ok
+ * @return false False if error
  */
 static inline bool wrBuffer(EVE_HalContext *phost, const uint8_t *buffer, uint32_t size)
 {
@@ -863,8 +896,8 @@ void EVE_Hal_endTransfer(EVE_HalContext *phost)
 	/* Transfers to FIFO and DL are kept open */
 	addr = phost->SpiRamGAddr;
 	if (addr != (EVE_Hal_supportCmdB(phost) ? REG_CMDB_WRITE : REG_CMD_WRITE)
-		&& !((addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE)))
-		&& !((addr >= RAM_DL) && (addr < (RAM_CMD + EVE_DL_SIZE))))
+	    && !((addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE)))
+	    && !((addr >= RAM_DL) && (addr < (RAM_CMD + EVE_DL_SIZE))))
 	{
 		flush(phost);
 	}
@@ -884,6 +917,8 @@ void EVE_Hal_endTransfer(EVE_HalContext *phost)
  * @brief Flush data to Coprocessor
  * 
  * @param phost Pointer to Hal context
+ * @return true True if ok
+ * @return false False if error
  */
 static bool flush(EVE_HalContext *phost)
 {
@@ -1101,7 +1136,7 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 }
 
 /**
- * @brief Transfer a string to Ever platform
+ * @brief Transfer a string to EVE platform
  * 
  * @param phost Pointer to Hal context
  * @param str String to transfer
@@ -1169,10 +1204,14 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 	}
 	return transferred;
 }
+///@}
 
 /************
 ** UTILITY **
 ************/
+
+/** @name UTILITY */
+///@{
 
 /**
  * @brief Send a host command to Coprocessor
@@ -1207,7 +1246,10 @@ void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 		    &sizeTransferred,
 		    true);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	case EVE_SPI_DUAL_CHANNEL:
 	case EVE_SPI_QUAD_CHANNEL:
@@ -1221,7 +1263,10 @@ void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 		    0,
 		    &sizeOfRead);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	default:
 		eve_printf_debug("No transfer\n");
@@ -1259,7 +1304,10 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
 		    &sizeTransferred,
 		    true);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	case EVE_SPI_DUAL_CHANNEL:
 	case EVE_SPI_QUAD_CHANNEL:
@@ -1274,7 +1322,10 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
 		    0,
 		    &sizeOfRead);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	default:
 		eve_printf_debug("No transfer\n");
@@ -1317,6 +1368,8 @@ void setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T numchnls, uint8_t numdummy
  * 
  * @param phost Pointer to Hal context
  * @param up Up or Down
+ * @return true True if ok
+ * @return false False if error
  */
 bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 {
@@ -1404,10 +1457,14 @@ void EVE_Hal_restoreSPI(EVE_HalContext *phost)
 
 	setSPI(phost, phost->SpiChannels, phost->SpiDummyBytes);
 }
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 /**
  * @brief Display GPIO pins
  * 
@@ -1420,6 +1477,7 @@ bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost)
 	/* no-op */
 	return true;
 }
+///@}
 
 #endif /* #if defined(FT4222_PLATFORM) */
 

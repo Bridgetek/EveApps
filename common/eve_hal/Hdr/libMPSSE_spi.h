@@ -53,32 +53,36 @@
 #define FTDI_API
 #endif
 
-/* Bit defination of the transferOptions parameter in SPI_Read, SPI_Write & SPI_Transfer  */
+/** @name Bit defination of the transferOptions parameter in SPI_Read, SPI_Write & SPI_Transfer */
+///@{
 
-/* transferOptions-Bit0: If this bit is 0 then it means that the transfer size provided is in bytes */
+/** transferOptions-Bit0: If this bit is 0 then it means that the transfer size provided is in bytes */
 #define SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES 0x00000000
-/* transferOptions-Bit0: If this bit is 1 then it means that the transfer size provided is in bytes */
+/** transferOptions-Bit0: If this bit is 1 then it means that the transfer size provided is in bytes */
 #define SPI_TRANSFER_OPTIONS_SIZE_IN_BITS 0x00000001
-/* transferOptions-Bit1: if BIT1 is 1 then CHIP_SELECT line will be enabled at start of transfer */
+/** transferOptions-Bit1: if BIT1 is 1 then CHIP_SELECT line will be enabled at start of transfer */
 #define SPI_TRANSFER_OPTIONS_CHIPSELECT_ENABLE 0x00000002
-/* transferOptions-Bit2: if BIT2 is 1 then CHIP_SELECT line will be disabled at end of transfer */
+/** transferOptions-Bit2: if BIT2 is 1 then CHIP_SELECT line will be disabled at end of transfer */
 #define SPI_TRANSFER_OPTIONS_CHIPSELECT_DISABLE 0x00000004
+///@}
 
-/* Bit defination of the Options member of configOptions structure*/
+/** @name Bit defination of the Options member of configOptions structure*/
+///@{
 #define SPI_CONFIG_OPTION_MODE_MASK 0x00000003
 #define SPI_CONFIG_OPTION_MODE0 0x00000000
 #define SPI_CONFIG_OPTION_MODE1 0x00000001
 #define SPI_CONFIG_OPTION_MODE2 0x00000002
 #define SPI_CONFIG_OPTION_MODE3 0x00000003
 
-#define SPI_CONFIG_OPTION_CS_MASK 0x0000001C /*111 00*/
-#define SPI_CONFIG_OPTION_CS_DBUS3 0x00000000 /*000 00*/
-#define SPI_CONFIG_OPTION_CS_DBUS4 0x00000004 /*001 00*/
-#define SPI_CONFIG_OPTION_CS_DBUS5 0x00000008 /*010 00*/
-#define SPI_CONFIG_OPTION_CS_DBUS6 0x0000000C /*011 00*/
-#define SPI_CONFIG_OPTION_CS_DBUS7 0x00000010 /*100 00*/
+#define SPI_CONFIG_OPTION_CS_MASK 0x0000001C /**< 111 00*/
+#define SPI_CONFIG_OPTION_CS_DBUS3 0x00000000 /**< 000 00*/
+#define SPI_CONFIG_OPTION_CS_DBUS4 0x00000004 /**< 001 00*/
+#define SPI_CONFIG_OPTION_CS_DBUS5 0x00000008 /**< 010 00*/
+#define SPI_CONFIG_OPTION_CS_DBUS6 0x0000000C /**< 011 00*/
+#define SPI_CONFIG_OPTION_CS_DBUS7 0x00000010 /**< 100 00*/
 
 #define SPI_CONFIG_OPTION_CS_ACTIVELOW 0x00000020
+///@}
 
 /******************************************************************************/
 /*								Type defines								  */
@@ -105,10 +109,10 @@ typedef signed long int32;
 
 typedef enum I2C_ClockRate_t
 {
-	I2C_CLOCK_STANDARD_MODE = 100000, // 100kb/sec
-	I2C_CLOCK_FAST_MODE = 400000, // 400kb/sec
-	I2C_CLOCK_FAST_MODE_PLUS = 1000000, // 1000kb/sec
-	I2C_CLOCK_HIGH_SPEED_MODE = 3400000 // 3.4Mb/sec
+	I2C_CLOCK_STANDARD_MODE = 100000, /**< 100kb/sec */
+	I2C_CLOCK_FAST_MODE = 400000, /**< 400kb/sec */
+	I2C_CLOCK_FAST_MODE_PLUS = 1000000, /**< 1000kb/sec */
+	I2C_CLOCK_HIGH_SPEED_MODE = 3400000 /**< 3.4Mb/sec */
 } I2C_CLOCKRATE;
 
 typedef struct ChannelConfig_t
@@ -117,25 +121,25 @@ typedef struct ChannelConfig_t
 
 	uint8 LatencyTimer;
 
-	uint32 configOptions; /*This member provides a way to enable/disable features
+	uint32 configOptions; /**< This member provides a way to enable/disable features
 	specific to the protocol that are implemented in the chip
-	BIT1-0=CPOL-CPHA:	00 - MODE0 - data captured on rising edge, propagated on falling
- 						01 - MODE1 - data captured on falling edge, propagated on rising
- 						10 - MODE2 - data captured on falling edge, propagated on rising
- 						11 - MODE3 - data captured on rising edge, propagated on falling
-	BIT4-BIT2: 000 - A/B/C/D_DBUS3=ChipSelect
-			 : 001 - A/B/C/D_DBUS4=ChipSelect
- 			 : 010 - A/B/C/D_DBUS5=ChipSelect
- 			 : 011 - A/B/C/D_DBUS6=ChipSelect
- 			 : 100 - A/B/C/D_DBUS7=ChipSelect
- 	BIT5: ChipSelect is active high if this bit is 0
-	BIT6 -BIT31		: Reserved
+	\n BIT1-0=CPOL-CPHA:	00 - MODE0 - data captured on rising edge, propagated on falling
+ 	\n					01 - MODE1 - data captured on falling edge, propagated on rising
+ 	\n					10 - MODE2 - data captured on falling edge, propagated on rising
+ 	\n					11 - MODE3 - data captured on rising edge, propagated on falling
+	\n BIT4-BIT2: 000 - A/B/C/D_DBUS3=ChipSelect
+	\n		 : 001 - A/B/C/D_DBUS4=ChipSelect
+ 	\n		 : 010 - A/B/C/D_DBUS5=ChipSelect
+ 	\n		 : 011 - A/B/C/D_DBUS6=ChipSelect
+ 	\n		 : 100 - A/B/C/D_DBUS7=ChipSelect
+ 	\n BIT5: ChipSelect is active high if this bit is 0
+	\n BIT6 -BIT31		: Reserved
 	*/
 
-	uint32 Pin; /*BIT7   -BIT0:   Initial direction of the pins	*/
-	/*BIT15 -BIT8:   Initial values of the pins		*/
-	/*BIT23 -BIT16: Final direction of the pins		*/
-	/*BIT31 -BIT24: Final values of the pins		*/
+	uint32 Pin; /**< BIT7   -BIT0:   Initial direction of the pins
+	\n BIT15 -BIT8:   Initial values of the pins
+	\n BIT23 -BIT16: Final direction of the pins
+	\n BIT31 -BIT24: Final values of the pins */
 	uint16 reserved;
 } ChannelConfig;
 

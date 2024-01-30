@@ -28,26 +28,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "Platform.h"
-
 #include "Common.h"
-#include "App.h"
-#ifdef EVE_FLASH_AVAILABLE
+#include "Platform.h"
+#include "EVE_CoCmd.h"
+#include "DemoAudioPlayback.h"
+#if defined(EVE_FLASH_AVAILABLE)
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoAudioPlayback();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Audio playback demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoAudioPlayback();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define ENABLE_ALL_WAV_IN_RAM_G 1
-
 #define BUTTON_MARGIN  250
-
 Img_t g_Img[] = {
     //index addressFlash addressRamg size      x    y  w  h    bitmapLayout extFormat    tag isFlash
     { 0     ,10530496    ,0          ,6400   ,0   ,0 ,80 ,80 ,COMPRESSED_RGBA_ASTC_4x4_KHR       ,0           ,1  ,1 },
     { 1     ,10536896    ,0          ,6400   ,0   ,0 ,80 ,80 ,COMPRESSED_RGBA_ASTC_4x4_KHR       ,0           ,2  ,1 },
 };
 
-#define ANIM_ADDR     (10529664) // address of "output.anim.object" from Flash map after generating Flash
+#define ANIM_ADDR (10529664) /**< address of "output.anim.object" from Flash map after generating Flash */
 #define FRAME_COUNT   (99)
 
 #define BTN_STATE_PLAY   0
@@ -219,8 +257,7 @@ void drawUi() {
 
 }
 
-void DemoAudioPlayback(EVE_HalContext* pHalContext) {
-    s_pHalContext = pHalContext;
+void DemoAudioPlayback() {
     FlashHelper_SwitchFullMode(s_pHalContext);
 
     // To avoid a pop sound on reset or power state change
@@ -252,4 +289,7 @@ void DemoAudioPlayback(EVE_HalContext* pHalContext) {
         drawUi();
     }
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

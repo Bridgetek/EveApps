@@ -43,24 +43,24 @@
 
 #ifdef EVE_SUPPORT_MEDIAFIFO
 
-/* Set the media FIFO. 
+/** Set the media FIFO. 
 Returns false in case a coprocessor fault occurred */
 EVE_HAL_EXPORT bool EVE_MediaFifo_set(EVE_HalContext *phost, uint32_t address, uint32_t size);
 
-/* Closes the current media FIFO.
+/** Closes the current media FIFO.
 Indication for HAL only */
 EVE_HAL_EXPORT void EVE_MediaFifo_close(EVE_HalContext *phost);
 
-/* Get the current read pointer. */
+/** Get the current read pointer. */
 EVE_HAL_EXPORT uint32_t EVE_MediaFifo_rp(EVE_HalContext *phost);
 
-/* Get the current write pointer. */
+/** Get the current write pointer. */
 EVE_HAL_EXPORT uint32_t EVE_MediaFifo_wp(EVE_HalContext *phost);
 
-/* Get the currently available space. */
+/** Get the currently available space. */
 EVE_HAL_EXPORT uint32_t EVE_MediaFifo_space(EVE_HalContext *phost);
 
-/* Write a buffer to the media FIFO. 
+/** Write a buffer to the media FIFO. 
 Waits if there is not enough space in the media FIFO. 
 Returns false in case a coprocessor fault occurred.
 If the transfered pointer is set, the write may exit early 
@@ -68,12 +68,12 @@ if the coprocessor function has finished, and the
 transfered amount will be set. */
 EVE_HAL_EXPORT bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t size, uint32_t *transfered);
 
-/* Wait for the media FIFO to fully empty. 
+/** Wait for the media FIFO to fully empty. 
 When checking if a file is fully processed, EVE_Cmd_waitFlush must be called.
 Returns false in case a coprocessor fault occurred, or in case the coprocessor is done processing */
 EVE_HAL_EXPORT bool EVE_MediaFifo_waitFlush(EVE_HalContext *phost, bool orCmdFlush);
 
-/* Wait for the media FIFO to have at least the requested amount of free space.
+/** Wait for the media FIFO to have at least the requested amount of free space.
 Returns 0 in case a coprocessor fault occurred, or in case the coprocessor is done processing */
 EVE_HAL_EXPORT uint32_t EVE_MediaFifo_waitSpace(EVE_HalContext *phost, uint32_t size, bool orCmdFlush);
 

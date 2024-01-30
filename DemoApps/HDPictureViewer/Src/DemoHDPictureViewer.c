@@ -28,14 +28,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include <math.h>
-#include "Platform.h"
-#include "App.h"
 #include "Common.h"
+#include "Platform.h"
+#include "EVE_CoCmd.h"
 #include "DemoHDPictureViewer.h"
+#include <math.h>
 #if defined(EVE_FLASH_AVAILABLE)
 
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoHDPictureViewer();
+
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "4K image viewer demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoHDPictureViewer();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 typedef struct POS_ {
 	uint32_t x;
 	uint32_t y;
@@ -222,10 +264,12 @@ void App_Draw2_Many_ASTC_1k() {
 	}
 }
 
-void DemoHDPictureViewer(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoHDPictureViewer() {
 	FlashHelper_SwitchFullMode(s_pHalContext);
 	App_Draw2_Many_ASTC_1k();
 	EVE_sleep(10 * 1000);
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

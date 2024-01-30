@@ -1,0 +1,28 @@
+var _esd___touch_tag_8c =
+[
+    [ "Esd_TouchPos_t", "union_esd___touch_pos__t.html", "union_esd___touch_pos__t" ],
+    [ "Esd_TouchTag__Initializer", "_esd___touch_tag_8c.html#abfc79e47a0e44037887618bb8685e347", null ],
+    [ "Esd_TouchTag_CurrentTag", "_esd___touch_tag_8c.html#aa44dbd4602acae41a71904b5aaaf80ee", null ],
+    [ "Esd_TouchTag_End", "_esd___touch_tag_8c.html#ab30287dda147902473057eddd8906346", null ],
+    [ "Esd_TouchTag_Hover", "_esd___touch_tag_8c.html#a230405d3f9b8d24efbd9bc402d136575", null ],
+    [ "Esd_TouchTag_Inside", "_esd___touch_tag_8c.html#ac71adf3a100ea950d4ad028e71e13748", null ],
+    [ "Esd_TouchTag_Start", "_esd___touch_tag_8c.html#a57d166c39642d3b109497e63895417e6", null ],
+    [ "Esd_TouchTag_SuppressCurrentTags", "_esd___touch_tag_8c.html#a61377c03fd3722d23eec9d82d83b9013", null ],
+    [ "Esd_TouchTag_Tag", "_esd___touch_tag_8c.html#a2eae4ea506fdd97c1093a383dabdad4d", null ],
+    [ "Esd_TouchTag_Touching", "_esd___touch_tag_8c.html#a05b404a8677f3523014272e1978435c2", null ],
+    [ "Esd_TouchTag_TouchX", "_esd___touch_tag_8c.html#ae57cfcc126503d344bd4b5452764ee3d", null ],
+    [ "Esd_TouchTag_TouchXDelta", "_esd___touch_tag_8c.html#a0bd6171733ed1bd3109eed1a124aef3e", null ],
+    [ "Esd_TouchTag_TouchY", "_esd___touch_tag_8c.html#a6fd11f678a48c1a305c46e89b3d67f19", null ],
+    [ "Esd_TouchTag_TouchYDelta", "_esd___touch_tag_8c.html#a4a58b6c8e6fcf33a4f5b439e4e0748a9", null ],
+    [ "Esd_TouchTag_Update", "_esd___touch_tag_8c.html#a6b814f3e8a0433ebba07619da34df1f8", null ],
+    [ "s_GpuRegTouchTag", "_esd___touch_tag_8c.html#a40e0be5ee6adf672c0a00a9d2a14f917", null ],
+    [ "s_LastTagFrame", "_esd___touch_tag_8c.html#ae08ae49b1de5338557e1dac9d8e0df34", null ],
+    [ "s_NullTag", "_esd___touch_tag_8c.html#ae9aa888cc6be4cdef09388dc5b5cb31a", null ],
+    [ "s_SuppressCurrentTags", "_esd___touch_tag_8c.html#a584030bc4c1b9d432e1c59fcd0733c62", null ],
+    [ "s_TagDown", "_esd___touch_tag_8c.html#aff303e5d0590816e6cfbd04b5b8a4496", null ],
+    [ "s_TagHandlers", "_esd___touch_tag_8c.html#a1d9d95b5ac9fe8fb9519fd500acd6186", null ],
+    [ "s_TagUp", "_esd___touch_tag_8c.html#af1de9e8ac1d8789544c071df59da7a73", null ],
+    [ "s_TouchPos", "_esd___touch_tag_8c.html#ae4af0c5b40be83b77836e89b3dd8352f", null ],
+    [ "s_TouchPosXDelta", "_esd___touch_tag_8c.html#ab916e52488d940c6219e0d2a6b5c36a6", null ],
+    [ "s_TouchPosYDelta", "_esd___touch_tag_8c.html#aa5c121b758fe2c9fe3a2ddd12fcba7e8", null ]
+];

@@ -29,7 +29,7 @@
  * SOFTWARE.
 */
 
-#if defined(RP2040_PLATFORM)
+#if defined(PICO_BUILD)
 
 #include "pico.h"
 #include "pico/stdlib.h"

@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2019
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,14 +28,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoRotaryDial.h"
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoRotaryDial();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Rotary dial demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoRotaryDial();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define FingerStop_SIZE (1178)
 #define CallIcon (2311)
 #define CallCancelIcon (2129)
@@ -44,7 +84,7 @@ static EVE_HalContext *s_pHalContext;
 #define YellowBall_40x40	  (1556)
 #define YellowBall_60x60   (3085)
 
-  /* sample app structure definitions */
+  /** sample app structure definitions */
 typedef struct Bitmap_header
 {
 	uint8_t Format;
@@ -104,12 +144,12 @@ PROGMEM const Gpu_Fonts_t g_Gpu_Fonts[133] = {
 	18,
 	25,
 	950172
-}; 
+};
 
 #define DIAL		1
 
 int32_t Uncompressed_FileSize[] = { 4256,6272,6272,800,1800,3200,7200 };
-/* Header of raw data containing properties of bitmap */
+/** Header of raw data containing properties of bitmap */
 Bitmap_header_t Bitmap_RawData_Header[] =
 {
 	/* format,width,height,stride,arrayoffset */
@@ -126,7 +166,7 @@ uint8_t YellowBall60x60[YellowBall_60x60] = { 0x78,0x9C,0xA5,0x99,0x6D,0x8C,0x5C
 
 int32_t BaseTrackVal = 0, BaseTrackValInit = 0, BaseTrackValSign = 0, MemLoc = 0;
 
-uint32_t Load_RawDataFromfile(uchar8_t *ImageArrayname,/* Image Array*/
+uint32_t Load_RawDataFromfile(uchar8_t* ImageArrayname,/* Image Array*/
 	uint32_t ptr,/* Array Size*/
 	uint32_t RamAddr,
 	int16_t Handle,
@@ -137,7 +177,7 @@ uint32_t Load_RawDataFromfile(uchar8_t *ImageArrayname,/* Image Array*/
 	uint8_t i
 )
 {
-	uint8_t *pbuff = NULL;
+	uint8_t* pbuff = NULL;
 	int32_t FileLen = 0, fsize = 0;
 
 	/* Make the RAM address align of 8 */
@@ -172,8 +212,7 @@ uint32_t Load_RawDataFromfile(uchar8_t *ImageArrayname,/* Image Array*/
 	return (RamAddr + fsize);
 }
 
-void DemoRotaryDial(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoRotaryDial() {
 	uint8_t ReadTag = 0, PrevTag = 0, StoreTag, flag = 0, PrintTag = 0, Tagcheck = 0, Penup = 0, i = 0, j;
 
 	char8_t StringArray[31];
@@ -289,7 +328,7 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 	EVE_Hal_wr8(s_pHalContext, REG_VOL_SOUND, 0xFF);
 
 	/* Calculation of balls offsets and rate */
-	for (i = 0; i<40; i++)
+	for (i = 0; i < 40; i++)
 	{
 		BmpBalls[i].xOffset = random(s_pHalContext->Width);
 		BmpBalls[i].yOffset = random(s_pHalContext->Height);
@@ -348,14 +387,14 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 		EVE_CoCmd_gradient(s_pHalContext, 0, 0, 0xEDBA11, 0, s_pHalContext->Height, 0x82660A);
 		EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(s_pHalContext->Width, s_pHalContext->Height));
 		EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(0, 4 * s_pHalContext->Height / 5));
-		EVE_CoCmd_gradient(s_pHalContext, 0, 0, 0x2B2205, 0, ((s_pHalContext->Height*0.80))/*218*/, 0x82660A);
+		EVE_CoCmd_gradient(s_pHalContext, 0, 0, 0x2B2205, 0, ((s_pHalContext->Height * 0.80))/*218*/, 0x82660A);
 		EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(s_pHalContext->Width, s_pHalContext->Height));
 		EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(0, 0));
 
 		/* Draw all the background bitmaps - balls with various resolutions */
 		EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
 		EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255)); // brown outside circle
-		for (i = 0; i<40; i++)
+		for (i = 0; i < 40; i++)
 		{
 #ifdef DISPLAY_RESOLUTION_WVGA
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(3 + (i % 4)));
@@ -485,7 +524,7 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 						if (PrintTag == 10)PrintTag = 0;
 						StringArray[k] = PrintTag + '0';
 
-						if (k<17)
+						if (k < 17)
 						{
 							k++;
 						}
@@ -522,10 +561,10 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 		/* dial button (tag 100) & penup has been done - play dtmf sound */
 		if ((Tagcheck == 100) && (flag == 1))
 		{
-			if (k>0)
+			if (k > 0)
 			{
 				delay(200);
-				for (m = 0; m<k; m++)
+				for (m = 0; m < k; m++)
 				{
 					/* Play the dtmf sound */
 					EVE_Hal_wr16(s_pHalContext, REG_SOUND, StringArray[m]);
@@ -574,9 +613,9 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 			/* for value 1 to 9 - threshold*/
 			for (m = 1, l = 9; m <= 9, l >= 1; m++, l--)
 			{
-				if ((NextTh > threshold_angle - (m*IncTheta)) && (ReadTag == l))
+				if ((NextTh > threshold_angle - (m * IncTheta)) && (ReadTag == l))
 				{
-					NextTh = threshold_angle - (m*IncTheta);
+					NextTh = threshold_angle - (m * IncTheta);
 					thresholdflag = 1;
 				}
 			}
@@ -614,7 +653,7 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 			MinTheta = MinTheta + IncTheta;
 			MaxTheta = MaxTheta + IncTheta;
 		}
-		else if (((NextTh < MinTheta) && (NextTh >(MinTheta - 30))) && (NextTh != 0) && (Touch != NoTouch))
+		else if (((NextTh < MinTheta) && (NextTh > (MinTheta - 30))) && (NextTh != 0) && (Touch != NoTouch))
 		{
 			EVE_Hal_wr8(s_pHalContext, REG_VOL_SOUND, 0xFF);
 			EVE_Hal_wr16(s_pHalContext, REG_SOUND, 0x51);
@@ -686,7 +725,7 @@ void DemoRotaryDial(EVE_HalContext* pHalContext) {
 		EVE_Cmd_wr32(s_pHalContext, TAG_MASK(0));
 
 		/* display numbers in the centre of the point while dialing*/
-		if ((PrintTag >0) && (PrintTag <= 10) && (Touch != NoTouch))
+		if ((PrintTag > 0) && (PrintTag <= 10) && (Touch != NoTouch))
 		{
 			if (PrintTag == 10)PrintTag = 0;
 			EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));

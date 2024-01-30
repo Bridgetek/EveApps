@@ -59,12 +59,11 @@
     <ClCompile Include="..\..\..\..\common\application\Common.c" />
     <ClCompile Include="..\..\..\..\common\application\Logo.c" />
     <ClCompile Include="..\..\..\..\common\application\Maths.c" />
-    <ClCompile Include="..\..\Src\App.c" />
     <ClCompile Include="..\..\Src\Authenticate.c" />
     <ClCompile Include="..\..\Src\Charging.c" />
     <ClCompile Include="..\..\Src\Choose_Language.c" />
     <ClCompile Include="..\..\Src\Def.c" />
-    <ClCompile Include="..\..\Src\Event.c" />
+    <ClCompile Include="..\..\Src\DemoEvChargePoint.c" />
     <ClCompile Include="..\..\Src\Plugin.c" />
     <ClCompile Include="..\..\Src\Report.c" />
     <ClCompile Include="..\..\Src\Screen_Saver.c" />
@@ -117,12 +116,11 @@
     <ClInclude Include="..\..\..\..\common\application\Gesture.h" />
     <ClInclude Include="..\..\..\..\common\application\Logo.h" />
     <ClInclude Include="..\..\..\..\common\application\Maths.h" />
-    <ClInclude Include="..\..\Hdr\App.h" />
     <ClInclude Include="..\..\Hdr\Authenticate.h" />
     <ClInclude Include="..\..\Hdr\Charging.h" />
     <ClInclude Include="..\..\Hdr\Choose_Language.h" />
     <ClInclude Include="..\..\Hdr\Def.h" />
-    <ClInclude Include="..\..\Hdr\Event.h" />
+    <ClInclude Include="..\..\Hdr\DemoEvChargePoint.h" />
     <ClInclude Include="..\..\Hdr\Plugin.h" />
     <ClInclude Include="..\..\Hdr\Report.h" />
     <ClInclude Include="..\..\Hdr\Screen_Saver.h" />

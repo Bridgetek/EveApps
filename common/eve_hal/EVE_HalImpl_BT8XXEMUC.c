@@ -48,9 +48,9 @@
 #define NOMINMAX
 #endif
 #if !defined(NTDDI_VERSION) && !defined(_WIN32_WINNT) && !defined(WINVER)
-#define NTDDI_VERSION 0x05010000 /* NTDDI_WINXP */
-#define _WIN32_WINNT 0x0501 /* _WIN32_WINNT_WINXP */
-#define WINVER 0x0501 /* _WIN32_WINNT_WINXP */
+#define NTDDI_VERSION 0x05010000 /**< NTDDI_WINXP */
+#define _WIN32_WINNT 0x0501 /**< _WIN32_WINNT_WINXP */
+#define WINVER 0x0501 /**< _WIN32_WINNT_WINXP */
 #endif
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -218,7 +218,7 @@ static void BT8XXEMUC_unlockProcessPipe()
 	InterlockedExchange(&s_AtomicLock, 0);
 }
 
-// Open a new process if it has not been opened yet, uses reference counting
+/** Open a new process if it has not been opened yet, uses reference counting */
 static bool BT8XXEMUC_openProcess()
 {
 	BT8XXEMUC_lockProcessPipe();
@@ -272,7 +272,7 @@ static bool BT8XXEMUC_openProcess()
 	return true;
 }
 
-// Reduce the reference count of the process, and closes it when done
+/** Reduce the reference count of the process, and closes it when done */
 static void BT8XXEMUC_closeProcess()
 {
 	BT8XXEMUC_lockProcessPipe();
@@ -313,8 +313,9 @@ static void BT8XXEMUC_closeProcess()
 	BT8XXEMUC_unlockProcessPipe();
 }
 
-// Open an additional pipe on the open process. Must be closed
-// before closing the process
+/** Open an additional pipe on the open process.Must be closed
+ * before closing the process
+ */
 static HANDLE BT8XXEMUC_openPipe()
 {
 	BT8XXEMUC_lockProcessPipe();
@@ -358,7 +359,7 @@ static void BT8XXEMUC_unlockPipe(BT8XXEMUC_Remote *emulator)
 	InterlockedExchange(&emulator->atomicLock, 0);
 }
 
-// Close a pipe
+/** Close a pipe */
 static void BT8XXEMUC_closePipe(BT8XXEMUC_Remote *emulator)
 {
 	BT8XXEMUC_lockPipe(emulator);

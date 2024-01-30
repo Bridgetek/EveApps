@@ -28,14 +28,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoKeyboard.h"
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoKeyboard();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Keyboard demo",
+		"Support QVGA, WQVGA, WVGA, WSVGA, WXGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoKeyboard();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define ON          1
 #define OFF         0						 
 #define Font        27					// Font Size
@@ -115,9 +155,8 @@ uint8_t Gpu_Rom_Font_WH(uint8_t Char, uint8_t font) {
 	return Width;
 }
 
-// notepad
-void DemoKeyboard(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+/** notepad */
+void DemoKeyboard() {
 	/*local variables*/
 	uint8_t Line = 0;
 	uint16_t Disp_pos = 0, But_opt;

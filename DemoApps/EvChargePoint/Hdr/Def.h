@@ -4,7 +4,6 @@
 #include <time.h>
 #include "Platform.h"
 #include "Gpu.h"
-#include "Event.h"
 
 #define RAM_DL_SIZE                 (1024 * 1024)
 // Precision

@@ -28,20 +28,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "Platform.h"
 #include "Common.h"
-#include "App.h"
-#include "FT_Util.h"
+#include "Platform.h"
+#include "EVE_CoCmd.h"
+#include "DemoMediaPlayer.h"
 #if defined(EVE_FLASH_AVAILABLE)
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoMediaPlayer();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Manage and play media content on hard disk/SD card",
+		"Support QVGA, WQVGA, WVGA, WSVGA, WXGA",
+		"EVE3/4",
+		"WIN32"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoMediaPlayer();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
+#include "FT_Util.h"
 ft_int32_t MultimediaExplorer_Main(Ft_Gpu_Hal_Context_t* pHalContext, GuiManager* CleO, int command, void* _data);
 ft_void_t Info(Ft_Gpu_Hal_Context_t* pHalContext);
 
-void DemoMediaPlayer(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoMediaPlayer() {
 	FlashHelper_SwitchFullMode(s_pHalContext);
 
     init_guiobs(s_pHalContext);
@@ -50,4 +90,7 @@ void DemoMediaPlayer(EVE_HalContext* pHalContext) {
         MultimediaExplorer_Main(s_pHalContext, getGuiInstance(), 0, NULL);
     }
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

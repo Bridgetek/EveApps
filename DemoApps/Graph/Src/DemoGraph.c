@@ -28,14 +28,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoGraph.h"
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoGraph();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Graph demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoGraph();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define REPORT_FRAMES   0
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 #define SUBDIV  4
@@ -264,8 +304,7 @@ void plot()
 	}
 }
 
-void DemoGraph(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoGraph() {
 	int16_t sx[5], sy[5];
 	int32_t f, j;
 	static int32_t _f;

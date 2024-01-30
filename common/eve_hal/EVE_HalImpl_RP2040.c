@@ -39,30 +39,46 @@
 
 static int s_SpiOpened[2];
 
-EVE_HalPlatform g_HalPlatform;
 bool EVE_Hal_NoInit = false;
 
-/* Initialize global HAL platform */
+/** @name INIT */
+///@{
+
+/**
+ * @brief Initialize global HAL platform 
+ *
+ */
 void EVE_HalImpl_initialize()
 {
 	/* no-op */
 }
 
-/* Release global HAL platform */
+/**
+ * @brief Release global HAL platform
+ * 
+ */
 void EVE_HalImpl_release()
 {
 	eve_assert(!s_SpiOpened[0]);
 	eve_assert(!s_SpiOpened[1]);
 }
 
-/* List the available devices */
+/**
+ * @brief List the available devices 
+ *
+ */
 EVE_HAL_EXPORT size_t EVE_Hal_list()
 {
 	/* List two SPI channels, but they may be used multiple times with different CS/PWD pin selection */
 	return 2;
 }
 
-/* Get info of the specified device. Devices of type EVE_HOST_UNKNOWN should be ignored */
+/**
+ * @brief Get info of the specified device. Devices of type EVE_HOST_UNKNOWN should be ignored
+ * 
+ * @param deviceInfo
+ * @param deviceIdx
+ */
 EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 {
 	memset(deviceInfo, 0, sizeof(EVE_DeviceInfo));
@@ -72,7 +88,14 @@ EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 	deviceInfo->Host = EVE_HOST_EMBEDDED;
 }
 
-/* Check whether the context is the specified device */
+/**
+ * @brief Check whether the context is the specified device
+ * 
+ * @param phost Pointer to Hal context
+ * @param deviceIdx
+ * @return true True if ok
+ * @return false False if error
+ */
 EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 {
 	return deviceIdx ? (phost->SpiPort == spi1) : (phost->SpiPort == spi0);
@@ -82,6 +105,9 @@ EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
  * @brief Get the default configuration parameters
  * 
  * @param parameters EVE_Hal framework's parameters
+ * @param deviceIdx
+ * @return true True if ok
+ * @return false False if error
  */
 bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 {
@@ -201,10 +227,14 @@ void EVE_HalImpl_idle(EVE_HalContext *phost)
 {
 	/* no-op */
 }
+///@}
 
 /*************
 ** TRANSFER **
 *************/
+
+/** @name TRANSFER */
+///@{
 
 static inline void csSelect(EVE_HalContext *phost)
 {
@@ -451,7 +481,7 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 }
 
 /**
- * @brief Transfer a string to Eve platform
+ * @brief Transfer a string to EVE platform
  * 
  * @param phost Pointer to Hal context
  * @param str String to transfer
@@ -493,10 +523,14 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 	}
 	return transferred;
 }
+///@}
 
 /************
 ** UTILITY **
 ************/
+
+/** @name UTILITY */
+///@{
 
 /**
  * @brief Send a host command
@@ -545,6 +579,8 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
  * 
  * @param phost Pointer to Hal context
  * @param up Up or Down
+ * @return true True if ok
+ * @return false False if error
  */
 bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 {
@@ -553,12 +589,12 @@ bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 		/* Power down */
 		gpio_put(phost->PowerDownPin, 0);
 		EVE_sleep(20);
-		
+
 		/* Reset the core, in case PD pin is not wired */
 		EVE_Hal_hostCommand(phost, EVE_CORE_RESET);
 		setSPI(phost, EVE_SPI_SINGLE_CHANNEL, 1);
 		EVE_sleep(20);
-		
+
 		/* Power up */
 		gpio_put(phost->PowerDownPin, 1);
 		EVE_sleep(20);
@@ -622,10 +658,14 @@ uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost)
 {
 	return 0; /* TODO */
 }
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 
 /**
  * @brief Init host MCU
@@ -651,6 +691,7 @@ void EVE_Mcu_release()
 {
 	/* no-op */
 }
+///@}
 
 /*********
 ** MISC **
@@ -661,6 +702,8 @@ static absolute_time_t s_LastTime;
 static uint64_t s_TotalMilliseconds64;
 static int32_t s_RemainderMicros;
 
+/** @name MISC */
+///@{
 /**
  * @brief Init timer
  * 
@@ -716,7 +759,7 @@ uint32_t EVE_millis()
 /**
 * @brief Get clock in miliseond
 * 
-* @return uint32_t Clock number
+* @return uint64_t Clock number
 */
 uint64_t EVE_millis64()
 {
@@ -749,6 +792,7 @@ bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost)
 {
 	return true;
 }
+///@}
 
 #endif /* #if defined(RP2040_PLATFORM) */
 

@@ -28,16 +28,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoImageviewer2.h"
 #include "FTGesture.h"
 #if defined(EVE_FLASH_AVAILABLE)
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoImageviewer2();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Image viewer demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32, FT900, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoImageviewer2();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define IMAGE_SELECTIONMENU	101
 #define MAX_IMAGES	18
 
@@ -115,8 +155,8 @@ SAMAPP_Bitmap_Tile_t tile[] = {
 
 #define PRECISION 16
 
-/* Boot up for FT800  */
-/* Initial boot up DL - make the back ground green color */
+/** Boot up for FT800  */
+/** Initial boot up DL - make the back ground green color */
 const uint8_t FT_DLCODE_BOOTUP[12] =
 {
 	255,255,255,2,//GPU instruction CLEAR_COLOR_RGB
@@ -945,8 +985,7 @@ void ImageViewer()
 	}
 }
 
-void DemoImageviewer2(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoImageviewer2() {
 	Display_Start(s_pHalContext);
 	EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x80, 0x80, 0x00));
 	EVE_CoCmd_text(s_pHalContext, (s_pHalContext->Width / 2), 100, 31, OPT_CENTERX, "The App_ImageViewer 2");
@@ -958,4 +997,7 @@ void DemoImageviewer2(EVE_HalContext* pHalContext) {
 
 	ImageViewer();
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

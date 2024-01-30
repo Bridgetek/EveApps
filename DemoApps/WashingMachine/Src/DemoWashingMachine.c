@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2019
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,56 +29,84 @@
  * SOFTWARE.
  */
 
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoWashingMachine.h"
+
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_WVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoWashingMachine();
 
-#ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
-#define DISPLAY_RESOLUTION_HVGA_PORTRAIT 1
-#endif
-#ifdef DISPLAY_RESOLUTION_WQVGA
-#define DISPLAY_RESOLUTION_WQVGA 1
-#endif
-#ifdef DISPLAY_RESOLUTION_WVGA
-#define DISPLAY_RESOLUTION_WVGA 1
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
 #endif
 
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Washing machine UI demo",
+		"Support WQVGA, WVGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoWashingMachine();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #if EVE_CHIPID <= EVE_FT801
 #define ROMFONT_TABLEADDRESS (0xFFFFC)
 #else
 #define ROMFONT_TABLEADDRESS 3145724UL // 2F FFFCh
 #endif
 
-#ifdef FT9XX_PLATFORM
-#include "ff.h"
-#endif
-
 #define NAMEARRAYSZ 500
 
 int16_t CartX = 480;
+static uint8_t keypressed = 0;
 
 float linear(float p1, float p2, uint16_t t, uint16_t rate)
 {
 	float st = (float)t / rate;
-	return p1 + (st*(p2 - p1));
+	return p1 + (st * (p2 - p1));
 }
 
 uint16_t smoothstep(int16_t p1, int16_t p2, uint16_t t, uint16_t rate)
 {
 	float dst = (float)t / rate;
-	float st = SQ(dst)*(3 - 2 * dst);
-	return p1 + (st*(p2 - p1));
+	float st = SQ(dst) * (3 - 2 * dst);
+	return p1 + (st * (p2 - p1));
 }
 
 uint16_t acceleration(uint16_t p1, uint16_t p2, uint16_t t, uint16_t rate)
 {
 	float dst = (float)t / rate;
 	float st = SQ(dst);
-	return p1 + (st*(p2 - p1));
+	return p1 + (st * (p2 - p1));
 }
 
 float deceleration(uint16_t p1, uint16_t p2, uint16_t t, uint16_t rate)
@@ -86,10 +114,8 @@ float deceleration(uint16_t p1, uint16_t p2, uint16_t t, uint16_t rate)
 	float st, dst = (float)t / rate;
 	dst = 1 - dst;
 	st = 1 - SQ(dst);
-	return p1 + (st*(p2 - p1));
+	return p1 + (st * (p2 - p1));
 }
-
-static uint8_t keypressed = 0;
 
 static uint8_t istouch()
 {
@@ -117,20 +143,6 @@ void end_frame()
 	EVE_CoCmd_swap(s_pHalContext);
 }
 
-#if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
-void Load_file2gram(uint32_t add, uint8_t sectors, FILE *afile)
-{
-	uint8_t pbuff[512], temp[512], tval;
-	uint16_t z = 0;
-	for (z = 0; z < sectors; z++)
-	{
-		fread(pbuff, 1, 512, afile);
-		EVE_Hal_wrMem(s_pHalContext, add, pbuff, 512L);
-		add += 512;
-	}
-}
-#endif
-
 static struct {
 	signed short dragprev;
 	int vel;      // velocity
@@ -145,28 +157,6 @@ static void scroller_init(uint32_t limit)
 	scroller.base = 0;     // screen x coordinate, in 1/16ths pixel
 	scroller.limit = limit;
 }
-
-/*
-static void scroller_run()
-{
-  signed short sy = EVE_Hal_rd16(s_pHalContext,REG_TOUCH_SCREEN_XY);
-
-  if ((sy != -32768) & (scroller.dragprev != -32768)) {
-	scroller.vel = (scroller.dragprev - sy) << 4;
-  } else {
-	int change = MAX(1, abs(scroller.vel) >> 5);
-	if (scroller.vel < 0)
-	  scroller.vel += change;
-	if (scroller.vel > 0)
-	  scroller.vel -= change;
-  }
-  scroller.dragprev = sy;
-
-  scroller.base += scroller.vel;
-
-  scroller.base = MAX(0, MIN(scroller.base, scroller.limit));
-}
-*/
 
 static uint16_t scroller_run(uint8_t touchTag)
 {
@@ -234,13 +224,10 @@ Wash_Window[7] =
 	{TEST_DIR "\\home.bin",		40,	 ARGB4,	NEAREST,    40,	   40 ,	   80,	177L	},//4kb
 	{TEST_DIR "\\Bkgd.bin",		136,    L8,	NEAREST,   480,	  272 ,	  240,	181L	},   //33kb
 };
-#elif DISPLAY_RESOLUTION_WVGA
+static uint16_t ButX = 330;
 
-#ifdef FT9XX_PLATFORM
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 SAMAPP_Logo_Img_t Main_Icons[10] =
-#else
-PROGMEM SAMAPP_Logo_Img_t Main_Icons[10] =
-#endif
 {
 	{TEST_DIR "\\shirtH.bin",		 70,    ARGB4,  NEAREST,    70,    70 ,    140,   0},   //10
 	{TEST_DIR "\\TempH.bin",		 70,    ARGB4,  NEAREST,    70,     70 ,    140,   10},  //10
@@ -254,36 +241,18 @@ PROGMEM SAMAPP_Logo_Img_t Main_Icons[10] =
 	{TEST_DIR "\\BkgdH.bin",        240,      L8,  NEAREST,   800,    480 ,    400,   67     },         //94
 };
 
-#ifdef FT9XX_PLATFORM
 SAMAPP_Logo_Img_t Wash_Window[7] =
-#else
-PROGMEM	SAMAPP_Logo_Img_t  Wash_Window[7] =
-#endif
 {
 	{TEST_DIR "\\WashH.bin",		88,	 ARGB4,	NEAREST,    88,	   352,	  176,	161	}, // 61
 	{TEST_DIR "\\RinseH.bin",		96,	 ARGB4,	NEAREST,    96,	   384,	  192,	222	}, // 72
 	{TEST_DIR "\\SpinH.bin",		80,	 ARGB4,	NEAREST,    80,	   480,	  160,	294	}, // 75
-	{TEST_DIR "\\WBarH.bin",		94,	RGB565,	NEAREST,   664,	   94 ,	  1328,	369	}, //122
-	{TEST_DIR "\\bubH.bin",		54,	 ARGB4,	NEAREST,    54,	   54 ,	  108,	491	}, //6
+	{TEST_DIR "\\WBarH.bin",		94,	 RGB565,	NEAREST,   664,	   94 ,	  1328,	369	}, //122
+	{TEST_DIR "\\bubH.bin",		    54,	 ARGB4,	NEAREST,    54,	   54 ,	  108,	491	}, //6
 	{TEST_DIR "\\homeH.bin",		70,	 ARGB4,	NEAREST,    70,	   70 ,	  140,	497	}, //10
-	{TEST_DIR "\\BkgdH.bin",	   240,    L8,	NEAREST,   800,	  480 ,	  400,	591	}, //94
+	{TEST_DIR "\\BkgdH.bin",	    240, L8,	NEAREST,   800,	  480 ,	  400,	591	}, //94
 };
-#elif DISPLAY_RESOLUTION_HVGA_PORTRAIT
-#else
-#warning Display resolution is not supported
-#endif
-
-uint8_t Stflag, OptionsSet, MainFlag, Tagval, Pf = 0;
-uint16_t BrightNess, SoundLev = 255, TimeSet, IterCount, Px;
-#ifdef DISPLAY_RESOLUTION_WQVGA
-static uint16_t ButX = 330;
-#elif DISPLAY_RESOLUTION_WVGA
 static uint16_t ButX = 592;
 #elif DISPLAY_RESOLUTION_HVGA_PORTRAIT
-static uint16_t ButX = 30;
-#endif
-
-#ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
 SAMAPP_Logo_Img_t Main_Icons[10] =
 {
 	{TEST_DIR "\\shirt.bin",		 40,    ARGB4,  NEAREST,    40,     40 ,    80,   0L      },
@@ -308,12 +277,7 @@ Wash_Window[7] =
 	{TEST_DIR "\\home.bin",		40,	 ARGB4,	NEAREST,    40,	   40 ,	   80,	177L	},//4kb
 	{TEST_DIR "\\Bkgd.bin",		136,    L8,	NEAREST,   320,	  480 ,	  240,	181L	},   //33kb
 };
-
-#ifdef FT9XX_PLATFORM
 SAMAPP_Logo_Img_t Wash_Window[7] =
-#else
-PROGMEM	SAMAPP_Logo_Img_t  Wash_Window[7] =
-#endif
 {
 	{TEST_DIR "\\WashH.bin",		88,	 ARGB4,	NEAREST,    88,	   352,	  176,	161	}, // 61
 	{TEST_DIR "\\RinseH.bin",		96,	 ARGB4,	NEAREST,    96,	   384,	  192,	222	}, // 72
@@ -323,8 +287,46 @@ PROGMEM	SAMAPP_Logo_Img_t  Wash_Window[7] =
 	{TEST_DIR "\\homeH.bin",		70,	 ARGB4,	NEAREST,    70,	   70 ,	  140,	497	}, //10
 	{TEST_DIR "\\BkgdH.bin",	   240,    L8,	NEAREST,   800,	  480 ,	  400,	591	}, //94
 };
-
+static uint16_t ButX = 30;
+#else
+#warning Display resolution is not supported
 #endif
+
+
+typedef struct Item_Prop
+{
+	char* SoilLev;
+	char* Temp;
+	char* SpinSpeed;
+}Item_Properties;
+
+Item_Properties Item_Property[] =
+{
+		{"Light",  "Cold", "Low"},//Eco cold
+		{"Normal", "Warm", "Medium"}, //Normal
+		{"Heavy",  "Hot",  "High"}, // HEavy Duty
+		{"Light",  "Warm", "Medium"},//Perm Press
+		{"Normal", "Hot",  "Medium"},//Active Wear
+		{"Heavy",  "Warm", "High"},//Bedding
+		{"Heavy",  "Cold", "Low"},//Wool
+};
+
+typedef struct Bub
+{
+	int16_t xOffset;
+	int16_t yOffset;
+	char8_t xDiff;
+	char8_t yDiff;
+}Bubbles;
+
+static uint8_t ProcFinish;
+uint8_t Stflag, OptionsSet, MainFlag, Tagval, Pf = 0;
+uint16_t BrightNess, SoundLev = 255, TimeSet, IterCount, Px;
+static char* Array_Cycle_Name[9] = { 0,"Eco Cold", "Normal", "Heavy","PermPress",  "Wool", "Bedding", "ActiveWear" };
+char* Array_Cycle_Options[3] = { "Soil Level", "Temperature", "Spin Speed" };
+char* Array_Menu_Options[3] = { "Child Lock", "Settings", "Start" };
+char* BrightLevel[6] = { 0,"Level1", "Level2", "Level3", "Level4", "Level5" };
+char* SoundLevel[6] = { 0,"Mute", "Level1", "Level2", "Level3", "Level4" };
 
 void Logo_Intial_setup(SAMAPP_Logo_Img_t sptr[], uint8_t num)
 {
@@ -363,41 +365,6 @@ static void rotate_around(int16_t x, int16_t y, int16_t a)
 	EVE_CoCmd_setMatrix(s_pHalContext);
 }
 
-static char *Array_Cycle_Name[9] = { 0,"Eco Cold", "Normal", "Heavy","PermPress",  "Wool", "Bedding", "ActiveWear" };
-char *Array_Cycle_Options[3] = { "Soil Level", "Temperature", "Spin Speed" };
-char *Array_Menu_Options[3] = { "Child Lock", "Settings", "Start" };
-
-char *BrightLevel[6] = { 0,"Level1", "Level2", "Level3", "Level4", "Level5" };
-
-char *SoundLevel[6] = { 0,"Mute", "Level1", "Level2", "Level3", "Level4" };
-
-typedef struct Item_Prop
-{
-	char *SoilLev;
-	char *Temp;
-	char *SpinSpeed;
-}Item_Properties;
-
-Item_Properties Item_Property[] =
-{
-		{"Light",  "Cold", "Low"},//Eco cold
-		{"Normal", "Warm", "Medium"}, //Normal
-		{"Heavy",  "Hot",  "High"}, // HEavy Duty
-		{"Light",  "Warm", "Medium"},//Perm Press
-		{"Normal", "Hot",  "Medium"},//Active Wear
-		{"Heavy",  "Warm", "High"},//Bedding
-		{"Heavy",  "Cold", "Low"},//Wool
-};
-
-typedef struct Bub
-{
-	int16_t xOffset;
-	int16_t yOffset;
-	char8_t xDiff;
-	char8_t yDiff;
-}Bubbles;
-
-static uint8_t ProcFinish;
 uint16_t WashWindow()
 {
 	uint16_t BitmapTr = 0, BubY = 0, i = 0, th = 0, PwY = 0, PwY1 = 0, PwY2 = 0;
@@ -506,7 +473,7 @@ uint16_t WashWindow()
 		EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
 #ifdef DISPLAY_RESOLUTION_WQVGA
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(40, 130, 3, 0));
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(75, 233, 3, 0));
 #endif
 #ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
@@ -815,9 +782,8 @@ uint16_t WashWindow()
 		if (IterCount % 50 == 0 && Pf == 0)
 #ifdef DISPLAY_RESOLUTION_WQVGA
 			Px += 11;
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 			Px += 19;
-
 #endif
 #ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
 		Px += 11;
@@ -901,7 +867,7 @@ uint8_t Settings()
 	uint16_t SettingBlockHeight = 30, SettingBlockWidth = 50, SettingBlockX = 115, SettingBlockY = 25, SettingBlockGap = 10;
 	static uint16_t SettingBackgroundHeight = 215, DisplayXPos = 60, DisplayYPos = 80, SoundXPos = 60, SoundYPos = 145;
 	uint8_t TextFont = 23, SettingFont = 18;
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 	uint16_t SettingBlockHeight = 50, SettingBlockWidth = 80, SettingBlockX = 200, SettingBlockY = 100, SettingBlockGap = 10;
 	static uint16_t SettingBackgroundHeight, DisplayXPos = 100, DisplayYPos = 100, SoundXPos = 100, SoundYPos = 200;
 	uint8_t TextFont = 30, SettingFont = 23;
@@ -1097,7 +1063,7 @@ uint8_t Settings()
 		EVE_Cmd_wr32(s_pHalContext, TAG('H'));
 #ifdef DISPLAY_RESOLUTION_WQVGA
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(s_pHalContext->Width - Main_Icons[8].sizex - 10, 10, 8, 0));
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(8));
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2F((s_pHalContext->Width - Main_Icons[8].sizex - 10) * 16, 10 * 16));
 #endif
@@ -1445,7 +1411,7 @@ uint8_t MainWindow()
 			EVE_Cmd_wr32(s_pHalContext, TAG('L'));
 #ifdef DISPLAY_RESOLUTION_WQVGA
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(340, 105, 4, 0));
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(4));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(600 * 16, 163 * 16));
 #endif
@@ -1460,7 +1426,7 @@ uint8_t MainWindow()
 		EVE_Cmd_wr32(s_pHalContext, TAG('S'));
 #ifdef DISPLAY_RESOLUTION_WQVGA
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(340, 145, 6, 0));
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(6));
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2F(600 * 16, 249 * 16));
 #endif
@@ -1471,7 +1437,7 @@ uint8_t MainWindow()
 		EVE_Cmd_wr32(s_pHalContext, TAG('P'));
 #ifdef DISPLAY_RESOLUTION_WQVGA
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(340, 185, 7, 0));
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(7));
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2F(600 * 16, 333 * 16));
 #endif
@@ -1526,7 +1492,7 @@ uint8_t MainWindow()
 					EVE_Cmd_wr32(s_pHalContext, VERTEX2F(375 * 16, 140 * 16));
 					EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
 					EVE_CoCmd_text(s_pHalContext, 120, 125, 27, OPT_CENTERY, "Please Select a Washing Mode");
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 					EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
 					EVE_Cmd_wr32(s_pHalContext, BEGIN(RECTS));
 					EVE_Cmd_wr32(s_pHalContext, VERTEX2F(255 * 16, 255 * 16));
@@ -1560,7 +1526,7 @@ uint8_t MainWindow()
 			EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 200, 255));
 			EVE_CoCmd_text(s_pHalContext, 380, By, 18, 0, Array_Menu_Options[i]);
 			By += 40;
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 		By = 182;
 		for (i = 0; i < 3; i++)
 		{
@@ -1625,7 +1591,7 @@ uint8_t MainWindow()
 			if (IterCount % 50 == 0 && Pf == 0)
 #ifdef DISPLAY_RESOLUTION_WQVGA
 				Px += 11;
-#elif DISPLAY_RESOLUTION_WVGA
+#elif defined(DISPLAY_RESOLUTION_WVGA)
 				Px += 19;
 #endif
 #ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
@@ -1640,8 +1606,7 @@ uint8_t MainWindow()
 	return Read_Tag;
 }
 
-void DemoWashingMachine(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoWashingMachine() {
 	Logo_Intial_setup(Main_Icons, 7);
 
 	while (1)
@@ -1654,4 +1619,8 @@ void DemoWashingMachine(EVE_HalContext* pHalContext) {
 		}
 	}
 }
+
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif // #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_WVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)

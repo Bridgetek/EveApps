@@ -51,7 +51,8 @@ the available list of which is specified further below for ESD using these macro
 #define ESD_TARGET_FLASH(name, ...)
 #define ESD_TARGET_TOUCH(name, ...)
 
-// Chip IDs with EVE generation
+/** @name Chip IDs with EVE generation */
+///@{
 #define EVE_FT800 0x10800
 #define EVE_FT801 0x10801
 #define EVE_FT810 0x20810
@@ -66,16 +67,20 @@ the available list of which is specified further below for ESD using these macro
 #define EVE_BT816 0x30816
 #define EVE_BT817 0x40817
 #define EVE_BT818 0x40818
+///@}
 
-// EVE generations
-#define EVE1 1 /* FT800 and FT801 */
-#define EVE2 2 /* FT810 to FT813, and BT880 to BT883 */
-#define EVE3 3 /* BT815 and BT816 */
-#define EVE4 4 /* BT817 and BT818 */
+/** @name EVE generations */
+///@{
+#define EVE1 1 /**< FT800 and FT801 */
+#define EVE2 2 /**< FT810 to FT813, and BT880 to BT883 */
+#define EVE3 3 /**< BT815 and BT816 */
+#define EVE4 4 /**< BT817 and BT818 */
+///@}
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
+///@cond ESD
 
 /*
 
@@ -154,7 +159,7 @@ ESD_TARGET_PLATFORM(MM900EV_LITE, DisplayName = "MM900EV-Lite", SupportedArchite
 ESD_TARGET_PLATFORM(EVE_PLATFORM_FT4222, DisplayName = "FT4222", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bFT4222\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_MPSSE, DisplayName = "MPSSE", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bMPSSE\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_RP2040, DisplayName = "Rapberry Pi Pico", SupportedArchitectures = "\bPICO\b")
-ESD_TARGET_PLATFORM(MM2040EV, DisplayName = "MM2040EV", SupportedArchitectures = "\bPICO\b")
+ESD_TARGET_PLATFORM(EVE_PLATFORM_MM2040EV, DisplayName = "MM2040EV", SupportedArchitectures = "\bPICO\b")
 
 ESD_TARGET_FLASH(EVE_FLASH_W25Q16, DisplayName = "W25Q16")
 ESD_TARGET_FLASH(EVE_FLASH_W25Q32, DisplayName = "W25Q32")
@@ -174,8 +179,8 @@ ESD_TARGET_TOUCH(EVE_TOUCH_FOCAL, DisplayName = "FocalTech")
 ESD_TARGET_TOUCH(EVE_TOUCH_GOODIX, DisplayName = "Goodix")
 ESD_TARGET_TOUCH(EVE_TOUCH_RESISTIVE, DisplayName = "Resistive")
 ESD_TARGET_TOUCH(EVE_TOUCH_DISABLED, DisplayName = "Disabled")
-
-/*
+/// @endcond
+/** @attention
 
 The following values are set based on the input definitions.
 Do not set these values manually; instead, use the specific user definitions.
@@ -329,8 +334,7 @@ Validate the configured options.
     || defined(MM900EV_LITE) || defined(MM930MINI)                 \
     || defined(MM930LITE) || defined(MM932LC)                      \
     || defined(EVE_PLATFORM_FT4222) || defined(EVE_PLATFORM_MPSSE) \
-    || defined(EVE_PLATFORM_RP2040)                                \
-    || defined(MM2040EV)
+    || defined(EVE_PLATFORM_RP2040) || defined(EVE_PLATFORM_MM2040EV)
 #define EVE_PLATFORM_AVAILABLE
 #endif
 
@@ -355,7 +359,7 @@ Validate the configured options.
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
-/*
+/** @details
 
 The selected graphics module below must set one of the following options.
 (Users must select the graphics module definition, *not* one of these enable options.)
@@ -799,7 +803,6 @@ It may also set platform, display, and flash values if none are configured.
 
 #define BT817_ENABLE
 #define ENABLE_SPI_QUAD
-#define EVE_USE_INTERNAL_OSC
 
 #ifndef EVE_DISPLAY_AVAILABLE
 #define EVE_DISPLAY_AVAILABLE
@@ -838,7 +841,9 @@ It may also set platform, display, and flash values if none are configured.
 
 #if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
 #define EVE_PLATFORM_AVAILABLE
+#ifndef FT900_PLATFORM
 #define FT900_PLATFORM
+#endif // FT900_PLATFORM
 #define EVE_MODULE_PANL
 #define malloc pvPortMalloc
 #define calloc vPortCalloc
@@ -859,7 +864,9 @@ It may also set platform, display, and flash values if none are configured.
 
 #if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
 #define EVE_PLATFORM_AVAILABLE
+#ifndef FT900_PLATFORM
 #define FT900_PLATFORM
+#endif // FT900_PLATFORM
 #define EVE_MODULE_PANL
 #define malloc pvPortMalloc
 #define calloc vPortCalloc
@@ -880,7 +887,9 @@ It may also set platform, display, and flash values if none are configured.
 
 #if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
 #define EVE_PLATFORM_AVAILABLE
+#ifndef FT900_PLATFORM
 #define FT900_PLATFORM
+#endif // FT900_PLATFORM
 #define EVE_MODULE_PANL
 #define malloc pvPortMalloc
 #define calloc vPortCalloc
@@ -901,7 +910,9 @@ It may also set platform, display, and flash values if none are configured.
 #if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
 #define EVE_PLATFORM_AVAILABLE
 #define PANL_APPLET
+#ifndef FT900_PLATFORM
 #define FT900_PLATFORM
+#endif // FT900_PLATFORM
 #define EVE_MODULE_PANL
 #define malloc pvPortMalloc
 #define calloc vPortCalloc
@@ -1107,32 +1118,32 @@ It may also set platform, display, and flash values if none are configured.
 
 #endif
 
-/// Re-Mapping FT800 Series to FT80X
+// Re-Mapping FT800 Series to FT80X
 #if defined(FT800_ENABLE) || defined(FT801_ENABLE)
 #define FT80X_ENABLE
 #endif
 
-/// Re-Mapping FT810 Series to FT81X
+// Re-Mapping FT810 Series to FT81X
 #if defined(FT810_ENABLE) || defined(FT811_ENABLE) || defined(FT812_ENABLE) || defined(FT813_ENABLE)
 #define FT81X_ENABLE
 #endif
 
-/// Re-Mapping BT880 Series to BT88X
+// Re-Mapping BT880 Series to BT88X
 #if defined(BT880_ENABLE) || defined(BT881_ENABLE) || defined(BT882_ENABLE) || defined(BT883_ENABLE)
 #define BT88X_ENABLE
 #endif
 
-/// Re-Mapping BT815 Series to BT81X
+// Re-Mapping BT815 Series to BT81X
 #if defined(BT815_ENABLE) || defined(BT816_ENABLE)
 #define BT81X_ENABLE
 #endif
 
-/// Re-Mapping BT817 Series to BT81XA
+// Re-Mapping BT817 Series to BT81XA
 #if defined(BT817_ENABLE) || defined(BT818_ENABLE)
 #define BT81XA_ENABLE
 #endif
 
-/// Model numbered macro for versioning convenience.
+// Model numbered macro for versioning convenience.
 #if defined(FT800_ENABLE)
 #define EVE_SUPPORT_CHIPID EVE_FT800
 #define EVE_SUPPORT_GEN EVE1
@@ -1225,12 +1236,16 @@ It may also set platform, display, and flash values if none are configured.
 #define ENABLE_KD2401_HVGA_PORTRAIT
 #endif
 
+#ifndef EVE_DISPLAY_REFRESH
+#define EVE_DISPLAY_REFRESH 0
+#endif
+
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
 /* The following are only used in ESD to configure the most appropriate flash emulation */
-#if defined(ESD_SIMULATION)
+#if defined(ESD_SIMULATION) || defined(EVE_DEFINE_FLASH)
 #if defined(EVE_FLASH_W25Q16)
 #define EVE_FLASH_W25Q
 #define EVE_FLASH_SIZE 2
@@ -1270,6 +1285,8 @@ It may also set platform, display, and flash values if none are configured.
 #define EVE_FLASH_MX25L
 #define EVE_FLASH_SIZE 256
 #endif
+#endif
+#if defined(ESD_SIMULATION)
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 #ifdef _WIN32
 #define EVE_FLASH_FIRMWARE L"BT817/unified.blob"
@@ -1306,10 +1323,14 @@ These may only be set by one of the platform target definitions, and should not 
 #define EVE_HOST EVE_HOST_BT8XXEMU
 
 #elif defined(__FT900__) || defined(MM900EV1A) || defined(MM900EV1B) || defined(MM900EV2A) || defined(MM900EV3A) || defined(MM900EV_LITE)
+#ifndef FT900_PLATFORM
 #define FT900_PLATFORM
+#endif // FT900_PLATFORM
 
 #elif defined(__FT930__) || defined(MM930MINI) || defined(MM930LITE) || defined(MM932LC)
+#ifndef FT93X_PLATFORM
 #define FT93X_PLATFORM
+#endif // FT93X_PLATFORM
 
 #elif defined(EVE_PLATFORM_FT4222)
 #define FT4222_PLATFORM
@@ -1317,7 +1338,7 @@ These may only be set by one of the platform target definitions, and should not 
 #elif defined(EVE_PLATFORM_MPSSE)
 #define MPSSE_PLATFORM
 
-#elif defined(EVE_PLATFORM_RP2040) || defined(MM2040EV)
+#elif defined(EVE_PLATFORM_RP2040) || defined(EVE_PLATFORM_MM2040EV)
 #define RP2040_PLATFORM
 
 #endif
@@ -1423,9 +1444,11 @@ These may only be set by one of the platform target definitions, and should not 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
-/// Feature support.
-/// Avoid hardcoding specific EVE models throughout the libraries.
-/// Allows disabling specific features for debugging purposes.
+/** @name Feature support.
+ * Avoid hardcoding specific EVE models throughout the libraries.
+ * \n Allows disabling specific features for debugging purposes.
+ */
+///@{
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 #define EVE_SUPPORT_HSF
 #endif
@@ -1450,19 +1473,19 @@ These may only be set by one of the platform target definitions, and should not 
 #define EVE_SUPPORT_RESISTIVE
 #endif
 #endif
-
+///@}
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
-/// Other options
-#define EVE_DL_OPTIMIZE 1 /* Keep cache of displaylist values that don't often change but are generally set by every widget to reduce display list size */
-#define EVE_DL_CACHE_SCISSOR 1 /* Keep cache of current scissor */
-#define EVE_DL_END_PRIMITIVE 0 /* Whether the END command is sent */
+// Other options
+#define EVE_DL_OPTIMIZE 1 /**< Keep cache of displaylist values that don't often change but are generally set by every widget to reduce display list size */
+#define EVE_DL_CACHE_SCISSOR 1 /**< Keep cache of current scissor */
+#define EVE_DL_END_PRIMITIVE 0 /**< Whether the END command is sent */
 #define EVE_DL_STATE_STACK_SIZE 4
 #define EVE_DL_STATE_STACK_MASK 3
 
-#define EVE_CMD_HOOKS 0 /* Allow adding a callback hook into EVE_CoCmd calls using CoCmdHook in EVE_HalContext */
+#define EVE_CMD_HOOKS 0 /**< Allow adding a callback hook into EVE_CoCmd calls using CoCmdHook in EVE_HalContext */
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////

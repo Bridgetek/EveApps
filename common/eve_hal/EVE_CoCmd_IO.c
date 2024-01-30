@@ -94,7 +94,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_inflate_progMem(EVE_HalContext *phost, uint32_t ds
 	return EVE_Cmd_waitFlush(phost); // Resource failed to load
 }
 
-/* Get the end memory address of data inflated by CMD_INFLATE and CMD_INFLATE2
+/** @brief Get the end memory address of data inflated by CMD_INFLATE and CMD_INFLATE2
 * At API level 2, the allocation pointer is also advanced by:
 *  - cmd_loadimage
 *  - cmd_playvideo
@@ -202,7 +202,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_flashRead_flush(EVE_HalContext *phost, uint32_t de
 	return EVE_Cmd_waitFlush(phost);
 }
 
-/// Attach flash. Return new FLASH_STATUS
+/**
+ * @brief Attach flash.
+ */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost)
 {
 	uint32_t flashStatus;
@@ -217,7 +219,12 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost)
 	return EVE_Hal_rd32(phost, REG_FLASH_STATUS); // Return current status
 }
 
-/// Enter fast flash state. Return new FLASH_STATUS
+/**
+ * @brief Enter fast flash state.
+ * @param phost Pointer to Hal context
+ * @param result
+ * @return new FLASH_STATUS 
+ */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashFast(EVE_HalContext *phost, uint32_t *result)
 {
 	uint16_t resAddr;

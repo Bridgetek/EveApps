@@ -128,7 +128,7 @@ typedef eve_progmem char prog_char8_t;
 
 typedef struct
 {
-	ft_uint32_t TotalChannelNum; //< Total number channels for libmpsse
+	ft_uint32_t TotalChannelNum; /**< Total number channels for libmpsse */
 } Gpu_HalInit_t;
 
 #define Gpu_Hal_Context_t EVE_HalContext
@@ -151,20 +151,24 @@ typedef struct
 
 typedef struct Fifo_t
 {
-	uint32_t fifo_buff; //fifo buffer address
-	int32_t fifo_len; //fifo length
-	int32_t fifo_wp; //fifo write pointer - maintained by host
-	int32_t fifo_rp; //fifo read point - maintained by device
-	/* FT800 series specific registers */
-	uint32_t HW_Read_Reg; //hardware fifo read register
-	uint32_t HW_Write_Reg; //hardware fifo write register
+	uint32_t fifo_buff; /**< fifo buffer address */
+	int32_t fifo_len; /**< fifo length */
+	int32_t fifo_wp; /**< fifo write pointer - maintained by host */
+	int32_t fifo_rp; /**< fifo read point - maintained by device */
+	/** @name FT800 series specific registers */
+	///@{
+	uint32_t HW_Read_Reg; /**< hardware fifo read register */
+	uint32_t HW_Write_Reg; /**< hardware fifo write register */
+	///@}
 } Fifo_t;
 
-/* Type of file to load from SDCard or Windows file system */
-#define LOADIMAGE 1 //loadimage command takes destination address and options before the actual bitmap data
-#define INFLATE 2 //inflate command takes destination address before the actual bitmap
-#define LOAD 3 //load bitmaps directly
+/** @name Type of file to load from SDCard or Windows file system */
+///@{
+#define LOADIMAGE 1 /**< loadimage command takes destination address and options before the actual bitmap data */
+#define INFLATE 2 /**< inflate command takes destination address before the actual bitmap */
+#define LOAD 3 /**< load bitmaps directly */
 #define INFLATE2 4
+///@}
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -184,6 +188,8 @@ static inline eve_deprecated("Use `EVE_Hal_open`") bool Gpu_Hal_Open(EVE_HalCont
 	return EVE_Hal_open(phost, &parameters);
 }
 
+/** @name The basic APIs Level 1 */
+///@{
 #define Gpu_Hal_Close EVE_Hal_close
 #define Gpu_Hal_DeInit EVE_Hal_release
 
@@ -205,6 +211,7 @@ static inline eve_deprecated("Use `EVE_Hal_open`") bool Gpu_Hal_Open(EVE_HalCont
 #define Gpu_Hal_WrMem EVE_Hal_wrMem
 #define Gpu_Hal_WrMem_ProgMem EVE_Hal_wrProgMem
 #define Gpu_Hal_WrMemFromFlash EVE_Hal_wrProgMem
+///@}
 
 static inline eve_deprecated("Use `EVE_Hal_rdMem` (note: buffer and addr are swapped)") ft_void_t Gpu_Hal_RdMem(EVE_HalContext *phost, ft_uint32_t addr, ft_uint8_t *buffer, ft_uint32_t length)
 {
@@ -213,22 +220,30 @@ static inline eve_deprecated("Use `EVE_Hal_rdMem` (note: buffer and addr are swa
 
 /*******************************************************************************/
 /*******************************************************************************/
-/* APIs for coprocessor Fifo read/write and space management */
+/** @name APIs for coprocessor Fifo read/write and space management */
+///@{
 #define Gpu_Hal_WrCmd32 EVE_Cmd_wr32
+///@}
 
-/// Write a buffer to the command buffer. Waits if there is not enough space in the command buffer. Returns FALSE in case a coprocessor fault occurred
+/** @name Write a buffer to the command buffer. Waits if there is not enough space in the command buffer. Returns FALSE in case a coprocessor fault occurred */
+///@{
 #define Gpu_Hal_WrCmdBuf EVE_Cmd_wrMem
 #define Gpu_Hal_WrCmdBuf_nowait EVE_Cmd_wrMem
 
 #define Gpu_Hal_WrCmdBuf_ProgMem EVE_Cmd_wrProgMem
 #define Gpu_Hal_WrCmdBufFromFlash EVE_Cmd_wrProgMem
+///@}
 
-/// Wait for the command buffer to fully empty. Returns FALSE in case a coprocessor fault occurred
+/**@name Wait for the command buffer to fully empty. Returns FALSE in case a coprocessor fault occurred */
+///@{
 #define Gpu_Hal_WaitCmdFifoEmpty EVE_Cmd_waitFlush
 #define Gpu_Hal_WaitCmdfifo_empty EVE_Cmd_waitFlush
+///@}
 
-/// Wait for the command buffer to have at least the requested amount of free space
+/** @name Wait for the command buffer to have at least the requested amount of free space */
+///@{
 #define Gpu_Hal_WaitCmdFreespace EVE_Cmd_waitSpace
+///@}
 
 /*
 // Use the provided wait functions!
@@ -243,12 +258,12 @@ static inline ft_void_t Gpu_Hal_RdCmdRpWp(EVE_HalContext *phost, ft_uint16_t *rp
 /*******************************************************************************/
 
 #ifdef _MSC_VER
-#pragma deprecated(Gpu_CoCmd_SendCmd) /* Use EVE_Cmd_wr32 */
-#pragma deprecated(Gpu_Copro_SendCmd) /* Use EVE_Cmd_wr32 */
-#pragma deprecated(Gpu_CoCmd_StartFrame) /* Remove */
-#pragma deprecated(Gpu_CoCmd_EndFrame) /* Remove */
-#pragma deprecated(Gpu_CoCmd_StartFunc) /* Use EVE_Cmd_startFunc */
-#pragma deprecated(Gpu_CoCmd_EndFunc) /* Use EVE_Cmd_endFunc */
+#pragma deprecated(Gpu_CoCmd_SendCmd) /**< Use EVE_Cmd_wr32 */
+#pragma deprecated(Gpu_Copro_SendCmd) /**< Use EVE_Cmd_wr32 */
+#pragma deprecated(Gpu_CoCmd_StartFrame) /**< Remove */
+#pragma deprecated(Gpu_CoCmd_EndFrame) /**< Remove */
+#pragma deprecated(Gpu_CoCmd_StartFunc) /**< Use EVE_Cmd_startFunc */
+#pragma deprecated(Gpu_CoCmd_EndFunc) /**< Use EVE_Cmd_endFunc */
 #endif
 
 #define Gpu_CoCmd_SendCmd EVE_Cmd_wr32
@@ -276,7 +291,8 @@ inline static eve_deprecated("Use `EVE_Cmd_startFunc`, `EVE_Cmd_wr32`, and `EVE_
 
 /*******************************************************************************/
 /*******************************************************************************/
-/* APIs for Host Commands */
+/** @name APIs for Host Commands */
+///@{
 #define GPU_INTERNAL_OSC EVE_INTERNAL_OSC
 #define GPU_EXTERNAL_OSC EVE_EXTERNAL_OSC
 #define GPU_PLL_SOURCE_T EVE_PLL_SOURCE_T
@@ -353,6 +369,7 @@ inline static eve_deprecated("Use `EVE_Cmd_startFunc`, `EVE_Cmd_wr32`, and `EVE_
 #define ft_delay EVE_sleep
 
 #define Gpu_Hal_WaitLogo_Finish EVE_Cmd_waitLogo
+///@}
 
 inline static ft_int16_t Gpu_Hal_TransferString(EVE_HalContext *phost, const ft_char8_t *str)
 {
@@ -363,6 +380,8 @@ inline static ft_int16_t Gpu_Hal_TransferString_S(EVE_HalContext *phost, const f
 {
 	return EVE_Hal_transferString(phost, str, 0, length, 0) - 1;
 }
+/** @name APIs for Host Commands */
+///@{
 #define Gpu_Hal_Sleep EVE_sleep
 
 #define Gpu_HostCommand EVE_Hal_hostCommand
@@ -385,22 +404,23 @@ inline static ft_int16_t Gpu_Hal_TransferString_S(EVE_HalContext *phost, const f
 #define Gpu_81X_ResetActive EVE_Host_resetActive
 #define Gpu_81X_ResetRemoval EVE_Host_resetRemoval
 #endif
-
+///@}
 #define Hal_LoadSDCard() EVE_Util_loadSdCard(NULL)
 
 #define Gpu_ClearScreen EVE_Util_clearScreen
 
 typedef enum
 {
-	FLASH_CMD_SUCCESS = 0,
-	FLASH_CMD_ALIGNED_ERR
+	FLASH_CMD_SUCCESS = 0, /**< 0 */
+	FLASH_CMD_ALIGNED_ERR /**< 1 */
 } Flash_Cmd_Status_t;
 
 #define FLASH_WRITE_ALIGN_BYTE (256)
 #define FLASH_UPDATE_ALIGN_BYTE (4096)
 #define FLASH_READ_ALIGN_BYTE (64)
 
-/* Flash section */
+/** @name Flash section */
+///@{
 void Gpu_CoCmd_FlashHelper_Init(Gpu_Hal_Context_t *phost);
 uint32_t Gpu_CoCmd_FlashHelper_SwitchState(Gpu_Hal_Context_t *phost, uint8_t nextState);
 uint32_t Gpu_CoCmd_FlashHelper_SwitchFullMode(Gpu_Hal_Context_t *phost);
@@ -410,15 +430,18 @@ Flash_Cmd_Status_t Gpu_CoCmd_FlashHelper_Read(Gpu_Hal_Context_t *phost, uint32_t
 void Gpu_CoCmd_FlashHelper_Erase(Gpu_Hal_Context_t *phost);
 void Gpu_CoCmd_FlashHelper_ClearCache(Gpu_Hal_Context_t *phost);
 uint8_t Gpu_CoCmd_FlashHelper_GetState(Gpu_Hal_Context_t *phost);
+///@}
 
-/* Definitions to ensure these don't get redefined */
+/**@name Definitions to ensure these don't get redefined */
+///@{
 #define App_WrCoCmd_Buffer(phost, cmd) EVE_Cmd_wr32((phost), (cmd))
 #define App_WrCoStr_Buffer(phost, s) EVE_Cmd_wrString((phost), (s), EVE_CMD_STRING_MAX)
 #define App_Flush_Co_Buffer(phost) EVE_Cmd_waitFlush((phost))
 #define App_Flush_Co_Buffer_nowait(phost) EVE_Cmd_waitFlush((phost))
 #define App_Set_CmdBuffer_Index(idx) eve_noop()
+///@}
 
-#define POLAR_UTIL /* Enable sin()/cos() calculator utilities */
+#define POLAR_UTIL /**< Enable sin()/cos() calculator utilities */
 
 #ifdef RGB //Undefine RGB from wingdi.h in Visual Studio
 #undef RGB
@@ -448,7 +471,7 @@ uint8_t Gpu_CoCmd_FlashHelper_GetState(Gpu_Hal_Context_t *phost);
 #endif
 
 #if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
-/* strcpy_P and strlen_P only support Arduino */
+/** strcpy_P and strlen_P only support Arduino */
 #define strcpy_P strcpy
 #define strlen_P strlen
 #endif
@@ -478,8 +501,8 @@ static int32_t Gpu_Hal_Dec2Ascii(char8_t *pSrc, int32_t value)
 	char8_t *pdst;
 	char8_t charval;
 	int32_t CurrVal = value;
-    int32_t tmpval;
-    int32_t i;
+	int32_t tmpval;
+	int32_t i;
 	char8_t tmparray[16];
 	char8_t idx = 0;
 

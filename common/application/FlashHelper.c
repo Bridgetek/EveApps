@@ -377,6 +377,7 @@ uint32_t FlashHelper_SwitchFullMode(EVE_HalContext* phost)
 /**
  * @brief Adjust for non-sqare pixel panel
  *
+ * @param phost Pointer to Hal context
  * @param physical_W Panel width in inches
  * @param physical_H Panel height in inches
  * @return ft_void_t

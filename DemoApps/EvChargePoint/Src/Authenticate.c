@@ -31,10 +31,11 @@
 
 #include "Authenticate.h"
 #include "Def.h"
-#include "App.h"
+#include "DemoEvChargePoint.h"
+#include "common.h"
 
 // Global variables
-extern Gpu_Hal_Context_t* g_pHalContext;
+extern Gpu_Hal_Context_t* s_pHalContext;
 extern E_LANG g_language;
 
 typedef enum {
@@ -81,22 +82,22 @@ void ath_init() {
 }
 
 void ath_drawing() {
-    Gpu_CoCmd_SetFont2(g_pHalContext, HF_TITLE, FontTitle.xf_addr - FontBegin.xf_addr, 0);
-    Gpu_CoCmd_SetFont2(g_pHalContext, HF_BOTTOM, FontBottom.xf_addr - FontBegin.xf_addr, 0);
+    Gpu_CoCmd_SetFont2(s_pHalContext, HF_TITLE, FontTitle.xf_addr - FontBegin.xf_addr, 0);
+    Gpu_CoCmd_SetFont2(s_pHalContext, HF_BOTTOM, FontBottom.xf_addr - FontBegin.xf_addr, 0);
 
     if (page_state == TAP_POINT) {
         // Draw header text
         
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(0, 0, 0));
-        Gpu_CoCmd_Text(g_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_tapYourCard);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+        Gpu_CoCmd_Text(s_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_tapYourCard);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
         
         // Draw Tap Point
 
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(alpha));
-        draw_image_with_tag(g_pHalContext, ATH_TAP_POINT, ADDR(ATH_TAP_POINT, ATH_BEGIN),
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(alpha));
+        draw_image_with_tag(s_pHalContext, ATH_TAP_POINT, ADDR(ATH_TAP_POINT, ATH_BEGIN),
                    H_CENTER(ATH_TAP_POINT.width), V_CENTER(ATH_TAP_POINT.height), ATH_TAG_TAP_POINT);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(255));
         alpha += alpha_step;
         if (alpha >= 255) {
             alpha = 255;
@@ -110,12 +111,12 @@ void ath_drawing() {
     } else if (page_state == WHITE_CARD) {
 
         // Draw header text
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(0, 0, 0));
-        Gpu_CoCmd_Text(g_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_checkingTheCard);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+        Gpu_CoCmd_Text(s_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_checkingTheCard);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
 
         // Draw White Card
-        draw_image(g_pHalContext, ATH_CARD, ADDR(ATH_CARD, ATH_BEGIN), card_x, V_CENTER(ATH_CARD.height));
+        draw_image(s_pHalContext, ATH_CARD, ADDR(ATH_CARD, ATH_BEGIN), card_x, V_CENTER(ATH_CARD.height));
         card_x += card_move;
         if (card_x >= RIGHT_STONE || card_x <= LEFT_STONE) {
             card_move = -card_move;
@@ -129,12 +130,12 @@ void ath_drawing() {
         pay_ani = PAY_NUM;
         restart_screen_saver();
     } else {
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_BLUE);
-        Gpu_CoCmd_Text(g_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_authenticated);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_BLUE);
+        Gpu_CoCmd_Text(s_pHalContext, X_HEADER, Y_HEADER, HF_TITLE, 0, s_authenticated);
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
 
         // Draw White Card        
-        draw_image(g_pHalContext, ATH_CARD, ADDR(ATH_CARD, ATH_BEGIN), card_x, V_CENTER(ATH_CARD.height));
+        draw_image(s_pHalContext, ATH_CARD, ADDR(ATH_CARD, ATH_BEGIN), card_x, V_CENTER(ATH_CARD.height));
         
         count_frame++;
     }
@@ -144,9 +145,9 @@ void ath_drawing() {
     if (g_language == LANG_DE)
         hf_paywith = 30;
 
-    App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(0, 0, 0));
-    Gpu_CoCmd_Text(g_pHalContext, ATH_PAYWITH_X, ATH_PAYWITH_Y, hf_paywith, 0, s_payWith);
-    App_WrCoCmd_Buffer(g_pHalContext, COLOR_RGB(255, 255, 255));
+    App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+    Gpu_CoCmd_Text(s_pHalContext, ATH_PAYWITH_X, ATH_PAYWITH_Y, hf_paywith, 0, s_payWith);
+    App_WrCoCmd_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
 
     // Draw Pay Items
     int pay_alpha = 255;
@@ -156,16 +157,16 @@ void ath_drawing() {
         } else {
             pay_alpha = 255;
         }
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(pay_alpha));
-        draw_image(g_pHalContext, ATH_PAY[i], ADDR(ATH_PAY[i], ATH_BEGIN),
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(pay_alpha));
+        draw_image(s_pHalContext, ATH_PAY[i], ADDR(ATH_PAY[i], ATH_BEGIN),
                    ATH_PAY_ROOM * i + (ATH_PAY_ROOM - ATH_PAY[i].width) * 0.5,
                    ATH_PAY_VERTICAL_CENTER - ATH_PAY[i].height * 0.5);
-        App_WrCoCmd_Buffer(g_pHalContext, COLOR_A(255));
+        App_WrCoCmd_Buffer(s_pHalContext, COLOR_A(255));
     }
 }
 
 void ath_process_event() {
-    uint8_t tag = Gesture_Get(g_pHalContext)->tagReleased;
+    uint8_t tag = Gesture_Get(s_pHalContext)->tagReleased;
 
     if (tag == ATH_TAG_TAP_POINT) {
         page_state = WHITE_CARD;

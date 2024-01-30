@@ -59,7 +59,6 @@
     <ClCompile Include="..\..\..\..\common\application\Common.c" />
     <ClCompile Include="..\..\..\..\common\application\Logo.c" />
     <ClCompile Include="..\..\..\..\common\application\Maths.c" />
-    <ClCompile Include="..\..\Src\App.c" />
     <ClCompile Include="..\..\Src\DemoUnicode.c" />
   </ItemGroup>
   <ItemGroup>
@@ -108,7 +107,6 @@
     <ClInclude Include="..\..\..\..\common\application\Gesture.h" />
     <ClInclude Include="..\..\..\..\common\application\Logo.h" />
     <ClInclude Include="..\..\..\..\common\application\Maths.h" />
-    <ClInclude Include="..\..\Hdr\App.h" />
     <ClInclude Include="..\..\Hdr\DemoUnicode.h" />
     <ClInclude Include="..\..\..\..\common\application\fatfs\source\diskio.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

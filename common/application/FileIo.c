@@ -515,7 +515,7 @@ char* FileIO_Read_Line() { return 0; };
 /**
  * @brief Read a whole file to a buffer
  * 
- * @param txt File to read
+ * @param file File to read
  * @param buff Result buffer
  * @param offset Offset where to read
  * @param size Number of byte to read
@@ -561,7 +561,7 @@ int FileIO_File_To_Buffer(const char *file, char *buff, long offset, int size, i
  * @param txt File to write
  * @param buffer Buffer to write
  * @param buffersize Buffer size
- * @param mode File open mode: FILEIO_E_FOPEN_READ | FILEIO_E_FOPEN_WRITE | FILEIO_E_FOPEN_APPEND
+ * @note File open mode: FILEIO_E_FOPEN_READ | FILEIO_E_FOPEN_WRITE | FILEIO_E_FOPEN_APPEND
  */
 void FileIO_Buffer_To_File(const char *txt, const char *buffer, unsigned long buffersize) {
 	if (-1 == FileIO_File_Open(txt, FILEIO_E_FOPEN_WRITE)) {

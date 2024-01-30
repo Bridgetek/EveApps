@@ -37,12 +37,12 @@
 
 /*
 Commands are organized as follows:
-- System commands
-- I/O commands
-- Render state commands
-- Widget rendering commands
-- Complex widget commands
-*/
+ - System commands
+ - I/O commands
+ - Render state commands
+ - Widget rendering commands
+ - Complex widget commands
+ */
 
 #ifndef ESD_FUNCTION
 #define ESD_FUNCTION(name, ...)
@@ -54,16 +54,18 @@ Commands are organized as follows:
 #define ESD_PARAMETER(name, ...)
 #endif
 
-/* Change to `eve_pragma_error` to strictly disable use of unsupported commands */
+/** Change to `eve_pragma_error` to strictly disable use of unsupported commands */
 #define EVE_COCMD_UNSUPPORTED(cmd, res) eve_pragma_warning("Coprocessor command " #cmd " is not supported on this platform")(res)
 
 /**********************************************************************
 ***********************************************************************
 **********************************************************************/
 
-/* Reusable templates for basic commands to save on compiled code space */
-/* d: uint32_t, w: uint16_t */
-/* z: nul-terminated string, z_s: nul-terminated string with known length */
+/** @name Reusable templates for basic commands to save on compiled code space
+ * d: uint32_t, w: uint16_t
+ * z: nul-terminated string, z_s: nul-terminated string with known length 
+ */
+///@{
 EVE_HAL_EXPORT void EVE_CoCmd_d(EVE_HalContext *phost, uint32_t cmd);
 EVE_HAL_EXPORT void EVE_CoCmd_dd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0);
 EVE_HAL_EXPORT void EVE_CoCmd_ddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1);
@@ -105,8 +107,13 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz(EVE_HalContext *phost, uint32_t cmd,
 EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz_s(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint16_t w4, uint16_t w5, const char *s, uint32_t len);
-
-/** Write a display list instruction. Example: EVE_CoCmd_dl(DISPLAY()); */
+///@}
+/** @brief Write a display list instruction.
+ * \n Example: EVE_CoCmd_dl(DISPLAY());
+ * 
+ * @param phost Pointer to Hal context
+ * @param dl display list instruction
+ */
 static inline void EVE_CoCmd_dl(EVE_HalContext *phost, uint32_t dl)
 {
 	EVE_CoCmd_d(phost, dl);
@@ -147,7 +154,7 @@ EVE_HAL_EXPORT void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost);
 /**
 * @brief Send CMD_DLSTART
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_dlStart(EVE_HalContext *phost)
 {
@@ -213,7 +220,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 /**
 * @brief Send CMD_SYNC
 * 
-* @param phost
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_sync(EVE_HalContext *phost)
 {
@@ -243,7 +250,7 @@ static inline void EVE_CoCmd_clearCache(EVE_HalContext *phost)
 /**
 * @brief Send CMD_NOP
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_nop(EVE_HalContext *phost)
 {
@@ -393,6 +400,21 @@ static inline void EVE_CoCmd_memWrite(EVE_HalContext *phost, uint32_t ptr, uint3
 	EVE_CoCmd_ddd(phost, CMD_MEMWRITE, ptr, num);
 }
 
+/**
+* @brief Send CMD_MEMWRITE, followed by a single 32-bit value. 
+* 
+* Convenience function to write one 32-bit value through the coprocessor.
+* Useful in combination with EVE_Cmd_waitRead32 to add synchronization points into the command buffer.
+* 
+* @param phost Pointer to Hal context
+* @param ptr Destination on RAM_G
+* @param value Value to write
+*/
+static inline void EVE_CoCmd_memWrite32(EVE_HalContext *phost, uint32_t ptr, uint32_t value)
+{
+	EVE_CoCmd_dddd(phost, CMD_MEMWRITE, ptr, 4, value);
+}
+
 ESD_FUNCTION(EVE_CoCmd_memSet, Type = void, Category = _GroupHidden, Inline, Include = "Esd_Core.h")
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(ptr, Type = uint32_t, Default = 0) // MEMORY_ADDRESS
@@ -533,6 +555,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_loadImage_progMem(EVE_HalContext *phost, uint32_t 
 * @param ptr Source address of bitmap
 * @param w Width of bitmap, in pixels
 * @param h Height of bitmap, in pixels
+* @return bool Returns false on coprocessor fault
 */
 EVE_HAL_EXPORT bool EVE_CoCmd_getProps(EVE_HalContext *phost, uint32_t *ptr, uint32_t *w, uint32_t *h);
 
@@ -571,7 +594,7 @@ static inline void EVE_CoCmd_mediaFifo(EVE_HalContext *phost, uint32_t ptr, uint
 /**
 * @brief Send CMD_VIDEOSTART
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_videoStart(EVE_HalContext *phost)
 {
@@ -703,13 +726,13 @@ static inline void EVE_CoCmd_flashDetach(EVE_HalContext *phost)
 */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost);
 
-/*
+/**
 Enter fast flash state. Returns new FLASH_STATUS. Optional parameter `result` will contain any error code, 0 on success
-0xE001 flash is not attached
-0xE002 no header detected in sector 0 - is flash blank?
-0xE003 sector 0 data failed integrity check
-0xE004 device/blob mismatch - was correct blob loaded?
-0xE005 failed full-speed test - check board wiring
+\n 0xE001 flash is not attached
+\n 0xE002 no header detected in sector 0 - is flash blank?
+\n 0xE003 sector 0 data failed integrity check
+\n 0xE004 device/blob mismatch - was correct blob loaded?
+\n 0xE005 failed full-speed test - check board wiring
 */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashFast(EVE_HalContext *phost, uint32_t *result);
 
@@ -777,7 +800,7 @@ static inline void EVE_CoCmd_appendF(EVE_HalContext *phost, uint32_t ptr, uint32
 /**
 * @brief Send CMD_VIDEOSTARTF
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_videoStartF(EVE_HalContext *phost)
 {
@@ -1044,7 +1067,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 /**
 * @brief Send CMD_SETMATRIX
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_setMatrix(EVE_HalContext *phost)
 {
@@ -1306,6 +1329,7 @@ ESD_PARAMETER(s, Type = const char *, Default = "Text")
 * @param bottom 
 * @param baseLine 
 * @param capsHeight 
+* @param xOffset
 * @param s Text string, UTF-8 encoding
 */
 EVE_HAL_EXPORT void EVE_CoCmd_text_ex(EVE_HalContext *phost, int16_t x, int16_t y, int16_t font, uint16_t options, bool bottom, int16_t baseLine, int16_t capsHeight, int16_t xOffset, const char *s);
@@ -1572,10 +1596,10 @@ EVE_HAL_EXPORT void EVE_CoCmd_number(EVE_HalContext *phost, int16_t x, int16_t y
 * @param phost Pointer to Hal context
 * @param x0 x-coordinate of point 0, in pixels
 * @param y0 y-coordinate of point 0, in pixels
-* @param rgb0 Color of point 0, as a 24-bit RGB number
+* @param argb0 Color of point 0, as a 24-bit RGB number
 * @param x1 x-coordinate of point 1, in pixels
 * @param y1 y-coordinate of point 1, in pixels
-* @param rgb1 Color of point 1
+* @param argb1 Color of point 1
 */
 static inline void EVE_CoCmd_gradientA(EVE_HalContext *phost, int16_t x0, int16_t y0, uint32_t argb0, int16_t x1, int16_t y1, uint32_t argb1)
 {
@@ -1600,7 +1624,7 @@ static inline void EVE_CoCmd_gradientA(EVE_HalContext *phost, int16_t x0, int16_
 /**
 * @brief Send CMD_CALIBRATE
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 * @return uint32_t 
 */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_calibrate(EVE_HalContext *phost);
@@ -1626,7 +1650,7 @@ static inline void EVE_CoCmd_spinner(EVE_HalContext *phost, int16_t x, int16_t y
 /**
 * @brief Send CMD_STOP
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_stop(EVE_HalContext *phost)
 {
@@ -1651,7 +1675,7 @@ static inline void EVE_CoCmd_track(EVE_HalContext *phost, int16_t x, int16_t y, 
 /**
 * @brief Send CMD_SCREENSAVER
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_screenSaver(EVE_HalContext *phost)
 {
@@ -1879,7 +1903,7 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_calibrateSub(EVE_HalContext *phost, uint16_t x
 /**
 * @brief Send CMD_TESTCARD
 * 
-* @param phost 
+* @param phost Pointer to Hal context
 */
 static inline void EVE_CoCmd_testCard(EVE_HalContext *phost)
 {

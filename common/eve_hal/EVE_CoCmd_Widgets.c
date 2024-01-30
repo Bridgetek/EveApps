@@ -34,7 +34,11 @@
 #include <stdarg.h>
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT815)
-/* Count number of arguments in Cmd_Text for string format*/
+/** @brief Count number of arguments in Cmd_Text for string format
+ * 
+ * @param str
+ * @return count
+ */
 static uint8_t countArgs(const char *str)
 {
 	uint8_t count = 0;

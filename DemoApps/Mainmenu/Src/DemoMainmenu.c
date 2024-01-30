@@ -28,18 +28,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoMainmenu.h"
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoMainmenu();
 
-#if defined(FT9XX_PLATFORM)
-#include "ff.h"
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
 #endif
 
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Main menu demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX, IDM2040 \n\n This demo has 3 design: Loopback, Win8 and Android"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoMainmenu();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define SQ(v) (v*v)
 #define NOTOUCH		-32768
 
@@ -144,7 +180,7 @@ DWORD get_fattime(void) {
 
 #define MAX_MENUS 12
 #define THUMBNAIL_ADDRESS (125*1024L)
-#define MENU_POINTSIZE  5 // 16bit prec
+#define MENU_POINTSIZE 5 /**< 16bit prec */
 
 uint16_t displayImageWidth, displayImageHeight;
 
@@ -1306,7 +1342,9 @@ void Backgroundanimation_6()
 }
 #endif
 
-/*API to show the icon with background animation*/
+/** 
+ * @brief API to show the icon with background animation
+ */
 void show_icon(uint8_t iconno) {
 	Play_Sound(s_pHalContext, 0x51, 100, 108);
 	do {
@@ -1991,8 +2029,7 @@ void menu_win8() {
 	}
 }
 
-void DemoMainmenu(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoMainmenu() {
 	Load_Thumbnails();
 #if defined(ANDROID_METHOD)
 	android_menu();

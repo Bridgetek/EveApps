@@ -74,6 +74,16 @@ extern "C" {
 	{              \
 	} while (false)
 
+#ifdef EVE_DEBUG_BREAK_SIGABRT
+/* Used by LittleFS tests */
+#include <signal.h>
+#define eve_debug_break() \
+	do                    \
+	{                     \
+		fflush(NULL);     \
+		raise(SIGABRT);   \
+	} while (false)
+#else
 #if defined(_DEBUG)
 #if defined(_MSC_VER)
 #define eve_debug_break() __debugbreak()
@@ -84,6 +94,7 @@ extern "C" {
 #endif
 #else
 #define eve_debug_break() eve_noop()
+#endif
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -104,7 +115,7 @@ extern "C" {
 #define eve_sprintf(str, fmt, ...) sprintf(str, fmt, ##__VA_ARGS__)
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #define eve_assume(cond) __assume(cond)
 #else
 #define eve_assume(cond) eve_noop()
@@ -179,7 +190,7 @@ extern "C" {
 
 /* Custom scope keyword (to avoid tripping the auto-formatter on scopes) */
 #ifndef eve_scope
-#define eve_scope if (true)
+#define eve_scope() if (true)
 #endif
 
 #endif /* #ifndef EVE_PLATFORM__H */

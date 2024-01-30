@@ -40,6 +40,10 @@
 ** INIT **
 *********/
 
+EVE_HalPlatform g_HalPlatform;
+/** @name INIT */
+///@{
+
 /**
  * @brief Eve_Hal framework initialization
  * 
@@ -76,6 +80,12 @@ EVE_HAL_EXPORT void EVE_Hal_defaults(EVE_HalParameters *parameters)
 	EVE_Hal_defaultsEx(parameters, -1);
 }
 
+/**
+ * @brief Setup default parameters for Eve_Hal framework
+ *
+ * @param parameters Pointer to EVE_HalParameters
+ * @param deviceIdx
+ */
 EVE_HAL_EXPORT void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t deviceIdx)
 {
 	memset(parameters, 0, sizeof(EVE_HalParameters));
@@ -128,9 +138,14 @@ EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost)
 	EVE_HalImpl_idle(phost);
 }
 
+///@}
+
 /*********************
 ** TRANSFER HELPERS **
 *********************/
+
+/** @name TRANSFER HELPERS */
+///@{
 
 /**
  * @brief Read 8 bits from Coprocessor's memory
@@ -257,7 +272,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const ui
  * 
  * @param phost Pointer to Hal context
  * @param addr Address to be write
- * @param uint8_t Data to be write
+ * @param buffer Data to be write
  * @param size Size of buffer
  */
 EVE_HAL_EXPORT void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_progmem_const uint8_t *buffer, uint32_t size)
@@ -283,10 +298,14 @@ EVE_HAL_EXPORT void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const
 	EVE_Hal_transferString(phost, str, index, size, padMask);
 	EVE_Hal_endTransfer(phost);
 }
+///@}
 
 /************
 ** UTILITY **
 ************/
+
+/** @name UTILITY */
+///@{
 
 /**
  * @brief Trim the internal clock till the measured frequency is within the acceptable range
@@ -310,10 +329,14 @@ EVE_HAL_EXPORT int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t low
 
 	return f;
 }
+///@}
 
 /*********
 ** HOST **
 *********/
+
+/** @name HOST */
+///@{
 
 /**
  * @brief Select clock source for Coprocessor
@@ -494,5 +517,6 @@ void EVE_Hal_displayMessage(EVE_HalContext *phost, const char *str, uint16_t siz
 	EVE_Hal_wr32(phost, RAM_DL + ((dl++) << 2), DISPLAY());
 	EVE_Hal_wr8(phost, REG_DLSWAP, DLSWAP_FRAME);
 }
+///@}
 
 /* end of file */

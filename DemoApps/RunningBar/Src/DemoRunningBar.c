@@ -28,15 +28,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoRunningBar.h"
 // Require eve >= FT810 to support PALETTED8
 #if EVE_CHIPID >= EVE_FT810
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoRunningBar();
+
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Wave signals demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoRunningBar();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 
 #define INDICATOR_FIELD_HANDLE    1
 #define GLOWIMAGE_HANDLE          2
@@ -149,8 +190,7 @@ void setupBitmapHandles() {
 	EVE_Cmd_waitFlush(s_pHalContext);
 }
 
-void DemoRunningBar(EVE_HalContext* pHalContext) {	
-	s_pHalContext = pHalContext;
+void DemoRunningBar() {	
 	// init bitmaps
 	setupBitmapHandles();
 
@@ -160,4 +200,7 @@ void DemoRunningBar(EVE_HalContext* pHalContext) {
 		Display_End(s_pHalContext);
 	}
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

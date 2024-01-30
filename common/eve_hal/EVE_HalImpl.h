@@ -43,28 +43,35 @@ extern EVE_HalPlatform g_HalPlatform;
 ** INIT **
 *********/
 
-/* Initialize HAL platform */
+/** @name INIT */
+///@{
+
+/** Initialize HAL platform */
 void EVE_HalImpl_initialize();
 
-/* Release HAL platform */
+/** Release HAL platform */
 void EVE_HalImpl_release();
 
-/* Get the default configuration parameters.
+/** Get the default configuration parameters.
 Use `deviceIdx` to choose the connected device. */
 bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx);
 
-/* Opens a new HAL context using the specified parameters */
+/** Opens a new HAL context using the specified parameters */
 bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters);
 
-/* Close a HAL context */
+/** Close a HAL context */
 void EVE_HalImpl_close(EVE_HalContext *phost);
 
-/* Idle. Call regularly to update frequently changing internal state */
+/** Idle. Call regularly to update frequently changing internal state */
 void EVE_HalImpl_idle(EVE_HalContext *phost);
+///@}
 
 /*************
 ** TRANSFER **
 *************/
+
+/** @name TRANSFER */
+///@{
 
 EVE_HAL_EXPORT void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t addr);
 EVE_HAL_EXPORT void EVE_Hal_endTransfer(EVE_HalContext *phost);
@@ -74,10 +81,14 @@ EVE_HAL_EXPORT uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value
 EVE_HAL_EXPORT uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value);
 
 EVE_HAL_EXPORT void EVE_Hal_flush(EVE_HalContext *phost);
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 
 void EVE_Mcu_initialize();
 void EVE_Mcu_release();
@@ -88,6 +99,7 @@ EVE_HAL_EXPORT uint32_t EVE_millis();
 EVE_HAL_EXPORT uint64_t EVE_millis64();
 
 bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost);
+///@}
 
 #endif /* #ifndef EVE_HAL_IMPL__H */
 

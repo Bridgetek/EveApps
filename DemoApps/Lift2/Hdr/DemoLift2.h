@@ -1,13 +1,27 @@
-#ifndef SET00_H_
-#define SET00_H_
+#ifndef DEMOLIFT2_H_
+#define DEMOLIFT2_H_
 
-#if defined(EVE_SUPPORT_UNICODE)
+#include "platform.h"
+
+/** Path to UI assets Folder */
+#if defined(_WIN32) 
+/** location on PC */
+#define TEST_DIR "..\\..\\..\\Test\\"
+
+#elif defined(EMBEDDED_PLATFORM) 
+/** location on sdcard */
+#define TEST_DIR "/EveApps/DemoLift2/Test"
+#else
+#define TEST_DIR "/"
+#endif
+
+#define GET_CALIBRATION                     1
 
 #define AVI_HEADER_SIZE (0xE4)
 //#define AVI_HEADER_SIZE (0x26FE)
 //#define VIDEO_BUFFER_SIZE (25*1024)
 
-#define DEMO_ASSETS_RAM_OFFSET (828658)//751744 /*800*1024*/ /*828658*/) //location where all assets are placed at the end of the ram
+#define DEMO_ASSETS_RAM_OFFSET (828658)//751744 /*800*1024*/ /*828658*/) /**< location where all assets are placed at the end of the ram */
 #define VIDEO_RING_BUFFER_SIZE (16*1024)
 #define AUDIO_RING_BUFFER_SIZE (8*1024)
 #define VIDEO_BUFFER_SIZE VIDEO_RING_BUFFER_SIZE
@@ -24,7 +38,7 @@ typedef struct S_LiftAppFont
 	uint8_t Width[LIFTAPPMAXCHARS];
 } S_LiftAppFont_t;
 
-/* bitmap structure to contain both for legacy and astc */
+/** bitmap structure to contain both for legacy and astc */
 typedef struct 
 {
 	/* below in terms of pixel resolution */
@@ -35,11 +49,11 @@ typedef struct
 	uint16_t swizzle;
 	uint32_t format;
 	uint8_t handle;
-	uint32_t addr;//for flash its 0x800000 + flashaddress/32
+	uint32_t addr; /**< for flash its 0x800000 + flashaddress / 32 */
 	uint8_t maxnumber;
 }LiftBitmap_t;
 
-/* Structure to for xfont */
+/** Structure to for xfont */
 typedef struct AppxFont_t
 {
 	Gpu_FontsExt_t *pfontext;
@@ -52,7 +66,5 @@ int32_t AppLift2_FontString(EVE_HalContext *pHalContext, wchar_t *pstring, AppxF
 void DemoLift2_InitialVideoSetupFlash(EVE_HalContext *pHalContext, LiftBitmap_t *paviframe);
 bool Lift_IsVideoEnded();
 bool AppLift2_IsAudioFinished();
-void DemoLift2(EVE_HalContext *ph);
 
-#endif /* EVE_SUPPORT_UNICODE */
-#endif /* SET00_H_ */
+#endif /* DEMOLIFT2_H_ */

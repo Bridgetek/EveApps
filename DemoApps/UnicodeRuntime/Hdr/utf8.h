@@ -1,4 +1,7 @@
-/*
+/**
+ * @file utf8.h
+ * @brief Application to demonstrate function of EVE.
+ * 
  * Copyright (c) Bridgetek Pte Ltd
  *
  * THIS SOFTWARE IS PROVIDED BY BRIDGETEK PTE LTD "AS IS"
@@ -19,8 +22,7 @@
  * RESPONSIBILITY OF THE PRODUCT MANUFACTURER TO MAINTAIN ANY CHANGES AND SUBSEQUENT WHQL
  * RE-CERTIFICATION AS A RESULT OF MAKING THESE CHANGES.
  *
- * Abstract: Application to demonstrate function of EVE.
- * Author : Bridgetek
+ * @author Bridgetek
  */
 
 #ifndef UTF8_H_

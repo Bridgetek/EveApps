@@ -170,13 +170,16 @@ uint8_t Gesture_GetTag(EVE_HalContext *phost)
  * @brief Refresh gesture data
  * 
  */
-void Gesture_Renew(EVE_HalContext *phost) {
-	sTag = EVE_Hal_rd32(phost, REG_TOUCH_TAG) & 0xFF;
-	sIsTouch = EVE_Hal_rd32(phost, REG_TOUCH_RAW_XY) != 0xFFFFFFFF;
-	sTouchX = EVE_Hal_rd16(phost, REG_TOUCH_SCREEN_XY + 2);
-	sTouchY = EVE_Hal_rd16(phost, REG_TOUCH_SCREEN_XY + 4);
-
-	sGesture.tagTrackTouched = EVE_Hal_rd32(phost, REG_TRACKER);
+Gesture_Touch_t *Gesture_Renew(Gpu_Hal_Context_t *phost)
+{
+	sTag = Gpu_Hal_Rd32(phost, REG_TOUCH_TAG) & 0xFF;
+	sIsTouch = Gpu_Hal_Rd32(phost, REG_TOUCH_RAW_XY) != 0xFFFFFFFF;
+	sTouchX = Gpu_Hal_Rd16(phost, REG_TOUCH_SCREEN_XY + 2);
+	sTouchY = Gpu_Hal_Rd16(phost, REG_TOUCH_SCREEN_XY + 4);
+	uint32_t track = Gpu_Hal_Rd32(phost, REG_TRACKER);
+	sGesture.tagTrackTouched = track & 0xFF;
+	sGesture.trackValLine = track >> 16;
+	sGesture.trackValCircle = (track >> 16) * 360 / 65535;
 	sGesture.isTouch = (uint8_t)sIsTouch;
 	sGesture.tagPressed = sTag;
 	sGesture.isSwipe = sIsSwipe;
@@ -184,13 +187,16 @@ void Gesture_Renew(EVE_HalContext *phost) {
 	sGesture.velocityX = Getvelocity_X();
 	sGesture.touchX = sTouchX;
 	sGesture.touchY = sTouchY;
+	return &sGesture;
 }
 
 /**
  * @brief Get gesture data
- * 
- * @return Gesture_Touch_t* 
+ *
+ * @return Gesture_Touch_t*
  */
-Gesture_Touch_t* Gesture_Get() {
+Gesture_Touch_t *Gesture_Get()
+{
 	return &sGesture;
 }
+

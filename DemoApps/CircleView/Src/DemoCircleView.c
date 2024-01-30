@@ -28,12 +28,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "Platform.h"
 #include "Common.h"
-#include "App.h"
+#include "Platform.h"
+#include "EVE_CoCmd.h"
+#include "DemoCircleView.h"
 #if defined(EVE_FLASH_AVAILABLE)
 
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoCircleView();
+
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Image viewer demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoCircleView();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define RAW  4096
 #define LUT  421184 
 #define SIZ  (LUT+1024)
@@ -110,8 +153,7 @@ void draw() {
 	Display_End(s_pHalContext);
 }
 
-void DemoCircleView(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoCircleView() {
 	FlashHelper_SwitchFullMode(s_pHalContext);
 	EVE_CoCmd_flashRead(s_pHalContext, 0, 0, SIZ);
 
@@ -123,5 +165,7 @@ void DemoCircleView(EVE_HalContext* pHalContext) {
 		getMousePosition();
 	}	
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif
-

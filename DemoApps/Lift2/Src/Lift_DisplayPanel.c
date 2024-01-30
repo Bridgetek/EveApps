@@ -90,7 +90,7 @@ uint8_t Current_Month = 2;
 wchar_t Current_Date[20] = L"2018-05-18";
 SYSTEMTIME	Time;
 
-//Specify color: Alpha(31~24 bit) + RGB(23~0 bit)
+/** Specify color : Alpha(31 ~24 bit) + RGB(23 ~0 bit) */
 static void Color_ARGB(EVE_HalContext *pHalContext, uint32_t c)
 {
 	uint32_t rgb = c & 0xFFFFFF;

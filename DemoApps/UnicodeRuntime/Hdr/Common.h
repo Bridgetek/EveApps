@@ -16,13 +16,13 @@
 #include "ff.h"
 #endif
 
-/* macro: PRINTF_LEVEL
- *    range: 0-3
- *    1 for release mode: Only APP_INF messages and printf function calls
+/** macro: PRINTF_LEVEL
+ *    range: 0-3 \n
+ *    0 to print nothing \n
+ *    1 for release mode: Only APP_INF messages and printf function calls \n
  *    2 and 3 for debug mode
  *       - 2: Only APP_ERR messages
  *       - 3: APP_ERR messages and APP_DBG messages
- *    0 to print nothing
  */
 #define PRINTF_LEVEL                        3
 

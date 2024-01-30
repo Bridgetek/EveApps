@@ -28,16 +28,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "Platform.h"
 #include "Common.h"
-#include "App.h"
-#include <math.h>
-// require FT81x to support PALETTED565
+#include "Platform.h"
+#include "EVE_CoCmd.h"
+#include "DemoInstrument.h"
 #if EVE_CHIPID >= EVE_FT810
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoInstrument();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Instrument demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoInstrument();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 const uint8_t rate = 125;
 typedef struct _sinwave {
 	int y;
@@ -221,11 +260,13 @@ void sin_lut() {
 	}
 }
 
-void DemoInstrument(EVE_HalContext* pHalContext) {	
-	s_pHalContext = pHalContext;
+void DemoInstrument() {	
 #if defined(EVE_SUPPORT_CAPACITIVE)
 	EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_EXTENDED);
 #endif
 	sin_lut();
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

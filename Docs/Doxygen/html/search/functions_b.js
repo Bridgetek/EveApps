@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['ld_5fclust_0',['ld_clust',['../ff_8c.html#ad1b3343c92d0f0e58ba448c3c11b1f39',1,'ff.c']]],
+  ['ld_5fdword_1',['ld_dword',['../ff_8c.html#aa4880817cfec23d4e560b785d1ceefcb',1,'ff.c']]],
+  ['ld_5fword_2',['ld_word',['../ff_8c.html#afb2ad66be348163ba091faf871b0d9b6',1,'ff.c']]],
+  ['lift_5fdisplaypanel_3',['Lift_DisplayPanel',['../_lift___display_panel_8h.html#a163fab376941f6db08b7e9aa02c8674e',1,'Lift_DisplayPanel.h']]],
+  ['lift_5fdisppanel_5finit_4',['Lift_DispPanel_Init',['../_lift___display_panel_8h.html#a15e1405d52b3ae31ff4d4b6c6df3a93b',1,'Lift_DisplayPanel.h']]],
+  ['lift_5fisvideoended_5',['Lift_IsVideoEnded',['../_demo_lift2_8h.html#a8965f504eadf4d03f7fc63aa358e3585',1,'DemoLift2.h']]],
+  ['liftapp_5fftransition_6',['LiftApp_FTransition',['../_demo_lift_8c.html#ae05794aad76a038527d861d38076589a',1,'DemoLift.c']]],
+  ['liftapp_5flandscape_7',['LiftApp_Landscape',['../_demo_lift_8c.html#a93998949c3b10185b2d09e807fe46dfa',1,'DemoLift.c']]],
+  ['liftapp_5fportrait_8',['LiftApp_Portrait',['../_demo_lift_8c.html#af570d8c8c2799bd3b893fb89e748b6d0',1,'DemoLift.c']]],
+  ['liftappcomputebitmap_9',['LiftAppComputeBitmap',['../_demo_lift_8c.html#a3cde862d62d40e969fd467cc0a3a72db',1,'DemoLift.c']]],
+  ['liftappcomputebitmap_5fsingle_10',['LiftAppComputeBitmap_Single',['../_demo_lift_8c.html#a4cf34fdcd5ad34fd1b9bc825af9dbab2',1,'DemoLift.c']]],
+  ['liftappcomputebitmapcolomn_11',['LiftAppComputeBitmapColomn',['../_demo_lift_8c.html#a185b4671a4fd5fd0b41b8daf6f90ca19',1,'DemoLift.c']]],
+  ['liftappcomputebitmaprowrotate_12',['LiftAppComputeBitmapRowRotate',['../_demo_lift_8c.html#affbb413fd680aa6df7487573f605228e',1,'DemoLift.c']]],
+  ['liftappcontrolflow_13',['LiftAppControlFlow',['../_demo_lift_8c.html#a8c56becdc538d3152a55ad6e7ab634e1',1,'DemoLift.c']]],
+  ['liftcontrol_5fsetgoup_14',['LiftControl_SetGoUp',['../_lift___control_8h.html#a959eb1ed4624d2b32f3cadb3ca4e6861',1,'Lift_Control.h']]],
+  ['linear_15',['linear',['../_demo_lift_8c.html#aa0a0c026380f917b48bfefc1255ab5f6',1,'linear(float p1, float p2, uint16_t t, uint16_t rate):&#160;DemoLift.c'],['../_demo_mainmenu_8c.html#af917b4d5c7baf1574f7153f99a084d6b',1,'linear(float_t p1, float_t p2, float_t t, uint16_t rate):&#160;DemoMainmenu.c'],['../_f_t___app___play_video_8c.html#ae0cf5327dc82f561103e07e18c0ff063',1,'linear(float p1, float p2, float t, ft_uint16_t rate):&#160;FT_App_PlayVideo.c']]],
+  ['linebetbuttons_16',['lineBetButtons',['../_demo_jackpot_8c.html#a9699da748d24e9a8ad93791cd7cfa78c',1,'DemoJackpot.c']]],
+  ['list_5fout_5ffiles_17',['List_Out_files',['../_demo_imageviewer_8c.html#aebd225a5d4d8021f2ce70c0e25b46744',1,'DemoImageviewer.c']]],
+  ['load_5fanimation_18',['load_animation',['../_screen___saver_8c.html#a645e6293350137643198449bad677c89',1,'Screen_Saver.c']]],
+  ['load_5fjpeg_19',['Load_Jpeg',['../_demo_imageviewer_8c.html#a58c9ecf33e16b5e9ab9e1f56aa8c1c8e',1,'DemoImageviewer.c']]],
+  ['load_5frawdatafromfile_20',['load_rawdatafromfile',['../_demo_meter_8c.html#a7541f1d4f3b25d46331ab8deaaaf382e',1,'Load_RawDataFromfile(char ImageArrayname[], uint32_t ptr, int16_t Handle, int16_t Format, int16_t Stride, int16_t Width, int16_t Height):&#160;DemoMeter.c'],['../_demo_rotary_dial_8c.html#a923e233c5064970efe0f0a2435b34690',1,'Load_RawDataFromfile(uchar8_t *ImageArrayname, uint32_t ptr, uint32_t RamAddr, int16_t Handle, int16_t Format, int16_t Stride, int16_t Width, int16_t Height, uint8_t i):&#160;DemoRotaryDial.c']]],
+  ['load_5fthumbnails_21',['Load_Thumbnails',['../_demo_mainmenu_8c.html#ae70edd2152850b056121a339a680433b',1,'DemoMainmenu.c']]],
+  ['loadimage2ram_22',['Loadimage2ram',['../_demo_imageviewer_8c.html#aa4d55db006a9ef1875e9aad4c6a9b21b',1,'DemoImageviewer.c']]],
+  ['loadxfont_23',['loadXfont',['../_demo_unicode_8c.html#ad7a232428dce0c58b3af77f210432d23',1,'DemoUnicode.c']]],
+  ['logo_5fshowup_24',['logo_showup',['../_logo_8c.html#a6df15566f1ef9a05ca0377b5de35419b',1,'Logo_Showup(EVE_HalContext *phost):&#160;Logo.c'],['../_logo_8h.html#a6df15566f1ef9a05ca0377b5de35419b',1,'Logo_Showup(EVE_HalContext *phost):&#160;Logo.c']]]
+];

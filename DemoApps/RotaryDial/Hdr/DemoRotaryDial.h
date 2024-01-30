@@ -1,6 +1,20 @@
-#ifndef SET00_H_
-#define SET00_H_
+#ifndef DEMOROTARYDIAL_H_
+#define DEMOROTARYDIAL_H_
 
-void DemoRotaryDial(EVE_HalContext *ph);
+#include "platform.h"
 
-#endif /* SET00_H_ */
+/** Path to UI assets Folder */
+#if defined(_WIN32) 
+/** location on PC */
+#define TEST_DIR "..\\..\\..\\Test\\"
+
+#elif defined(EMBEDDED_PLATFORM) 
+/** location on sdcard */
+#define TEST_DIR "/EveApps/DemoRotaryDial/Test"
+#else
+#define TEST_DIR "/"
+#endif
+
+#define GET_CALIBRATION                     1
+
+#endif /* DEMOROTARYDIAL_H_ */

@@ -59,12 +59,11 @@
     <ClCompile Include="..\..\..\..\common\application\Common.c" />
     <ClCompile Include="..\..\..\..\common\application\Logo.c" />
     <ClCompile Include="..\..\..\..\common\application\Maths.c" />
-    <ClCompile Include="..\..\Src\App.c" />
+    <ClCompile Include="..\..\Src\DemoEvChargePoint.c" />
     <ClCompile Include="..\..\Src\Authenticate.c" />
     <ClCompile Include="..\..\Src\Charging.c" />
     <ClCompile Include="..\..\Src\Choose_Language.c" />
     <ClCompile Include="..\..\Src\Def.c" />
-    <ClCompile Include="..\..\Src\Event.c" />
     <ClCompile Include="..\..\Src\Plugin.c" />
     <ClCompile Include="..\..\Src\Report.c" />
     <ClCompile Include="..\..\Src\Screen_Saver.c" />
@@ -76,7 +75,7 @@
     <ClInclude Include="..\..\..\..\common\application\FlashHelper.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalDefs.h" />
-    <ClInclude Include="..\..\Hdr\App.h" />
+    <ClInclude Include="..\..\Hdr\DemoEvChargePoint.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoCmd.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Cmd.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Config.h" />
@@ -122,7 +121,6 @@
     <ClInclude Include="..\..\Hdr\Charging.h" />
     <ClInclude Include="..\..\Hdr\Choose_Language.h" />
     <ClInclude Include="..\..\Hdr\Def.h" />
-    <ClInclude Include="..\..\Hdr\Event.h" />
     <ClInclude Include="..\..\Hdr\Plugin.h" />
     <ClInclude Include="..\..\Hdr\Report.h" />
     <ClInclude Include="..\..\Hdr\Screen_Saver.h" />
@@ -168,14 +166,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

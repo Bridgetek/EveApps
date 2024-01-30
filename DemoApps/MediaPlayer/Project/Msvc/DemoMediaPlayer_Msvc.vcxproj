@@ -66,7 +66,6 @@
     <ClCompile Include="..\..\libs\AviPlayer\FT_MQueue.c" />
     <ClCompile Include="..\..\libs\AviPlayer\FT_Util.c" />
     <ClCompile Include="..\..\libs\MediaPlayer\MediaExplorer.c" />
-    <ClCompile Include="..\..\Src\App.c" />
     <ClCompile Include="..\..\Src\DemoMediaPlayer.c" />
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +114,6 @@
     <ClInclude Include="..\..\..\..\common\application\Gesture.h" />
     <ClInclude Include="..\..\..\..\common\application\Logo.h" />
     <ClInclude Include="..\..\..\..\common\application\Maths.h" />
-    <ClInclude Include="..\..\Hdr\App.h" />
     <ClInclude Include="..\..\Hdr\DemoMediaPlayer.h" />
     <ClInclude Include="..\..\libs\AviPlayer\bmp.h" />
     <ClInclude Include="..\..\libs\AviPlayer\container_avi.h" />

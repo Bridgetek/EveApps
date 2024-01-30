@@ -91,7 +91,7 @@
 
 typedef struct
 {
-	ft_uint32_t TotalChannelNum; //< Total number channels for libmpsse
+	ft_uint32_t TotalChannelNum; /**< Total number channels for libmpsse */
 } Ft_Gpu_HalInit_t;
 
 #define Ft_Gpu_Hal_Context_t EVE_HalContext
@@ -113,6 +113,8 @@ static inline eve_deprecated("Use `EVE_Hal_open`") bool Ft_Gpu_Hal_Open(EVE_HalC
 	return EVE_Hal_open(phost, &parameters);
 }
 
+/** @name The basic APIs Level 1 */
+///@{
 #define Ft_Gpu_Hal_Close EVE_Hal_close
 #define Ft_Gpu_Hal_DeInit EVE_Hal_release
 
@@ -133,7 +135,7 @@ static inline eve_deprecated("Use `EVE_Hal_open`") bool Ft_Gpu_Hal_Open(EVE_HalC
 
 #define Ft_Gpu_Hal_WrMem EVE_Hal_wrMem
 #define Ft_Gpu_Hal_WrMem_ProgMem EVE_Hal_wrProgMem
-
+///@}
 static inline eve_deprecated("Use `EVE_Hal_rdMem` (note: buffer and addr are swapped)") ft_void_t Ft_Gpu_Hal_RdMem(EVE_HalContext *phost, ft_uint32_t addr, ft_uint8_t *buffer, ft_uint32_t length)
 {
 	EVE_Hal_rdMem(phost, buffer, addr, length);
@@ -141,18 +143,20 @@ static inline eve_deprecated("Use `EVE_Hal_rdMem` (note: buffer and addr are swa
 
 /*******************************************************************************/
 /*******************************************************************************/
-/* APIs for coprocessor Fifo read/write and space management */
+/** @name APIs for coprocessor Fifo read/write and space management */
+///@{
 #define Ft_Gpu_Hal_WrCmd32 EVE_Cmd_wr32
 
-/// Write a buffer to the command buffer. Waits if there is not enough space in the command buffer. Returns FT_FALSE in case a coprocessor fault occurred
+/** Write a buffer to the command buffer. Waits if there is not enough space in the command buffer. Returns FT_FALSE in case a coprocessor fault occurred */
 #define Ft_Gpu_Hal_WrCmdBuf EVE_Cmd_wrMem
 #define Ft_Gpu_Hal_WrCmdBuf_ProgMem EVE_Cmd_wrProgMem
 
-/// Wait for the command buffer to fully empty. Returns FT_FALSE in case a coprocessor fault occurred
+/** Wait for the command buffer to fully empty. Returns FT_FALSE in case a coprocessor fault occurred */
 #define Ft_Gpu_Hal_WaitCmdFifoEmpty EVE_Cmd_waitFlush
 
-/// Wait for the command buffer to have at least the requested amount of free space
+/** Wait for the command buffer to have at least the requested amount of free space */
 #define Ft_Gpu_Hal_WaitCmdFreespace EVE_Cmd_waitSpace
+///@}
 
 /*
 // Use the provided wait functions!
@@ -167,13 +171,13 @@ static inline ft_void_t Ft_Gpu_Hal_RdCmdRpWp(EVE_HalContext *phost, ft_uint16_t 
 /*******************************************************************************/
 
 #ifdef _MSC_VER
-#pragma deprecated(Ft_Gpu_CoCmd_SendCmd) /* Use EVE_Cmd_wr32 */
-#pragma deprecated(Eve_CoCmd_SendCmd) /* Use EVE_Cmd_wr32 */
-#pragma deprecated(Ft_Gpu_Copro_SendCmd) /* Use EVE_Cmd_wr32 */
-#pragma deprecated(Eve_CoCmd_StartFrame) /* Remove */
-#pragma deprecated(Eve_CoCmd_EndFrame) /* Remove */
-#pragma deprecated(Ft_Gpu_CoCmd_StartFrame) /* Remove */
-#pragma deprecated(Ft_Gpu_CoCmd_EndFrame) /* Remove */
+#pragma deprecated(Ft_Gpu_CoCmd_SendCmd) /**< Use EVE_Cmd_wr32 */
+#pragma deprecated(Eve_CoCmd_SendCmd) /**< Use EVE_Cmd_wr32 */
+#pragma deprecated(Ft_Gpu_Copro_SendCmd) /**< Use EVE_Cmd_wr32 */
+#pragma deprecated(Eve_CoCmd_StartFrame) /**< Remove */
+#pragma deprecated(Eve_CoCmd_EndFrame) /**< Remove */
+#pragma deprecated(Ft_Gpu_CoCmd_StartFrame) /**< Remove */
+#pragma deprecated(Ft_Gpu_CoCmd_EndFrame) /**< Remove */
 #endif
 
 #define Ft_Gpu_CoCmd_SendCmd EVE_Cmd_wr32
@@ -204,7 +208,9 @@ inline static ft_void_t eve_deprecated("Use `EVE_Cmd_startFunc`, `EVE_Cmd_wr32`,
 
 /*******************************************************************************/
 /*******************************************************************************/
-/* APIs for Host Commands */
+/** @name APIs for Host Commands */
+///@{
+
 #define FT_GPU_INTERNAL_OSC EVE_INTERNAL_OSC
 #define FT_GPU_EXTERNAL_OSC EVE_EXTERNAL_OSC
 #define FT_GPU_PLL_SOURCE_T EVE_PLL_SOURCE_T
@@ -281,7 +287,7 @@ inline static ft_void_t eve_deprecated("Use `EVE_Cmd_startFunc`, `EVE_Cmd_wr32`,
 #define ft_delay EVE_sleep
 
 #define Ft_Gpu_Hal_WaitLogo_Finish EVE_Cmd_waitLogo
-
+///@}
 inline static ft_int16_t Ft_Gpu_Hal_TransferString(EVE_HalContext *phost, const ft_char8_t *str)
 {
 	return EVE_Hal_transferString(phost, str, 0, EVE_CMD_STRING_MAX, 0) - 1;
@@ -291,6 +297,8 @@ inline static ft_int16_t Ft_Gpu_Hal_TransferString_S(EVE_HalContext *phost, cons
 {
 	return EVE_Hal_transferString(phost, str, 0, length, 0) - 1;
 }
+/** @name APIs for Host Commands */
+///@{
 #define Ft_Gpu_Hal_Sleep EVE_sleep
 
 #define Ft_Gpu_HostCommand EVE_Hal_hostCommand
@@ -313,7 +321,7 @@ inline static ft_int16_t Ft_Gpu_Hal_TransferString_S(EVE_HalContext *phost, cons
 #define Ft_Gpu_81X_ResetActive EVE_Host_resetActive
 #define Ft_Gpu_81X_ResetRemoval EVE_Host_resetRemoval
 #endif
-
+///@}
 #define ft_millis_init eve_noop
 #define ft_millis_exit eve_noop
 #define ft_millis EVE_millis

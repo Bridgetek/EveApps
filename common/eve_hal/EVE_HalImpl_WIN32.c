@@ -42,6 +42,9 @@
 ** UTILITY **
 ************/
 
+/** @name UTILITY */
+///@{
+
 /**
  * @brief Get current system clock of Coprocessor
  * 
@@ -60,10 +63,14 @@ uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost)
 	t1 = EVE_Hal_rd32(phost, REG_CLOCK); /* t1 read */
 	return ((t1 - t0) * 64); /* bitshift 6 places is the same as multiplying 64 */
 }
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 
 /**
  * @brief Init host MCU
@@ -82,6 +89,7 @@ void EVE_Mcu_release()
 {
 	/* no-op */
 }
+///@}
 
 /*********
 ** MISC **
@@ -89,6 +97,8 @@ void EVE_Mcu_release()
 
 static DWORD s_Millis_Start;
 static ULONGLONG s_Millis64_Start;
+/** @name MISC */
+///@{
 
 /**
  * @brief Init timer
@@ -148,6 +158,7 @@ void EVE_sleep(uint32_t ms)
 	Sleep(ms);
 #endif
 }
+///@}
 
 #endif
 

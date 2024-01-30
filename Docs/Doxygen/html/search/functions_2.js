@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['backgroundanimation_5f1_0',['Backgroundanimation_1',['../_demo_mainmenu_8c.html#af2b0b71bc57b5e7cc10f96873b00c1f7',1,'DemoMainmenu.c']]],
+  ['backgroundanimation_5f2_1',['Backgroundanimation_2',['../_demo_mainmenu_8c.html#a2842ed5d7064e5ce7d8bef7d3578dbec',1,'DemoMainmenu.c']]],
+  ['backgroundanimation_5f3_2',['Backgroundanimation_3',['../_demo_mainmenu_8c.html#acaedc069831042e21c93f19d53d11e5d',1,'DemoMainmenu.c']]],
+  ['backgroundanimation_5f4_3',['Backgroundanimation_4',['../_demo_mainmenu_8c.html#a0e79b416fd1fb4cec32c29a567083b9b',1,'DemoMainmenu.c']]],
+  ['backgroundanimation_5f5_4',['Backgroundanimation_5',['../_demo_mainmenu_8c.html#ab7ff2c5536ab1e18dd7c24c567fe3a69',1,'DemoMainmenu.c']]],
+  ['be16_5',['be16',['../_f_t___util_8c.html#ac32f7fbe036c154937dd8fe6c34173a9',1,'FT_Util.c']]],
+  ['begin_6',['begin',['../classsdcard.html#a1bcac5c413fa34eec8df9d087a3d24ca',1,'sdcard::begin()'],['../class_reader.html#a20edcd2bfdb9e3dfa57a55e923497529',1,'Reader::begin()']]],
+  ['bootupconfig_7',['BootupConfig',['../_gpu___hal_8cpp.html#acdb3c9500a029e3781e975ab0e5fb98a',1,'Gpu_Hal.cpp']]],
+  ['bt8xxemu_5fchipselect_8',['BT8XXEMU_chipSelect',['../bt8xxemu_8h.html#acb5030b38c02a67f177c57df97af5956',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fdefaults_9',['BT8XXEMU_defaults',['../bt8xxemu_8h.html#a144ffbcf9dd7406c8aeb20f0b3e031c9',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fdestroy_10',['BT8XXEMU_destroy',['../bt8xxemu_8h.html#abed128aa3e72306459fec728f84a2643',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5fcreate_11',['BT8XXEMU_Flash_create',['../bt8xxemu_8h.html#a33f452d0f115a6493061e2441c3adf00',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5fdefaults_12',['BT8XXEMU_Flash_defaults',['../bt8xxemu_8h.html#a21cef5920870e716cb349769ac964447',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5fdestroy_13',['BT8XXEMU_Flash_destroy',['../bt8xxemu_8h.html#a2ddae3999e6181ee9c0952c52af167c5',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5ftransferspi4_14',['BT8XXEMU_Flash_transferSpi4',['../bt8xxemu_8h.html#a0f08c35ceefb81c2a96ca3358f7d04ae',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fhasinterrupt_15',['BT8XXEMU_hasInterrupt',['../bt8xxemu_8h.html#aab3084e970811db90d8a96463818b090',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fisrunning_16',['BT8XXEMU_isRunning',['../bt8xxemu_8h.html#a27fa5f7932fec0fbe41c7a6300263605',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5frun_17',['BT8XXEMU_run',['../bt8xxemu_8h.html#afba34c22b4d95352811161ea459fc09f',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fsetflag_18',['BT8XXEMU_setFlag',['../bt8xxemu_8h.html#a8b1e1d6103b8f5aab6695bbda0da085f',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fstop_19',['BT8XXEMU_stop',['../bt8xxemu_8h.html#a2ccced1945e528b8a1683cebd164a3a3',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5ftouchresetxy_20',['BT8XXEMU_touchResetXY',['../bt8xxemu_8h.html#abe2e24fedff0e501840ab850b9b5b749',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5ftouchsetxy_21',['BT8XXEMU_touchSetXY',['../bt8xxemu_8h.html#a15c596767ffafb46567c9c2396539992',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5ftransfer_22',['BT8XXEMU_transfer',['../bt8xxemu_8h.html#ab8ac6c6536f3b111dec9684070f7ffd4',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fversion_23',['BT8XXEMU_version',['../bt8xxemu_8h.html#acc05d8446d7dc972632382cdcd7f68c7',1,'bt8xxemu.h']]],
+  ['buff2file_24',['buff2file',['../_filemngr_8h.html#a36cb64ab2df4260c65bdc11dd39a9c86',1,'buff2File(char *txt, char *buffer, unsigned long buffersize, enum eFileMode mode):&#160;Filemngr.c'],['../_filemngr_8c.html#a36cb64ab2df4260c65bdc11dd39a9c86',1,'buff2File(char *txt, char *buffer, unsigned long buffersize, enum eFileMode mode):&#160;Filemngr.c']]]
+];

@@ -298,7 +298,7 @@ void Gpu_Init(EVE_HalContext* phost) {
 	printf("Set APILEVEL to default (1)\n");
 #endif
 
-#if defined(FT900_PLATFORM) || defined(FT93X_PLATFORM)
+#if defined(FT900_PLATFORM) || defined(FT93X_PLATFORM) || defined(RP2040_PLATFORM)
 	EVE_Util_loadSdCard(phost);
 #endif
 
@@ -811,23 +811,23 @@ void WelcomeScreen(Gpu_Hal_Context_t *phost, char* info[])
 		
 		// information
 		EVE_CoCmd_text(phost, DispWidth/2, 20, 28, OPT_CENTER , info[0]);
-		EVE_CoCmd_text(phost, DispWidth/2, 60, 26, OPT_CENTER , info[1]);
-		EVE_CoCmd_text(phost, DispWidth/2, 90, 26, OPT_CENTER , info[2]);  
-		EVE_CoCmd_text(phost, DispWidth/2, 120, 26, OPT_CENTER, info[3]);  
-		EVE_CoCmd_text(phost, DispWidth/2, 180, 26, OPT_CENTER, "Click to play");
+		EVE_CoCmd_text(phost, DispWidth/2, 60, 26, OPT_CENTERX , info[1]);
+		EVE_CoCmd_text(phost, DispWidth/2, 80, 26, OPT_CENTERX , info[2]);  
+		EVE_CoCmd_text(phost, DispWidth/2, 100, 26, OPT_CENTERX, info[3]);  
+		EVE_CoCmd_text(phost, DispWidth/2, DispHeight/2 - 32, 26, OPT_CENTER, "Click to play");
 		
 		// play button circle boundary
 		EVE_Cmd_wr32(phost, COLOR_RGB(100, 100, 100));
 		EVE_Cmd_wr32(phost, BEGIN(FTPOINTS));   
 		EVE_Cmd_wr32(phost, POINT_SIZE(20*16));
 		EVE_Cmd_wr32(phost, TAG('P'));
-		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2), VP(150)));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2), VP(DispHeight/2)));
 		EVE_Cmd_wr32(phost, COLOR_RGB(180, 35, 35));
 		
 		// play button
 		EVE_Cmd_wr32(phost, BEGIN(BITMAPS));
 		EVE_Cmd_wr32(phost, CELL(4));
-		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2 -14), VP(135)));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2 -14), VP(DispHeight/2 - 15)));
 		EVE_Cmd_wr32(phost, END());
 		Display_End(phost);
 

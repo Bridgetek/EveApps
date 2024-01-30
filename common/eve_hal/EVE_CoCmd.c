@@ -380,7 +380,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz_s(EVE_HalContext *phost, uint32_t cmd,
 #if defined(_DEBUG) && defined(EVE_MULTI_GRAPHICS_TARGET)
 EVE_HAL_EXPORT void EVE_CoCmd_debugUnsupported(const char *cmd, uint32_t chipId)
 {
-	eve_printf_debug("Coprocessor command %s is not supported on target platform %lx\n", cmd, chipId);
+	eve_printf_debug("Coprocessor command %s is not supported on target platform %lx\n", cmd, (unsigned long)chipId);
 }
 #endif
 
@@ -418,7 +418,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_getMatrix(EVE_HalContext *phost, int32_t *m)
 
 EVE_HAL_EXPORT void EVE_CoCmd_setRotate(EVE_HalContext *phost, uint32_t r)
 {
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	const bool swapXY = EVE_CHIPID >= EVE_FT810 ? r & 0x2 : false;
+#endif
 
 #if EVE_CMD_HOOKS
 	/* Check hook */
@@ -462,7 +464,9 @@ EVE_HAL_EXPORT void EVE_CoCmd_setRotate(EVE_HalContext *phost, uint32_t r)
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 
-/* Returns new frequency, or 0 in case of failure */
+/**
+ * @returns new frequency, or 0 in case of failure 
+ */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_pclkFreq(EVE_HalContext *phost, uint32_t ftarget, int32_t rounding)
 {
 	uint16_t resAddr;

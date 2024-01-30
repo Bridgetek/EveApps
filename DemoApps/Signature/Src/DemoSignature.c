@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2019
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,14 +28,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoSignature.h"
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoSignature();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Signature demo",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoSignature();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #define BACKGROUND_STAR_HANDLE 13
 #if defined(FT80X_ENABLE)
 #define RAM_G_END_ADDR 0x40000 //General purpose graphics RAM 256 kB
@@ -67,11 +107,10 @@ void InitStar() {
 	Gpu_Hal_WrCmd32(s_pHalContext, CMD_INFLATE);
 	Gpu_Hal_WrCmd32(s_pHalContext, START_ICON_ADDR);
 	Gpu_Hal_WrCmdBuf(s_pHalContext, home_start_icon, sizeof(home_start_icon)); //Load from RAM
-	
+
 }
 
-void DemoSignature(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoSignature() {
 	uint16_t w, h, x, y, tag;
 
 	int16_t sw = 2 * s_pHalContext->Width / 3;
@@ -80,16 +119,16 @@ void DemoSignature(EVE_HalContext* pHalContext) {
 	int16_t oy = (2 * s_pHalContext->Height / 3) - sh;
 	uint16_t a = 0;
 
-	x = s_pHalContext->Width*0.168;
-	y = s_pHalContext->Height*0.317;
+	x = s_pHalContext->Width * 0.168;
+	y = s_pHalContext->Height * 0.317;
 	w = s_pHalContext->Width - (2 * x);
-	h = s_pHalContext->Height - (2.5*y);
+	h = s_pHalContext->Height - (2.5 * y);
 
 	InitStar();
 
 	EVE_CoCmd_dlStart(s_pHalContext);        // start
 
-    /* Initialize the Star array */
+	/* Initialize the Star array */
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(BACKGROUND_STAR_HANDLE));    // handle for background stars
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(START_ICON_ADDR));      // Starting address in gram
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L4, 16, 32));  // format 
@@ -177,4 +216,3 @@ void DemoSignature(EVE_HalContext* pHalContext) {
 		a += 1;
 	}
 }
-

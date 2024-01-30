@@ -16,6 +16,7 @@ MESSAGE(STATUS "Configuring target: ${ProjectId}")
 project(${ProjectId} C CXX)
 
 ADD_EXECUTABLE(${ProjectId} ${SRCS} ${HDRS})
+ADD_DEFINITIONS(-DEVE_ADAPTIVE_FRAMERATE)
 
 IF(IS_PLATFORM_FT9XX)
   add_custom_command(

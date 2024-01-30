@@ -44,27 +44,35 @@
 #endif
 
 #if !defined(EVE_MULTI_GRAPHICS_TARGET) \
-    && !defined(FT_80X_ENABLE) \
-    && !defined(FT_81X_ENABLE) \
-    && !defined(BT_88X_ENABLE) \
-    && !defined(BT_81X_ENABLE) \
+    && !defined(FT_80X_ENABLE)          \
+    && !defined(FT_81X_ENABLE)          \
+    && !defined(BT_88X_ENABLE)          \
+    && !defined(BT_81X_ENABLE)          \
     && !defined(BT_81XA_ENABLE)
 #define EVE_MULTI_GRAPHICS_TARGET
 #endif
 
 /* Definitions used for FT800 coprocessor command buffer */
-#define EVE_DL_SIZE (8 * 1024UL) /* 8kB Display List buffer size */
+#define EVE_DL_SIZE (8 * 1024UL) /**< 8kB Display List buffer size */
 #define EVE_DL_COUNT (2 * 1024UL)
-#define EVE_CMD_FIFO_SIZE ((4) * 1024UL) /* 4kB coprocessor FIFO size */
+#define EVE_CMD_FIFO_SIZE ((4) * 1024UL) /**< 4kB coprocessor FIFO size */
 #define EVE_CMD_FIFO_COUNT (1024UL)
 #define EVE_CMD_FIFO_MASK (EVE_CMD_FIFO_SIZE - 1)
 #define EVE_CMD_FIFO_ALIGNMENT_MASK (EVE_CMD_FIFO_SIZE - ((4) - 1))
 
 #define EVE_CMD_FAULT(rp) (rp & 0x3)
 
+#define EVE_FLASH_WRITE_ALIGN (256)
+#define EVE_FLASH_UPDATE_ALIGN (4096)
+#define EVE_FLASH_READ_ALIGN (64)
+#define EVE_FLASH_FIRMWARE_SIZE (4096)
+
 /**************
 ** Addresses **
 **************/
+
+/** @name Addresses */
+///@{
 
 #define RAM_G 0UL
 #define ROM_CHIPID 786432UL
@@ -159,7 +167,7 @@
 #define RAM_DL 1048576UL
 #define ROMFONT_TABLEADDRESS 1048572UL
 
-#define LOW_FREQ_BOUND 47040000L // 98% of 48Mhz
+#define LOW_FREQ_BOUND 47040000L /**< 98 % of 48Mhz */
 
 #define BITMAP_ADDR_MASK 1048575UL
 #define SCISSOR_XY_SHIFT 9
@@ -397,6 +405,7 @@
 	                          LOW_FREQ_BOUND,        \
 	                          BITMAP_ADDR_MASK,      \
 	                          SCISSOR_SIZE_SHIFT
+///@}
 
 /*************
 ** Commands **
@@ -404,7 +413,8 @@
 
 // clang-format off
 
-// FT800
+/** @name Commands for FT800 */
+///@{
 #define CMD_DLSTART          4294967040UL
 #define CMD_SWAP             4294967041UL
 #define CMD_INTERRUPT        4294967042UL
@@ -451,13 +461,17 @@
 #define CMD_COLDSTART        4294967090UL
 #define CMD_GETMATRIX        4294967091UL
 #define CMD_GRADCOLOR        4294967092UL
+///@}
 
-// FT801
+/** @name Commands for FT801 */
+///@{
 #if defined(FT_80X_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
 #define CMD_CSKETCH          4294967093UL
 #endif
+///@}
 
-// FT810
+/** @name Commands for FT810 */
+///@{
 #if defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
 #define CMD_SETROTATE        4294967094UL
 #define CMD_SNAPSHOT2        4294967095UL
@@ -472,8 +486,10 @@
 #define CMD_SYNC             4294967106UL
 #define CMD_SETBITMAP        4294967107UL
 #endif
+///@}
 
-// BT815
+/** @name Commands for BT815 */
+///@{
 #if defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
 #define CMD_FLASHERASE       4294967108UL
 #define CMD_FLASHWRITE       4294967109UL
@@ -501,8 +517,10 @@
 #define CMD_NOP              4294967131UL
 #define CMD_VIDEOSTARTF      4294967135UL
 #endif
+///@}
 
-// BT817
+/** @name Commands for BT817 */
+///@{
 #if defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
 #define CMD_CALIBRATESUB     4294967136UL
 #define CMD_TESTCARD         4294967137UL
@@ -524,10 +542,14 @@
 #endif
 
 // clang-format on
+///@}
 
 /*****************
 ** Display List **
 *****************/
+
+/** @name Display List */
+///@{
 
 #define VERTEX2F(x, y) ((1UL << 30) | (((x)&32767UL) << 15) | (((y)&32767UL) << 0))
 #define VERTEX2II(x, y, handle, cell) ((2UL << 30) | (((x)&511UL) << 21) | (((y)&511UL) << 12) | (((handle)&31UL) << 7) | (((cell)&127UL) << 0))
@@ -585,10 +607,14 @@
 #define RETURN() ((36UL << 24))
 #define MACRO(m) ((37UL << 24) | (((m)&1UL) << 0))
 #define DISPLAY() ((0UL << 24))
+///@}
 
 /************
 ** Options **
 ************/
+
+/** @name Options */
+///@{
 
 #ifdef POINTS
 #undef POINTS
@@ -624,6 +650,7 @@ ESD_ENUM(Ft_CoPro_Opt, Type = uint16_t, Include = "EVE_Hal.h", Flags)
 #define OPT_RIGHTX 2048UL
 ESD_END()
 
+///@}
 #define ANIM_ONCE 0UL
 #define ANIM_LOOP 1UL
 #define ANIM_HOLD 2UL

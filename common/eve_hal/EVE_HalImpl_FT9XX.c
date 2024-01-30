@@ -47,7 +47,8 @@ static const pad_dir_t s_SpimFuncSS[4] = { pad_spim_ss0, pad_spim_ss1, pad_spim_
 ** INIT **
 *********/
 
-EVE_HalPlatform g_HalPlatform;
+/** @name INIT */
+///@{
 
 /**
  * @brief Initialize HAL platform
@@ -68,13 +69,21 @@ void EVE_HalImpl_release()
 #endif
 }
 
-/* List the available devices */
+/**
+ * @brief List the available devices
+ * 
+ */
 EVE_HAL_EXPORT size_t EVE_Hal_list()
 {
 	return 1;
 }
 
-/* Get info of the specified device. Devices of type EVE_HOST_UNKNOWN should be ignored */
+/**
+ * @brief Get info of the specified device. Devices of type EVE_HOST_UNKNOWN should be ignored
+ *
+ * @param deviceInfo
+ * @param deviceIdx
+ */
 EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 {
 	memset(deviceInfo, 0, sizeof(EVE_DeviceInfo));
@@ -83,7 +92,14 @@ EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 	deviceInfo->Host = EVE_HOST_EMBEDDED;
 }
 
-/* Check whether the context is the specified device */
+/**
+ * @brief Check whether the context is the specified device
+ * 
+ * @param phost Pointer to Hal context
+ * @param deviceIdx
+ * @return true True if ok
+ * @return false False if error
+ */
 EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 {
 	return true;
@@ -93,6 +109,9 @@ EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
  * @brief Get the default configuration parameters
  * 
  * @param parameters EVE_Hal framework's parameters
+ * @param deviceIdx
+ * @return true True if ok
+ * @return false False if error
  */
 bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 {
@@ -219,10 +238,14 @@ void EVE_HalImpl_idle(EVE_HalContext *phost)
 {
 	/* no-op */
 }
+///@}
 
 /*************
 ** TRANSFER **
 *************/
+
+/** @name TRANSFER */
+///@{
 
 /**
  * @brief Start data transfer to Coprocessor
@@ -461,7 +484,7 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 }
 
 /**
- * @brief Transfer a string to Ever platform
+ * @brief Transfer a string to EVE platform
  * 
  * @param phost Pointer to Hal context
  * @param str String to transfer
@@ -503,10 +526,14 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 	}
 	return transferred;
 }
+///@}
 
 /************
 ** UTILITY **
 ************/
+
+/** @name UTILITY */
+///@{
 
 /**
  * @brief Send a host command to Coprocessor
@@ -555,6 +582,8 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
  * 
  * @param phost Pointer to Hal context
  * @param up Up or Down
+ * @return true True if ok
+ * @return false False if error
  */
 bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 {
@@ -640,10 +669,14 @@ uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost)
 	t1 = EVE_Hal_rd32(phost, REG_CLOCK); /* t1 read */
 	return ((t1 - t0) << 6); /* bitshift 6 places is the same as multiplying 64 */
 }
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 
 /**
  * @brief Sdcard initialization
@@ -749,6 +782,7 @@ void EVE_Mcu_release()
 {
 	/* no-op */
 }
+///@}
 
 /*********
 ** MISC **
@@ -757,6 +791,9 @@ void EVE_Mcu_release()
 /* Globals for interrupt implementation */
 static uint32_t s_TotalMilliseconds = 0;
 static uint64_t s_TotalMilliseconds64 = 0;
+
+/** @name MISC */
+///@{
 
 /**
  * @brief Init FT9x timer
@@ -859,10 +896,14 @@ void EVE_sleep(uint32_t ms)
 {
 	delayms(ms);
 }
+///@}
 
 /*********
 ** MISC **
 *********/
+
+/** @name MISC */
+///@{
 
 /**
  * @brief Display GPIO pins
@@ -876,6 +917,7 @@ bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost)
 	return true;
 }
 
+///@}
 #endif /* #if defined(FT9XX_PLATFORM) */
 
 /* end of file */

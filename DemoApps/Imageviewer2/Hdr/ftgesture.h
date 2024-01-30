@@ -11,7 +11,7 @@
 * and for any consequences resulting from its use.
 *****************************************************************************/
 /**
-* @file                           FTGesture
+* @file                           ftgesture.h
 * @brief                          Gesture Library for MultiTouch
 * @version                        0.1
 * @date                           2014/9/15
@@ -61,84 +61,84 @@ typedef unsigned int uint32_t;
 
 typedef enum FTBOOL
 {
-	FTGL_FALSE = 0,
-	FTGL_TRUE = 1,
+	FTGL_FALSE = 0, /**< 0 */
+	FTGL_TRUE = 1, /**< 1 */
 }FTBOOL;
 typedef enum FTENABLE
 {
-	FTGL_DISABLE = 0,
-	FTGL_ENABLE = 1,
+	FTGL_DISABLE = 0, /**< 0 */
+	FTGL_ENABLE = 1, /**< 1 */
 }FTENABLE;
 typedef enum FTVALID
 {
-	FTGL_INVALID = 0,
-	FTGL_VALID = 1,
+	FTGL_INVALID = 0, /**< 0 */
+	FTGL_VALID = 1, /**< 1 */
 }FTVALID;
 
 /*************************************STATUS ENUM********************************************/
 typedef enum FTGLSTATUS
 {
-	FTGL_OK = 0x00,
-	FTGL_ERR = 0x01,
-	FTGL_WARNG = 0x02,
-	FTGL_FATAL = 0x04,	
-	FTGL_SETPARAM_ERROR = 0x08,
-	FTGL_MODE_ERROR = 0x10,	
-	FTGL_TOUCHPOINTCHANGE = 0x20,	
-	FTGL_TAPCHANGE = 0x40,
-	FTGL_SWIPECHANGE = 0x80,	
-	FTGL_FLICKCHANGE = 0x100,
-	FTGL_SCROLLERCHANGE = 0x200,
-	FTGL_TRANSFORMCHANGE = 0x400,	
+	FTGL_OK = 0x00, /**< 0x00 */
+	FTGL_ERR = 0x01, /**< 0x01 */
+	FTGL_WARNG = 0x02, /**< 0x02 */
+	FTGL_FATAL = 0x04, /**< 0x04 */
+	FTGL_SETPARAM_ERROR = 0x08, /**< 0x08 */
+	FTGL_MODE_ERROR = 0x10,	/**< 0x10 */
+	FTGL_TOUCHPOINTCHANGE = 0x20, /**< 0x20 */
+	FTGL_TAPCHANGE = 0x40, /**< 0x40 */
+	FTGL_SWIPECHANGE = 0x80, /**< 0x80 */
+	FTGL_FLICKCHANGE = 0x100, /**< 0x100 */
+	FTGL_SCROLLERCHANGE = 0x200, /**< 0x200 */
+	FTGL_TRANSFORMCHANGE = 0x400, /**< 0x400 */
 }FTGLSTATUS;
 /*************************************TPOINTS ENUM********************************************/
 typedef enum FTGLENUM_TPOINTS
 {
-	FTGL_TPOINTS_NONE 		= 0,	
-	FTGL_TPOINTS_ONE 		= 1,
-	FTGL_TPOINTS_TWO 		= 2,
-	FTGL_TPOINTS_THREE 		= 3,
-	FTGL_TPOINTS_FOUR 		= 4,
-	FTGL_TPOINTS_FIVE 		= 5,
+	FTGL_TPOINTS_NONE 		= 0, /**< 0 */
+	FTGL_TPOINTS_ONE 		= 1, /**< 1 */
+	FTGL_TPOINTS_TWO 		= 2, /**< 2 */
+	FTGL_TPOINTS_THREE 		= 3, /**< 3 */
+	FTGL_TPOINTS_FOUR 		= 4, /**< 4 */
+	FTGL_TPOINTS_FIVE 		= 5, /**< 5 */
 }FTGLENUM_TPOINTS;
 /*************************************SWIPE ENUM**********************************************/
 typedef enum FTGLENUM_TSWIPE
 {
-	FTGL_TSWIPE_NONE = 0,	
-	FTGL_TSWIPE_SWIPEUP = 1,
-	FTGL_TSWIPE_SWIPEDOWN = 2,
-	FTGL_TSWIPE_SWIPELEFT = 3,
-	FTGL_TSWIPE_SWIPERIGHT = 4,	
-	FTGL_TSWIPE_SWIPEIGNORE = 5,
+	FTGL_TSWIPE_NONE = 0, /**< 0 */
+	FTGL_TSWIPE_SWIPEUP = 1, /**< 1 */
+	FTGL_TSWIPE_SWIPEDOWN = 2, /**< 2 */
+	FTGL_TSWIPE_SWIPELEFT = 3, /**< 3 */
+	FTGL_TSWIPE_SWIPERIGHT = 4,	/**< 4 */
+	FTGL_TSWIPE_SWIPEIGNORE = 5, /**< 5 */
 }FTGLENUM_TSWIPE;
 
 /*************************************FLICK ENUM**********************************************/
 typedef enum FTGLENUM_TFLICK
 {
-	FTGL_TFLICK_NONE = 0,	
-	FTGL_TFLICK_FLICKUP = 1,
-	FTGL_TFLICK_FLICKDOWN = 2,
-	FTGL_TFLICK_FLICKLEFT = 3,
-	FTGL_TFLICK_FLICKRIGHT = 4,	
-	FTGL_TFLICK_FLICKIGNORE = 5,
+	FTGL_TFLICK_NONE = 0, /**< 0 */
+	FTGL_TFLICK_FLICKUP = 1, /**< 1 */
+	FTGL_TFLICK_FLICKDOWN = 2, /**< 2 */
+	FTGL_TFLICK_FLICKLEFT = 3, /**< 3 */
+	FTGL_TFLICK_FLICKRIGHT = 4,	/**< 4 */
+	FTGL_TFLICK_FLICKIGNORE = 5, /**< 5 */
 }FTGLENUM_TFLICK;
 
 /*************************************TAP ENUM************************************************/
 typedef enum FTGLENUM_TTAP
 {	
-	FTGL_TTAP_NONE = 0,		
-	FTGL_TTAP_ONETAP = 1,	
-	FTGL_TTAP_TWOTAP = 2,	
-	FTGL_TTAP_THREETAP = 3,	
-	FTGL_TTAP_LONGTAP = 4,	
-	FTGL_TTAP_TAPIGNORE = 6,	
+	FTGL_TTAP_NONE = 0,	/**< 0 */
+	FTGL_TTAP_ONETAP = 1, /**< 1 */
+	FTGL_TTAP_TWOTAP = 2, /**< 2 */
+	FTGL_TTAP_THREETAP = 3,	/**< 3 */
+	FTGL_TTAP_LONGTAP = 4, /**< 4 */
+	FTGL_TTAP_TAPIGNORE = 6, /**< 6 */
 }FTGLENUM_TTAP;
 /*************************************SCROLLER MODE ENUM**************************************/
 typedef enum FTGLSCROLLERMODE
 {
-	FTGL_SCROLLER_NONE = 0x00,
-	FTGL_SCROLLER_HORIZONTAL = 0x01,
-	FTGL_SCROLLER_VERTICAL = 0x02,		 	
+	FTGL_SCROLLER_NONE = 0x00, /**< 0x00 */
+	FTGL_SCROLLER_HORIZONTAL = 0x01, /**< 0x01 */
+	FTGL_SCROLLER_VERTICAL = 0x02, /**< 0x02 */	 	
 }FTGLSCROLLERMODE;
 /*************************************TAP CONTEXT*********************************************/
 typedef struct  
@@ -180,23 +180,23 @@ typedef struct
 /************************************FTGL CONTEXT*********************************************/
 typedef struct 
 {
-	int16_t	startX[FTGL_MAXTOUCH_PTS];			// Starting X Cordinate 
-	int16_t	startY[FTGL_MAXTOUCH_PTS];			// Starting Y Cordinate 
-	int16_t	currX[FTGL_MAXTOUCH_PTS];			// Current X Cordinate 
-	int16_t	currY[FTGL_MAXTOUCH_PTS];			// Current Y Cordinate 
-	int16_t	prevX[FTGL_MAXTOUCH_PTS];			// Previous X Cordinate 
-	int16_t	prevY[FTGL_MAXTOUCH_PTS];			// Previous Y Cordinate 
-	uint8_t currNumTchs;					// Current Number of Touches
-	uint8_t prevNumTchs;					// Previous Number of Touches
-	uint8_t startNumTchs;					// Starting Number of Touches
-	FTGLtapType tapType;						// Tap Parameters
-	FTGLswipeType swipeType;					// Swipe Parameters		
-	FTGLflickType flickType;					// Swipe Parameters		
-	FTGLtransform transform;					// Transform Parameters
-	FTGLscroll scroller;							// Scroller Parameters
-	int16_t centerX;								// Avg.Center X 
-	int16_t centerY;								// Avg.Center Y 
-	int16_t penUpcts,penDowncts;			// For Internal Purpose Only 
+	int16_t startX[FTGL_MAXTOUCH_PTS]; /**<	Starting X Cordinate */
+	int16_t	startY[FTGL_MAXTOUCH_PTS];			/**< Starting Y Cordinate */
+	int16_t	currX[FTGL_MAXTOUCH_PTS];			/**< Current X Cordinate */
+	int16_t	currY[FTGL_MAXTOUCH_PTS];			/**< Current Y Cordinate */
+	int16_t	prevX[FTGL_MAXTOUCH_PTS];			/**< Previous X Cordinate */
+	int16_t	prevY[FTGL_MAXTOUCH_PTS];			/**< Previous Y Cordinate */
+	uint8_t currNumTchs;					/**< Current Number of Touches */
+	uint8_t prevNumTchs;					/**< Previous Number of Touches */
+	uint8_t startNumTchs;					/**< Starting Number of Touches */
+	FTGLtapType tapType;						/**< Tap Parameters */
+	FTGLswipeType swipeType;					/**< Swipe Parameters */		
+	FTGLflickType flickType;					/**< Swipe Parameters */		
+	FTGLtransform transform;					/**< Transform Parameters */
+	FTGLscroll scroller;							/**< Scroller Parameters */
+	int16_t centerX;								/**< Avg.Center X */
+	int16_t centerY;								/**< Avg.Center Y */
+	int16_t penUpcts,penDowncts;			/**< For Internal Purpose Only */
 	int8_t tap_tchs,tap_cts;
 	int16_t tap_cx,tap_cy;	
 	int8_t swipe_tchs;
@@ -208,13 +208,16 @@ typedef struct
 }FTGLContext;
 
 FTGLContext FTGesture;
-/*******************************GESTURE PRIVATE APIS*****************************************/	
+/** @name GESTURE PRIVATE APIS */
+///@{
 void updatePrevstate();
 void updateStartstate();
 void updateCurrstate(int16_t x[],int16_t y[]);
 FTGLENUM_TTAP detectTap();	
-FTGLENUM_TSWIPE detectSwipe();	
-/***********************************UTILITY APIS*********************************************/
+FTGLENUM_TSWIPE detectSwipe();
+///@}
+/** @name UTILITY APIS */
+///@{
 int16_t avgCenter(uint8_t tchs,int16_t d[]);
 FTVALID Isvalidtouch(int16_t data2cmp); 
 int16_t distbwPoints( int16_t x1,int16_t y1,int16_t x2,int16_t y2);
@@ -224,12 +227,16 @@ int16_t smallestAngleDiff(int16_t a, int16_t b);
 int16_t avgScale(uint8_t tchs,int16_t ctr,int16_t d1[],int16_t d2[]);
 int16_t anglebwPoints(int16_t cx,int16_t cy,int16_t x,int16_t y);	
 int16_t avgDistance(uint8_t tchs,int16_t curr[],int16_t prev[]);
-/************************************RUN API*************************************************/
+///@}
+/** @name RUN API */
+///@{
 uint32_t FTGLRun(int16_t x[],int16_t y[]);	
 FTGLSTATUS FTGLInit();
 FTGLSTATUS FTGLExit();
 int16_t FTGLScrollerRun(uint8_t tchs,int16_t cx,int16_t cy);
-/************************************SET APIS************************************************/
+///@}
+/** @name SET APIS */
+///@{
 FTGLSTATUS FTGLSetScaleRange(int16_t minX,int16_t maxX,int16_t minY,int16_t maxY);
 FTGLSTATUS FTGLSetScale(int16_t sx,int16_t sy);
 FTGLSTATUS FTGLSetDragRange(int16_t minX,int16_t maxX,int16_t minY,int16_t maxY);
@@ -238,8 +245,10 @@ FTGLSTATUS FTGLSetAngle(int16_t angle);
 FTGLSTATUS FTGLSetScrollerRange(int32_t minX,int32_t maxX,int32_t minY,int32_t maxY);
 FTGLSTATUS FTGLSetScrollermode(uint8_t hor,uint8_t ver);
 FTGLSTATUS FTGLSetScrollerXY(int32_t scx,int32_t scy);
-FTGLSTATUS FTGLSetTransform(int16_t angle,int16_t sx,int16_t sy,int16_t dx,int16_t dy);	
-/************************************GET APIS************************************************/
+FTGLSTATUS FTGLSetTransform(int16_t angle,int16_t sx,int16_t sy,int16_t dx,int16_t dy);
+///@}
+/** @name GET APIS */
+///@{
 FTBOOL FTGLIsTouch();
 FTGLSTATUS FTGLGetCenter(int16_t *x,int16_t *y);
 FTGLSTATUS FTGLGetAngle(int16_t *angle);
@@ -256,21 +265,25 @@ FTGLSTATUS FTGLGetCoordinates(int16_t *startx,int16_t *starty,int16_t *currx,int
 							  int16_t *prevx,int16_t *prevy);
 FTGLSTATUS FTGLGetFlicktype(uint8_t *flick,uint8_t *nooftchs);
 FTGLSTATUS FTGLGetTapCoordinates(int16_t *startx,int16_t *starty);
-/********************************************************************************************
-**Usage			: Api to Check the Touch is Valid or Invalid
-**Return		: VALID or INVALID
-*********************************************************************************************/
+///@}
+/**
+ * @brief Api to Check the Touch is Valid or Invalid
+ * 
+ * @param data2cmp
+ * @return VALID or INVALID
+ */
 FTVALID Isvalidtouch(int16_t data2cmp) 
 {
 	if(data2cmp!=FTGL_NOTOUCH) return FTGL_VALID;
 	return FTGL_INVALID;
 }
-/**********************************************************************************************
-**Usage			: Api to get the distance Average centre
-**tchs			: number of touches
-**d[]			: array of values
-**Return		: Average centre				
-*********************************************************************************************/
+/**
+ *@brief Api to get the distance Average centre
+ * 
+ *@param tchs number of touches
+ *@param d[] array of values
+ *@return Average centre				
+ */
 int16_t avgCenter(uint8_t tchs,int16_t d[])
 {
 	int16_t avg = 0,i;
@@ -281,12 +294,15 @@ int16_t avgCenter(uint8_t tchs,int16_t d[])
 	}	
 	return avg/tchs;		
 }
-/*********************************************************************************************
-**Usage			: Api to get the distance between two points
-**x1/y1			: Ist Coordinate (X,Y)
-**x2/y2			: 2nd Coordinate (X,Y)
-**Return		: Distance				
-*********************************************************************************************/
+/**
+ *@brief Api to get the distance between two points
+ * 
+ *@param x1 Ist Coordinate X
+ *@param y1 Ist Coordinate Y
+ *@param x2 2nd Coordinate X
+ *@param y2 2nd Coordinate Y
+ *@return Distance				
+ */
 int16_t distbwPoints( int16_t x1,int16_t y1,int16_t x2,int16_t y2)
 {
 	int16_t dx,dy;	
@@ -294,14 +310,18 @@ int16_t distbwPoints( int16_t x1,int16_t y1,int16_t x2,int16_t y2)
 	dy = y1-y2;	
 	return sqrt(pow((double)dx,2)+pow((double)dy,2));
 }
-/*********************************************************************************************
-**Usage			: Api to get the Average Angle of touches 
-**tchs			: number of touches
-**ctrx/ctry		: Center X and Y of all Co-ordinates
-**currx/prevx	: Current and Previous X Coordinates
-**curry/prevy	: Current and Previous Y Coordinates
-**Return		: Average angle				
-*********************************************************************************************/
+/**
+ *@brief Api to get the Average Angle of touches
+ * 
+ *@param tchs number of touches
+ *@param cx Center X of all Co-ordinates
+ *@param cy Center Y of all Co-ordinates
+ *@param currx Current X Coordinates
+ *@param prevx Previous X Coordinates
+ *@param curry Current Y Coordinates
+ *@param prevy Previous Y Coordinates
+ *@return Average angle				
+ */
 int16_t avgAngle(uint8_t tchs,int16_t cx,int16_t cy,int16_t currx[],\
 				int16_t curry[],int16_t prevx[],int16_t prevy[])
 {
@@ -317,9 +337,13 @@ int16_t avgAngle(uint8_t tchs,int16_t cx,int16_t cy,int16_t currx[],\
 	}	
 	return angle/=tchs;
 }
-/*********************************************************************************************
-**Usage			: Api to get the smallest angle difference
-*********************************************************************************************/
+/**
+ * @brief Api to get the smallest angle difference
+ * 
+ * @param a
+ * @param b
+ * @return int16_t
+ */
 int16_t smallestAngleDiff(int16_t a, int16_t b)
 {	
 	int16_t d = a-b;
@@ -329,25 +353,30 @@ int16_t smallestAngleDiff(int16_t a, int16_t b)
 	d = d+360;
 	return d;
 }
-/********************************************************************************************
-**Usage			: Api to get the Angle between two points
-**cx/cy			: Center x and Center y
-**x/y			: X and Y Coordinate
-**Return		: angle			
-*********************************************************************************************/
+/**
+ *@brief Api to get the Angle between two points
+ * 
+ *@param cx Center x 
+ *@param cy Center y
+ *@param x X Coordinate
+ *@param y Y Coordinate
+ *@return angle			
+ */
 int16_t anglebwPoints(int16_t cx,int16_t cy,int16_t x,int16_t y)
 {
 	int16_t dx = x-cx;
 	int16_t dy = y-cy;	
 	return RAD2DEGREE(atan2((double)dx,(double)dy));
 }
-/********************************************************************************************
-**Usage			: Api to get the Average Scale of touches 
-**tchs			: number of touches
-**ctr			: Center of all Co-ordinates
-**curr/prev		: Current and Previous Coordinates
-**Return		: Average Scale				
-*********************************************************************************************/
+/**
+ *@brief Api to get the Average Scale of touches
+ * 
+ *@param tchs number of touches
+ *@param ctr Center of all Co-ordinates
+ *@param curr Current Coordinates 
+ *@param prev Previous Coordinates
+ *@return Average Scale				
+ */
 int16_t avgScale(uint8_t tchs,int16_t ctr,int16_t curr[],int16_t prev[])
 {
 	int16_t distance = 0,i;	
@@ -367,12 +396,14 @@ int16_t avgScale(uint8_t tchs,int16_t ctr,int16_t curr[],int16_t prev[])
 	}	
 	return distance/=tchs;
 }
-/********************************************************************************************
-**Usage			: Api to get the Average distance of touches 
-**tchs			: number of touches
-**curr/prev		: Current and Previous Coordinates
-**Return		: Average Distance				
-*********************************************************************************************/
+/**
+ *@brief Api to get the Average distance of touches
+ * 
+ *@param tchs number of touches
+ *@param curr Current Coordinates
+ *@param prev Previous Coordinates
+ *@return Average Distance				
+ */
 int16_t avgDistance(uint8_t tchs,int16_t curr[],int16_t prev[])
 {
 	int16_t a,b,i,distance = 0;	
@@ -383,9 +414,14 @@ int16_t avgDistance(uint8_t tchs,int16_t curr[],int16_t prev[])
 	}	
 	return distance/=tchs;
 }
-/********************************************************************************************
-**Usage			: Calculate the velocity of X and Y direction based on the mode setting
-*********************************************************************************************/
+/**
+ *@brief Calculate the velocity of X and Y direction based on the mode setting
+ * 
+ *@param tchs number of touches
+ *@param centerx Center X of all Co-ordinates
+ *@param centery Center Y of all Co-ordinates
+ *@return int16_t
+ */
 int16_t FTGLScrollerRun(uint8_t tchs,int16_t centerx,int16_t centery)
 {
 	int16_t change;
@@ -435,9 +471,9 @@ int16_t FTGLScrollerRun(uint8_t tchs,int16_t centerx,int16_t centery)
 	}
 	return 0;
 }
-/********************************************************************************************
-**Usage			: Update the Previous State of the gesture
-*********************************************************************************************/
+/**
+ *@brief Update the Previous State of the gesture
+ */
 void updatePrevstate()
 {
 	int16_t i;
@@ -448,10 +484,12 @@ void updatePrevstate()
 		FTGesture.prevY[i] = FTGesture.currY[i];
 	}	
 }
-/********************************************************************************************
-**Usage			: Update the Current State of the gesture
-**x[]/y[]		: X and Y Co-ordinates of Touches
-*********************************************************************************************/
+/**
+ *@brief Update the Current State of the gesture
+ * 
+ *@param x[] X Co-ordinates of Touches
+ *@param y[] Y Co-ordinates of Touches
+ */
 void updateCurrstate(int16_t x[],int16_t y[])
 {	
 	int16_t i;
@@ -463,9 +501,9 @@ void updateCurrstate(int16_t x[],int16_t y[])
 		if(Isvalidtouch(FTGesture.currX[i]))FTGesture.currNumTchs++;
 	}
 }
-/********************************************************************************************
-**Usage			: Update the Starting State of the gesture
-*********************************************************************************************/
+/**
+ *@brief Update the Starting State of the gesture
+ */
 void updateStartstate()
 {
 	int16_t i;
@@ -476,11 +514,13 @@ void updateStartstate()
 		FTGesture.startY[i] = FTGesture.currY[i];
 	}	
 }
-/********************************************************************************************
-**Usage			: API to Detect Tap
-**Return 		: Tap type
-*********************************************************************************************/
+
 ft_uint16_t ax,ay;
+/**
+ *@brief API to Detect Tap
+ * 
+ *@return Tap type
+ */
 FTGLENUM_TTAP detectTap()
 {
 	int16_t distx;
@@ -534,10 +574,11 @@ FTGLENUM_TTAP detectTap()
 	}
 	return FTGL_TTAP_NONE;
 }
-/********************************************************************************************
-**Usage			: API to Detect Swipe
-**Return 		: Swipe type
-*********************************************************************************************/
+/**
+ *@brief API to Detect Swipe
+ * 
+ *@return Swipe type
+ */
 FTGLENUM_TSWIPE detectSwipe()
 {	
 	int16_t dx,dy,sx,sy;	
@@ -583,11 +624,13 @@ FTGLENUM_TSWIPE detectSwipe()
 	}	
 	return FTGL_TSWIPE_NONE;	
 }
-/********************************************************************************************
-**Usage			: API to Run the Gesture
-**x[]/y[]		: X and Y Co-ordinates of Touches
-**Return 		: Status of the Gesture
-*********************************************************************************************/
+/**
+ *@brief API to Run the Gesture
+ * 
+ *@param x[] X Co-ordinates of Touches
+ *@param y[] Y Co-ordinates of Touches
+ *@return Status of the Gesture
+ */
 uint32_t FTGLRun(int16_t x[],int16_t y[])
 {		
 	int16_t i;	
@@ -734,10 +777,11 @@ uint32_t FTGLRun(int16_t x[],int16_t y[])
 	gstatus |= FTGL_SCROLLERCHANGE;		
 	return gstatus;
 }
-/********************************************************************************************
-**Usage			: API to Initialize the Gesture Variables
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to Initialize the Gesture Variables
+ * 
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLInit()
 {
 	int16_t i;
@@ -774,20 +818,24 @@ FTGLSTATUS FTGLInit()
 	FTGesture.prev_scale = 0;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to Exit the Gesture 
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to Exit the Gesture
+ *
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLExit()
 {
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to set the Scale Range(Max/Min) of Both X and Y direction
-**minX/maxX		: Minimum/Maximum of X direction
-**minY/maxY		: Minimum/Maximum of Y direction
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to set the Scale Range(Max/Min) of Both X and Y direction
+ * 
+ *@param minX Minimum of X direction
+ *@param maxX Maximum of X direction
+ *@param minY Minimum of Y direction
+ *@param maxY Maximum of Y direction
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetScaleRange(int16_t minX,int16_t maxX,int16_t minY,int16_t maxY)
 {
 	FTGesture.transform.minScaleX = minX;	
@@ -796,12 +844,14 @@ FTGLSTATUS FTGLSetScaleRange(int16_t minX,int16_t maxX,int16_t minY,int16_t maxY
 	FTGesture.transform.maxScaleY = maxY;			
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to Set the Scale values of X and Y Direction
-**x/y			: Scale Values of X and Y
-**Return 		: if set value is less than min or greater than max 
+/**
+ *@brief API to Set the Scale values of X and Y Direction
+ * 
+ *@param sx Scale Values of X
+ *@param sy Scale Values of Y
+ *@return if set value is less than min or greater than max 
 				  api returns "FTGL_SETPARAM_ERROR"	Otherwise "FTGL_OK"
-*********************************************************************************************/
+ */
 FTGLSTATUS FTGLSetScale(int16_t sx,int16_t sy)
 {
 	FTGesture.transform.scaleX = sx;
@@ -810,12 +860,15 @@ FTGLSTATUS FTGLSetScale(int16_t sx,int16_t sy)
 	if(sy<FTGesture.transform.minScaleY || sy>FTGesture.transform.maxScaleY) return FTGL_WARNG;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to set the Drag Range(Max/Min) of Both X and Y direction
-**minX/maxX		: Minimum/Maximum of X direction
-**minY/maxY		: Minimum/Maximum of Y direction
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to set the Drag Range(Max/Min) of Both X and Y direction
+ * 
+ *@param minX Minimum of X direction
+ *@param maxX Maximum of X direction
+ *@param minY Minimum of Y direction
+ *@param maxY Maximum of Y direction
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetDragRange(int16_t minX,int16_t maxX,int16_t minY,int16_t maxY)
 {
 	FTGesture.transform.minDragX = minX;
@@ -824,12 +877,14 @@ FTGLSTATUS FTGLSetDragRange(int16_t minX,int16_t maxX,int16_t minY,int16_t maxY)
 	FTGesture.transform.maxDragY = maxY;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to Set the Drag values of X and Y Direction
-**x/y			: Drag Values of X and Y
-**Return 		: if set value is less than min or greater than max 
+/**
+ *@brief API to Set the Drag values of X and Y Direction
+ * 
+ *@param dx Drag Values of X
+ *@param dy Drag Values of Y
+ *@return if set value is less than min or greater than max 
 				  api returns "FTGL_SETPARAM_ERROR"	Otherwise "FTGL_OK"
-*********************************************************************************************/
+ */
 FTGLSTATUS FTGLSetDrag(int16_t dx,int16_t dy)
 {	
 	FTGesture.transform.dragX = dx;
@@ -838,23 +893,27 @@ FTGLSTATUS FTGLSetDrag(int16_t dx,int16_t dy)
 	if(dy<FTGesture.transform.minDragY || dy>FTGesture.transform.maxDragY) return FTGL_WARNG;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to Set angle of rotation
-**angle			: Angle of Rotation
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to Set angle of rotation
+ * 
+ *@param angle Angle of Rotation
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetAngle(int16_t angle)
 {
 	FTGesture.transform.angleofRotation = angle;	
 	if(angle<=360) return FTGL_OK; 
 	return FTGL_WARNG;
 }
-/********************************************************************************************
-**Usage			: API to set the Scroller Range(Max/Min) of Both X and Y direction
-**minX/maxX		: Minimum/Maximum of X direction
-**minY/maxY		: Minimum/Maximum of Y direction
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to set the Scroller Range(Max/Min) of Both X and Y direction
+ * 
+ *@param minX Minimum of X direction
+ *@param maxX Maximum of X direction
+ *@param minY Minimum of Y direction
+ *@param maxY Maximum of Y direction
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetScrollerRange(int32_t minX,int32_t maxX,int32_t minY,int32_t maxY)
 {
 	FTGesture.scroller.minLimitX = minX*16;	
@@ -863,12 +922,13 @@ FTGLSTATUS FTGLSetScrollerRange(int32_t minX,int32_t maxX,int32_t minY,int32_t m
 	FTGesture.scroller.maxLimitY = maxY*16;	
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to set the Scroller Mode(Horizontal/Vertical)
-**hor			: Horizontal(ENABLE/DISABLE)
-**ver	 		: Vertical(ENABLE/DISABLE)
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to set the Scroller Mode(Horizontal/Vertical)
+ * 
+ *@param hor Horizontal(ENABLE/DISABLE)
+ *@param ver Vertical(ENABLE/DISABLE)
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetScrollerMode(uint8_t hor,uint8_t ver)
 {
 	FTGesture.scroller.mode = 0;
@@ -876,12 +936,13 @@ FTGLSTATUS FTGLSetScrollerMode(uint8_t hor,uint8_t ver)
 	return FTGL_OK;
 }
 
-/********************************************************************************************
-**Usage			: API to set the both Scroller X & Y direction base
-**scx			: X Direction data
-**scy	 		: Y Direction data
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to set the both Scroller X & Y direction base
+ * 
+ *@param scrollx X Direction data
+ *@param scrolly Y Direction data
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetScrollerXY(int32_t scrollx,int32_t scrolly)
 {	
 	FTGesture.scroller.baseX = scrollx;
@@ -889,13 +950,16 @@ FTGLSTATUS FTGLSetScrollerXY(int32_t scrollx,int32_t scrolly)
 	return FTGL_OK;
 }
 
-/********************************************************************************************
-**Usage			: API to set the Transform(scale/angle)
-**tap			: Tap Type
-**angle 		: Angle of Rotation		
-**sx/sy 		: Scale x/y direction
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to set the Transform(scale/angle)
+ * 
+ *@param angle Angle of Rotation		
+ *@param sx Scale x direction
+ *@param sy Scale y direction
+ *@param dx
+ *@param dy
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLSetTransform(int16_t angle,int16_t sx,int16_t sy,int16_t dx,int16_t dy)
 {	
 	FTGLSetScale(sx,sy);
@@ -903,12 +967,13 @@ FTGLSTATUS FTGLSetTransform(int16_t angle,int16_t sx,int16_t sy,int16_t dx,int16
 	FTGLSetAngle(angle);
 	return FTGL_OK;		
 }
-/********************************************************************************************
-**Usage			: API to get the Type of Tap and Number of Touches
-**tap			: Tap Type
-**nooftouches	: Number of Touches
-**Return 		: FTGL_OK  
-*********************************************************************************************/
+/**
+ *@brief API to get the Type of Tap and Number of Touches
+ * 
+ *@param tap Tap Type
+ *@param nooftchs Number of Touches
+ *@return FTGL_OK  
+ */
 FTGLSTATUS FTGLGetTaptype(uint8_t *tap,uint8_t *nooftchs)
 {
 	*nooftchs = (uint8_t)FTGesture.tapType.numberofTouches;
@@ -917,12 +982,13 @@ FTGLSTATUS FTGLGetTaptype(uint8_t *tap,uint8_t *nooftchs)
 	FTGesture.tapType.numberofTouches = FTGL_TPOINTS_NONE;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Direction of Swipe and Number of Touches
-**swipe			: Swipe Type
-**nooftouches	: Number of Touches
-**Return 		: FTGL_OK  
-*********************************************************************************************/
+/**
+ *@brief API to get the Direction of Swipe and Number of Touches
+ * 
+ *@param swipe Swipe Type
+ *@param nooftchs Number of Touches
+ *@return FTGL_OK  
+ */
 FTGLSTATUS FTGLGetSwipetype(uint8_t *swipe,uint8_t *nooftchs)
 {
 	*nooftchs = (uint8_t)FTGesture.swipeType.numberofTouches;
@@ -931,12 +997,13 @@ FTGLSTATUS FTGLGetSwipetype(uint8_t *swipe,uint8_t *nooftchs)
 	FTGesture.swipeType.numberofTouches = FTGL_TPOINTS_NONE;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Direction of Swipe and Number of Touches
-**swipe			: Swipe Type
-**nooftouches	: Number of Touches
-**Return 		: FTGL_OK  
-*********************************************************************************************/
+/**
+ *@brief API to get the Direction of flick and Number of Touches
+ * 
+ *@param flick flick Type
+ *@param nooftchs Number of Touches
+ *@return FTGL_OK  
+ */
 FTGLSTATUS FTGLGetFlicktype(uint8_t *flick,uint8_t *nooftchs)
 {	
 	*nooftchs = (uint8_t)FTGesture.flickType.numberofTouches;
@@ -945,25 +1012,29 @@ FTGLSTATUS FTGLGetFlicktype(uint8_t *flick,uint8_t *nooftchs)
 	FTGesture.flickType.numberofTouches = FTGL_TPOINTS_NONE;
 	return FTGL_OK;
 }
-/*******************************************************************************************
-**Usage			: API to get an Average centre of all touch points 
-**cx 			: Centre x direction
-**cy 			: Centre y direction
-**Return 		: FTGL_OK
-********************************************************************************************/
+/**
+ *@brief API to get an Average centre of all touch points 
+ * 
+ *@param cx Centre x direction
+ *@param cy Centre y direction
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetCenter(int16_t *cx,int16_t *cy)
 {
 	*cx = FTGesture.centerX;
 	*cy = FTGesture.centerY;
 	return FTGL_OK;
 }
-/*******************************************************************************************
-**Usage			: API to get the Transform values(angle/scale/drag) of both X & Y-Direction
-**angle 		: Angle of Rotation		
-**sx/sy 		: Scale x/y direction
-**dx/dy 		: Drag x/y direction
-**Return 		: FTGL_OK	
-********************************************************************************************/
+/**
+ *@brief API to get the Transform values(angle/scale/drag) of both X & Y-Direction
+ * 
+ *@param angle Angle of Rotation		
+ *@param sx Scale x direction
+ *@param sy Scale x/y direction
+ *@param dx Drag x direction
+ *@param dy Drag x/y direction
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLGetTransform(int16_t *angle,int16_t *sx,int16_t *sy,int16_t *dx,int16_t *dy)
 {
 	*angle = FTGesture.transform.angleofRotation;
@@ -973,79 +1044,89 @@ FTGLSTATUS FTGLGetTransform(int16_t *angle,int16_t *sx,int16_t *sy,int16_t *dx,i
 	*dy = FTGesture.transform.dragY;
 	return FTGL_OK;
 }
-/*******************************************************************************************
-**Usage			: API to get the Transform Angle of Rotation 	
-**angle 		: Angle of Rotation		
-**Return 		: FTGL_OK	
-********************************************************************************************/
+/**
+ *@brief API to get the Transform Angle of Rotation
+ * 
+ *@param angle Angle of Rotation		
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLGetAngle(int16_t *angle)
 {
 	*angle = FTGesture.transform.angleofRotation;
 	return FTGL_OK;
 }
-/*******************************************************************************************
-**Usage			: API to get the Transform - Scale values of both X & Y
-**sx 			: Scale x direction
-**sy 			: Scale y direction
-**Return 		: FTGL_OK
-********************************************************************************************/
+/**
+ *@brief API to get the Transform - Scale values of both X & Y
+ * 
+ *@param sx Scale x direction
+ *@param sy Scale y direction
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetScale(int16_t *sx,int16_t *sy)
 {
 	*sx = FTGesture.transform.scaleX;
 	*sy = FTGesture.transform.scaleY;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Transform-Draging values of both X & Y-Direction
-**dx 			: Drag x direction
-**dy 			: Drag y direction
-**Return 		: FTGL_OK
-*********************************************************************************************/
+/**
+ *@brief API to get the Transform-Draging values of both X & Y-Direction
+ * 
+ *@param dx Drag x direction
+ *@param dy Drag y direction
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetDrag(int16_t *dx,int16_t *dy)
 {
 	*dx = FTGesture.transform.dragX;
 	*dy = FTGesture.transform.dragY;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Scrolling values of both X & Y-Direction
-**scx 			: x - scroller base
-**scy 			: y - scroller base
-**Return 		: FTGL_OK
-*********************************************************************************************/
+/**
+ *@brief API to get the Scrolling values of both X & Y-Direction
+ * 
+ *@param scx x - scroller base
+ *@param scy y - scroller base
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetScroller(int32_t *scx,int32_t *scy)
 {
 	*scx = FTGesture.scroller.baseX;
 	*scy = FTGesture.scroller.baseY;
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Scrolling value of X-Direction
-**scx 			: x - scroller base
-**Return 		: FTGL_OK
-*********************************************************************************************/
+/**
+ *@brief API to get the Scrolling value of X-Direction
+ * 
+ *@param scx x - scroller base
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetScrollerX(int32_t *scx)
 {
 	*scx = FTGesture.scroller.baseX;	
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Scrolling value of Y- Direction
-**scy 			: y - scroller base
-**Return 		: FTGL_OK	
-*********************************************************************************************/
+/**
+ *@brief API to get the Scrolling value of Y- Direction
+ * 
+ *@param scy y - scroller base
+ *@return FTGL_OK	
+ */
 FTGLSTATUS FTGLGetScrollerY(int32_t *scy)
 {
 	*scy = FTGesture.scroller.baseY;	
 	return FTGL_OK;
 }
-/********************************************************************************************
-**Usage			: API to get the Coordinates of three States of touch points
-**startx/starty	: Starting Coordinate of X/Y
-**currx/curry 	: Current Coordinate of X/Y
-**prevx/prevy 	: Previous Coordinate of X/Y
-**Return 		: FTGL_OK
-*********************************************************************************************/
+/**
+ *@brief API to get the Coordinates of three States of touch points
+ * 
+ *@param startx Starting Coordinate of X
+ *@param starty Starting Coordinate of Y
+ *@param currx Current Coordinate of X
+ *@param curry Current Coordinate of Y
+ *@param prevx Previous Coordinate of X
+ *@param prevy Previous Coordinate of Y
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetCoordinates(int16_t *startx,int16_t *starty,int16_t *currx,int16_t *curry,\
 								int16_t *prevx,int16_t *prevy)
 {
@@ -1062,12 +1143,13 @@ FTGLSTATUS FTGLGetCoordinates(int16_t *startx,int16_t *starty,int16_t *currx,int
 	return FTGL_OK;	
 }
 
-/********************************************************************************************
-**Usage			: API to get the Coordinates of Tap
-**tapx/tapy		: Tap Coordinate of X/Y
-**Return 		: FTGL_OK
-*********************************************************************************************/
-
+/**
+ *@brief API to get the Coordinates of Tap
+ * 
+ *@param tapx Tap Coordinate of X
+ *@param tapy Tap Coordinate of Y
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetTapCoordinates(int16_t *tapx,int16_t *tapy)
 {
 	int16_t i;	
@@ -1078,20 +1160,22 @@ FTGLSTATUS FTGLGetTapCoordinates(int16_t *tapx,int16_t *tapy)
 	}
 	return FTGL_OK;	
 }
-/********************************************************************************************
-**Usage			: API to get the Current Number of Touches is present on the Screen
-**nooftouches	: Number of Touches present 
-**Return 		: FTGL_OK
-*********************************************************************************************/
+/**
+ *@brief API to get the Current Number of Touches is present on the Screen
+ * 
+ *@param nooftouches Number of Touches present 
+ *@return FTGL_OK
+ */
 FTGLSTATUS FTGLGetNoOfTchs(uint8_t *nooftouches)
 {
 	*nooftouches = FTGesture.currNumTchs;
 	return FTGL_OK;
 }
-/********************************************************************************************	
-**Usage			: API to get the Touch Status
-**Return 		: TRUE or FALSE 
-*********************************************************************************************/
+/**	
+ *@brief API to get the Touch Status
+ * 
+ *@return TRUE or FALSE 
+ */
 FTBOOL FTGLIsTouch()
 {
 	if(FTGesture.currNumTchs) return FTGL_TRUE; 	

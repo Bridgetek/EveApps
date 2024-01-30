@@ -1,6 +1,20 @@
-#ifndef SET00_H_
-#define SET00_H_
+#ifndef DEMOMETER_H_
+#define DEMOMETER_H_
 
-void DemoMeter(EVE_HalContext *ph);
+#include "platform.h"
 
-#endif /* SET00_H_ */
+/** Path to UI assets Folder */
+#if defined(_WIN32) 
+/** location on PC */
+#define TEST_DIR "..\\..\\..\\Test\\"
+
+#elif defined(EMBEDDED_PLATFORM) 
+/** location on sdcard */
+#define TEST_DIR "/EveApps/DemoMeter/Test"
+#else
+#define TEST_DIR "/"
+#endif
+
+#define GET_CALIBRATION                     1
+
+#endif /* DEMOMETER_H_ */

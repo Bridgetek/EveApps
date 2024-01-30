@@ -116,12 +116,12 @@
 #if defined(CLEO35)
 
 #undef GPIO_FT800_PWD
-#define GPIO_FT800_PWD (66) //for cleo35 module
+#define GPIO_FT800_PWD (66) /**< for cleo35 module */
 
 #elif defined(CLEO50)
 
 #undef GPIO_FT800_PWD
-#define GPIO_FT800_PWD (0) //for cleo50 module
+#define GPIO_FT800_PWD (0) /**< for cleo50 module */
 
 #elif defined(FT900DEMOBOARD)
 
@@ -161,7 +161,7 @@
 #endif /* RTC_PRESENT */
 
 /* Standard C libraries */
-#define ESD_USING_NEW_LIB // Using NewLib C Library for runtime
+#define ESD_USING_NEW_LIB /**< Using NewLib C Library for runtime */
 
 #include <unistd.h>
 #include <stdlib.h>

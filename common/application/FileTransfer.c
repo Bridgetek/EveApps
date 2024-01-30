@@ -63,6 +63,7 @@
 /**
  * @brief Erase flash
  *
+ * @param phost Pointer to Hal context
  * @return int 1 on successful, 0 on error
  */
 uint32_t Ftf_Flash_Erase(EVE_HalContext* phost) {
@@ -87,6 +88,7 @@ uint32_t Ftf_Flash_Erase(EVE_HalContext* phost) {
 /**
  * @brief Clear flash cache
  *
+ * @param phost Pointer to Hal context
  * @return int 1 on successful, 0 on error
  */
 uint32_t Ftf_Flash_ClearCache(EVE_HalContext* phost) {
@@ -112,8 +114,9 @@ uint32_t Ftf_Flash_ClearCache(EVE_HalContext* phost) {
  *   - If success, program the rest data of flash image by cmd_flashupdate
  *   - If not success, write a default blob.
  *
- * @param blob data buffer
- * @return int 1 on successful, 0 on error
+ * @param phost Pointer to Hal context
+ * @param pbuff data buffer
+ * @return uint32_t 1 on successful, 0 on error
  */
 uint32_t Ftf_Update_Blob(EVE_HalContext* phost, const char* pbuff) {
 	printf("Updating blob\n");
@@ -140,8 +143,9 @@ uint32_t Ftf_Update_Blob(EVE_HalContext* phost, const char* pbuff) {
 /**
  * @brief Write blob file to flash
  *
- * @param blob file Blob file address
- * @return int 1 on successful, 0 on error
+ * @param phost Pointer to Hal context
+ * @param blobfile Blob file address
+ * @return uint32_t 1 on successful, 0 on error
  */
 uint32_t Ftf_Write_BlobFile(EVE_HalContext* phost, const char* blobfile) {
 	char pBuff[BLOBSIZE];
@@ -166,7 +170,8 @@ uint32_t Ftf_Write_BlobFile(EVE_HalContext* phost, const char* blobfile) {
 /**
  * @brief Write default blob file to flash
  *
- * @return int 1 on successful, 0 on error
+ * @param phost Pointer to Hal context
+ * @return uint32_t 1 on successful, 0 on error
  */
 uint32_t Ftf_Write_Blob_Default(EVE_HalContext* phost) {
 	char pBuff[BLOBSIZE];
@@ -183,7 +188,6 @@ uint32_t Ftf_Write_Blob_Default(EVE_HalContext* phost) {
 /**
  * @brief Close the file transfer progress
  *
- * @return Ftf_Progress_t*
  */
 void Ftf_Progress_Close() {
 	FileIO_File_Close();
@@ -192,6 +196,7 @@ void Ftf_Progress_Close() {
 /**
  * @brief File transfer progress bar initialization
  *
+ * @param phost Pointer to Hal context
  * @param filePath Path to the file
  * @param fileName Filename on Progress bar
  * @param addr Address on flash
@@ -260,6 +265,7 @@ Ftf_Progress_t* Ftf_Progress_Init(EVE_HalContext* phost, const char* filePath, c
 /**
  * @brief Write a block data of file to flash
  *
+ * @param phost Pointer to Hal context
  * @param progress Ftf_Progress_t struct
  * @return uint32_t Percent of data transfered, 100 mean file transfer is done
  */
@@ -301,6 +307,7 @@ uint32_t Ftf_Progress_Write_Next(EVE_HalContext* phost, Ftf_Progress_t* progress
 /**
  * @brief Read a block data from flash to file
  *
+ * @param phost Pointer to Hal context
  * @param progress Ftf_Progress_t struct
  * @return uint32_t Percent of data received, 100 mean data transfer is done
  */
@@ -344,6 +351,7 @@ uint32_t Ftf_Progress_Read_Next(EVE_HalContext* phost, Ftf_Progress_t* progress)
  * @brief Default UI for the progress bar
  * User may construct their own UI for the progress bar with Ftf_Progress_Init and Ftf_Progress_Write_Next/Ftf_Progress_Read_Next
  *
+ * @param phost Pointer to Hal context
  * @param progress Ftf_Progress_t struct
  * @return uint32_t 1 on successful, 0 on error
  */
@@ -392,6 +400,7 @@ uint32_t Ftf_Progress_Ui(EVE_HalContext* phost, const Ftf_Progress_t* progress) 
 /**
  * @brief Write file to flash and show default progress bar on LCD
  *
+ * @param phost Pointer to Hal context
  * @param filePath File to transfer
  * @param fileName File name on the progress bar
  * @param address Address on flash
@@ -419,9 +428,11 @@ uint32_t Ftf_Write_File_To_Flash_With_Progressbar(EVE_HalContext* phost, const c
 /**
  * @brief Read file from flash and show default progress bar on LCD
  *
+ * @param phost Pointer to Hal context
  * @param filePath File to write
  * @param fileName File name on the progress bar
  * @param address Address on flash
+ * @param size
  * @return uint32_t Number of bytes received
  */
 uint32_t Ftf_Read_File_From_Flash_With_Progressbar(EVE_HalContext* phost, uint8_t* filePath, const char* fileName,
@@ -443,6 +454,7 @@ uint32_t Ftf_Read_File_From_Flash_With_Progressbar(EVE_HalContext* phost, uint8_
 /**
  * @brief Write file to flash via CMD_FLASHWRITE
  *
+ * @param phost Pointer to Hal context
  * @param fileName File to write
  * @param addr Address on flash
  * @param isErase false if Flash is already erased previously with cmd_flasherase
@@ -490,6 +502,7 @@ uint32_t Ftf_Write_File_To_Flash_By_Cmd_Fifo(EVE_HalContext* phost, const char* 
 /**
  * @brief Erase the flash and transfer a list of files into flash with CMD_FLASHWRITE
  *
+ * @param phost Pointer to Hal context
  * @param file File name array
  * @param addr Address on flash
  * @return int Number of bytes transfered, 0 on error
@@ -557,6 +570,7 @@ uint32_t Ftf_Write_FileArr_To_Flash_By_Cmd_Fifo(EVE_HalContext* phost, const cha
 /**
  * @brief Write file to flash via RAM_G
  *
+ * @param phost Pointer to Hal context
  * @param fileName File to write
  * @param addr Address on flash
  * @return int Number of bytes transfered on successful, 0 on error
@@ -627,6 +641,7 @@ uint32_t Ftf_Write_File_To_Flash_By_RAM_G(EVE_HalContext* phost, const char* fil
 /**
  * @brief Transfer a list of files into flash with CMD_UPDATE
  *
+ * @param phost Pointer to Hal context
  * @param file File name array
  * @param addr Address on flash
  * @return int Number of bytes transfered, 0 on error
@@ -652,8 +667,9 @@ uint32_t Ftf_Write_FileArr_To_Flash_By_RAM_G(EVE_HalContext* phost, const char* 
 /**
  * @brief Read data on RAM_G into a file
  *
+ * @param phost Pointer to Hal context
  * @param output Filename output
- * @param startAddress Address on RAM_G
+ * @param address Address on RAM_G
  * @param size Size to read
  * @return uint32_t 1 on successful, 0 on error
  */
@@ -712,8 +728,11 @@ uint32_t Ftf_Flash_Get_Size(EVE_HalContext* phost) {
 /**
  * @brief Transfer a file to RAM_G
  *
+ * @param phost Pointer to Hal context
  * @param file File to transfer
  * @param addr Address on RAM_G
+ * @param nbytes Number of bytes to transfer
+ * @param offset Offset of the file
  * @return uint32_t Number of bytes transfered on successful, 0 on error
  */
 uint32_t Ftf_Write_File_nBytes_To_RAM_G(EVE_HalContext* phost, const char* file, uint32_t addr, int nbytes, int offset) {
@@ -759,6 +778,7 @@ uint32_t Ftf_Write_File_nBytes_To_RAM_G(EVE_HalContext* phost, const char* file,
 /**
  * @brief Transfer a file to RAM_G
  *
+ * @param phost Pointer to Hal context
  * @param file File to transfer
  * @param addr Address on RAM_G
  * @return uint32_t Number of bytes transfered on successful, 0 on error
@@ -770,6 +790,7 @@ uint32_t Ftf_Write_File_To_RAM_G(EVE_HalContext* phost, const char* file, uint32
 /**
  * @brief Transfer a file list into RAM_G
  *
+ * @param phost Pointer to Hal context
  * @param file File name array
  * @param addr Address on RAM_G
  * @return uint32_t Number of bytes transfered on successful, 0 on error
@@ -795,6 +816,7 @@ uint32_t Ftf_Write_FileArr_To_RAM_G(EVE_HalContext* phost, char* file[], uint32_
 /**
  * @brief Read data on RAM_G into a file
  *
+ * @param phost Pointer to Hal context
  * @param output Filename output
  * @param startAddress Address on RAM_G
  * @param size Size to read

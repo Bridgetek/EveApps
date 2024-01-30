@@ -85,37 +85,41 @@ typedef int64_t int64;
 #include "ftd2xx.h"
 
 #define FT4222_EVENT_RXCHAR 8
-// spi slave sync word
-#define FT4222_SPI_SLAVE_SYNC_WORD 0x5A
 
-// spi slave cmd
+#define FT4222_SPI_SLAVE_SYNC_WORD 0x5A /**< spi slave sync word */
+
+/** @name spi slave cmd */
+///@{
 #define SPI_MASTER_TRANSFER 0x80
 #define SPI_SLAVE_TRANSFER 0x81
 #define SPI_SHORT_MASTER_TRANSFER 0x82
 #define SPI_SHORT_SLAVE_TRANSFER 0x83
-// Backwards compatibility for typo in earlier version
+///@}
+/** @name Backwards compatibility for typo in earlier version */
+///@{
 #define SPI_SHART_SLAVE_TRANSFER 0x83
 #define SPI_ACK 0x84
+///@}
 
-/* I2C Master Controller Status
+/** @name I2C Master Controller Status 
  *   bit 0 = controller busy: all other status bits invalid
- *   bit 1 = error condition
- *   bit 2 = slave address was not acknowledged during last operation
- *   bit 3 = data not acknowledged during last operation
- *   bit 4 = arbitration lost during last operation
- *   bit 5 = controller idle
- *   bit 6 = bus busy
+ *   \n bit 1 = error condition
+ *   \n bit 2 = slave address was not acknowledged during last operation
+ *   \n bit 3 = data not acknowledged during last operation
+ *   \n bit 4 = arbitration lost during last operation
+ *   \n bit 5 = controller idle
+ *   \n bit 6 = bus busy
  */
+///@{
 #define I2CM_CONTROLLER_BUSY(status) (((status)&0x01) != 0)
 #define I2CM_DATA_NACK(status) (((status)&0x0A) != 0)
 #define I2CM_ADDRESS_NACK(status) (((status)&0x06) != 0)
 #define I2CM_ARB_LOST(status) (((status)&0x12) != 0)
 #define I2CM_IDLE(status) (((status)&0x20) != 0)
 #define I2CM_BUS_BUSY(status) (((status)&0x40) != 0)
+///@}
 
-//
-// FT4222 Device status
-//
+/** FT4222 Device status */
 typedef enum FT4222_STATUS
 {
 	FT4222_OK,
@@ -139,7 +143,7 @@ typedef enum FT4222_STATUS
 	FT4222_OTHER_ERROR,
 	FT4222_DEVICE_LIST_NOT_READY,
 
-	FT4222_DEVICE_NOT_SUPPORTED = 1000, // FT_STATUS extending message
+	FT4222_DEVICE_NOT_SUPPORTED = 1000, /**< 1000, FT_STATUS extending message */
 	FT4222_CLK_NOT_SUPPORTED,
 	FT4222_VENDER_CMD_NOT_SUPPORTED,
 	FT4222_IS_NOT_SPI_MODE,
@@ -166,7 +170,7 @@ typedef enum FT4222_STATUS
 
 typedef enum FT4222_ClockRate
 {
-	SYS_CLK_60 = 0,
+	SYS_CLK_60 = 0, /**< 0 */
 	SYS_CLK_24,
 	SYS_CLK_48,
 	SYS_CLK_80,
@@ -175,7 +179,7 @@ typedef enum FT4222_ClockRate
 
 typedef enum FT4222_FUNCTION
 {
-	FT4222_I2C_MASTER = 1,
+	FT4222_I2C_MASTER = 1, /**< 1 */
 	FT4222_I2C_SLAVE,
 	FT4222_SPI_MASTER,
 	FT4222_SPI_SLAVE,
@@ -184,43 +188,43 @@ typedef enum FT4222_FUNCTION
 
 typedef enum FT4222_SPIMode
 {
-	SPI_IO_NONE = 0,
-	SPI_IO_SINGLE = 1,
-	SPI_IO_DUAL = 2,
-	SPI_IO_QUAD = 4,
+	SPI_IO_NONE = 0, /**< 0 */
+	SPI_IO_SINGLE = 1, /**< 1 */
+	SPI_IO_DUAL = 2, /**< 2 */
+	SPI_IO_QUAD = 4, /**< 4 */
 
 } FT4222_SPIMode;
 
 typedef enum FT4222_SPIClock
 {
-	CLK_NONE = 0,
-	CLK_DIV_2, // 1/2   System Clock
-	CLK_DIV_4, // 1/4   System Clock
-	CLK_DIV_8, // 1/8   System Clock
-	CLK_DIV_16, // 1/16  System Clock
-	CLK_DIV_32, // 1/32  System Clock
-	CLK_DIV_64, // 1/64  System Clock
-	CLK_DIV_128, // 1/128 System Clock
-	CLK_DIV_256, // 1/256 System Clock
-	CLK_DIV_512, // 1/512 System Clock
+	CLK_NONE = 0, /** < 0 */
+	CLK_DIV_2, /**< 1/2 System Clock */
+	CLK_DIV_4, /**< 1/4   System Clock */
+	CLK_DIV_8, /**< 1/8   System Clock */
+	CLK_DIV_16, /**< 1/16  System Clock */
+	CLK_DIV_32, /**< 1/32  System Clock */
+	CLK_DIV_64, /**< 1/64  System Clock */
+	CLK_DIV_128, /**< 1/128 System Clock */
+	CLK_DIV_256, /**< 1/256 System Clock */
+	CLK_DIV_512, /**< 1/512 System Clock */
 
 } FT4222_SPIClock;
 
 typedef enum FT4222_SPICPOL
 {
-	CLK_IDLE_LOW = 0,
-	CLK_IDLE_HIGH = 1,
+	CLK_IDLE_LOW = 0, /**< 0 */
+	CLK_IDLE_HIGH = 1, /**< 1 */
 } FT4222_SPICPOL;
 
 typedef enum FT4222_SPICPHA
 {
-	CLK_LEADING = 0,
-	CLK_TRAILING = 1,
+	CLK_LEADING = 0, /**< 0 */
+	CLK_TRAILING = 1, /**< 1 */
 } FT4222_SPICPHA;
 
 typedef enum SPI_DrivingStrength
 {
-	DS_4MA = 0,
+	DS_4MA = 0, /**< 0 */
 	DS_8MA,
 	DS_12MA,
 	DS_16MA,
@@ -228,7 +232,7 @@ typedef enum SPI_DrivingStrength
 
 typedef enum GPIO_Port
 {
-	GPIO_PORT0 = 0,
+	GPIO_PORT0 = 0, /**< 0 */
 	GPIO_PORT1,
 	GPIO_PORT2,
 	GPIO_PORT3
@@ -236,18 +240,18 @@ typedef enum GPIO_Port
 
 typedef enum GPIO_Dir
 {
-	GPIO_OUTPUT = 0,
+	GPIO_OUTPUT = 0, /**< 0 */
 	GPIO_INPUT,
 } GPIO_Dir;
 
-// Backwards compatibility for typo in earlier version
+/** Backwards compatibility for typo in earlier version */
 #define GPIO_Tigger GPIO_Trigger
 typedef enum GPIO_Trigger
 {
-	GPIO_TRIGGER_RISING = 0x01,
-	GPIO_TRIGGER_FALLING = 0x02,
-	GPIO_TRIGGER_LEVEL_HIGH = 0x04,
-	GPIO_TRIGGER_LEVEL_LOW = 0X08
+	GPIO_TRIGGER_RISING = 0x01, /**< 0x01 */
+	GPIO_TRIGGER_FALLING = 0x02, /**< 0x02 */
+	GPIO_TRIGGER_LEVEL_HIGH = 0x04, /**< 0x04 */
+	GPIO_TRIGGER_LEVEL_LOW = 0X08 /**< 0x08 */
 } GPIO_Trigger;
 
 typedef enum GPIO_Output
@@ -258,16 +262,16 @@ typedef enum GPIO_Output
 
 typedef enum I2C_MasterFlag
 {
-	NONE = 0x80,
-	START = 0x02,
-	Repeated_START = 0x03, // Repeated_START will not send master code in HS mode
-	STOP = 0x04,
-	START_AND_STOP = 0x06, // START condition followed by SEND and STOP condition
+	NONE = 0x80, /**< 0x80 */
+	START = 0x02, /**< 0x02 */
+	Repeated_START = 0x03, /**< 0x03, Repeated_START will not send master code in HS mode */
+	STOP = 0x04, /**< 0x04 */
+	START_AND_STOP = 0x06, /**< 0x06, START condition followed by SEND and STOP condition */
 } I2C_MasterFlag;
 
 typedef enum SPI_SlaveProtocol
 {
-	SPI_SLAVE_WITH_PROTOCOL = 0,
+	SPI_SLAVE_WITH_PROTOCOL = 0, /**< 0 */
 	SPI_SLAVE_NO_PROTOCOL,
 	SPI_SLAVE_NO_ACK,
 } SPI_SlaveProtocol;
@@ -293,7 +297,8 @@ struct SPI_Slave_Header
 extern "C" {
 #endif
 
-// FT4222 General Functions
+/** @name FT4222 General Functions */
+///@{
 LIBFT4222_API FT4222_STATUS FT4222_UnInitialize(FT_HANDLE ftHandle);
 LIBFT4222_API FT4222_STATUS FT4222_SetClock(FT_HANDLE ftHandle, FT4222_ClockRate clk);
 LIBFT4222_API FT4222_STATUS FT4222_GetClock(FT_HANDLE ftHandle, FT4222_ClockRate *clk);
@@ -304,8 +309,10 @@ LIBFT4222_API FT4222_STATUS FT4222_GetMaxTransferSize(FT_HANDLE ftHandle, uint16
 LIBFT4222_API FT4222_STATUS FT4222_SetEventNotification(FT_HANDLE ftHandle, DWORD mask, PVOID param);
 LIBFT4222_API FT4222_STATUS FT4222_GetVersion(FT_HANDLE ftHandle, FT4222_Version *pVersion);
 LIBFT4222_API FT4222_STATUS FT4222_ChipReset(FT_HANDLE ftHandle);
+///@}
 
-// FT4222 SPI Functions
+/** @name FT4222 SPI Functions */
+///@{
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_Init(FT_HANDLE ftHandle, FT4222_SPIMode ioLine, FT4222_SPIClock clock, FT4222_SPICPOL cpol, FT4222_SPICPHA cpha, uint8 ssoMap);
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SetLines(FT_HANDLE ftHandle, FT4222_SPIMode spiMode);
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SingleRead(FT_HANDLE ftHandle, uint8 *buffer, uint16 bufferSize, uint16 *sizeOfRead, BOOL isEndTransaction);
@@ -324,8 +331,10 @@ LIBFT4222_API FT4222_STATUS FT4222_SPISlave_RxQuickResponse(FT_HANDLE ftHandle, 
 LIBFT4222_API FT4222_STATUS FT4222_SPI_Reset(FT_HANDLE ftHandle);
 LIBFT4222_API FT4222_STATUS FT4222_SPI_ResetTransaction(FT_HANDLE ftHandle, uint8 spiIdx);
 LIBFT4222_API FT4222_STATUS FT4222_SPI_SetDrivingStrength(FT_HANDLE ftHandle, SPI_DrivingStrength clkStrength, SPI_DrivingStrength ioStrength, SPI_DrivingStrength ssoStrength);
+///@}
 
-// FT4222 I2C Functions
+/** @name FT4222 I2C Functions */
+///@{
 LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Init(FT_HANDLE ftHandle, uint32 kbps);
 LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Read(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 *buffer, uint16 bufferSize, uint16 *sizeTransferred);
 LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Write(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 *buffer, uint16 bufferSize, uint16 *sizeTransferred);
@@ -343,8 +352,10 @@ LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Read(FT_HANDLE ftHandle, uint8 *buff
 LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Write(FT_HANDLE ftHandle, uint8 *buffer, uint16 bufferSize, uint16 *sizeTransferred);
 LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_SetClockStretch(FT_HANDLE ftHandle, BOOL enable);
 LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_SetRespWord(FT_HANDLE ftHandle, uint8 responseWord);
+///@}
 
-// FT4222 GPIO Functions
+/** @name FT4222 GPIO Functions */
+///@{
 LIBFT4222_API FT4222_STATUS FT4222_GPIO_Init(FT_HANDLE ftHandle, GPIO_Dir gpioDir[4]);
 LIBFT4222_API FT4222_STATUS FT4222_GPIO_Read(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL *value);
 LIBFT4222_API FT4222_STATUS FT4222_GPIO_Write(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL bValue);
@@ -352,6 +363,7 @@ LIBFT4222_API FT4222_STATUS FT4222_GPIO_SetInputTrigger(FT_HANDLE ftHandle, GPIO
 LIBFT4222_API FT4222_STATUS FT4222_GPIO_GetTriggerStatus(FT_HANDLE ftHandle, GPIO_Port portNum, uint16 *queueSize);
 LIBFT4222_API FT4222_STATUS FT4222_GPIO_ReadTriggerQueue(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger *events, uint16 readSize, uint16 *sizeofRead);
 LIBFT4222_API FT4222_STATUS FT4222_GPIO_SetWaveFormMode(FT_HANDLE ftHandle, BOOL enable);
+///@}
 
 #ifdef __cplusplus
 }

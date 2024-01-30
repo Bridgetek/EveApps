@@ -28,14 +28,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "Platform.h"
 #include "Common.h"
-#include "App.h"
+#include "Platform.h"
+#include "EVE_CoCmd.h"
+#include "DemoFlashBitbang.h"
 #if defined(EVE_FLASH_AVAILABLE)
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoFlashBitbang();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Flash Bitbang demo: Reading flash content in low-level mode",
+		"Support QVGA, WQVGA, WVGA, WSVGA, WXGA",
+		"EVE3/4",
+		"WIN32, FT9XX, IDM2040"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoFlashBitbang();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 typedef enum _KEYBOARD_TYPE_E {
 	KEYBOARD_0_9, KEYBOARD_HEXA, KEYBOARD_09_AZ, KEYBOARD_09_az_AZ
 }KEYBOARD_TYPE;
@@ -855,9 +896,7 @@ void TestCmd() {
 	EVE_sleep(2000);
 }
 
-void DemoFlashBitbang(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
-
+void DemoFlashBitbang() {
 	/// Detach flash
 	FlashHelper_SwitchState(s_pHalContext, FLASH_STATUS_DETACHED);
 	EVE_Cmd_waitFlush(s_pHalContext);
@@ -876,4 +915,7 @@ void DemoFlashBitbang(EVE_HalContext* pHalContext) {
 	/// Start demo
 	ui();
 }
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

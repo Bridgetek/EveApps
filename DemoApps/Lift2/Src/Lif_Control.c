@@ -38,13 +38,13 @@
 
 #define ENABLE_FAST_MOVE 1
 
-#define CLOSING_TIME_MS		3	//timeout to simulate closing the door
-#define OPENING_TIME_MS		3	//timeout to simulate opening the door
-#define WAIT_TO_GO_MS		1	//timeout to wait to go after closing the door
-#define FLOOR_MOVE_MS		1	//timeout unit to move up/down to next floor
+#define CLOSING_TIME_MS 3 /**< timeout to simulate closing the door */
+#define OPENING_TIME_MS 3 /**< timeout to simulate opening the door */
+#define WAIT_TO_GO_MS 1 /**< timeout to wait to go after closing the door */
+#define FLOOR_MOVE_MS 1 /**< timeout unit to move up / down to next floor */
 #define WAIT_TO_CLOSE_MS	1
 
-#define GROUND_FLOOR_NUM	2		//floor_num = 1 for B1 and floor_num = 0 for B2
+#define GROUND_FLOOR_NUM	2		/**< floor_num = 1 for B1 and floor_num = 0 for B2 */
 floor_pad_t FloorPads[MAX_PAD_NUMBER] = {
 							{.floor_num = 0,.tag = TAG_FLOOR_0,.is_touched = false, .is_active = false,},
 							{.floor_num = 1,.tag = TAG_FLOOR_1,.is_touched = false, .is_active = false,},

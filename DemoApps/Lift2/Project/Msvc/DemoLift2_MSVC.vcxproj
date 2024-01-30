@@ -59,7 +59,6 @@
     <ClCompile Include="..\..\..\..\common\application\Common.c" />
     <ClCompile Include="..\..\..\..\common\application\Logo.c" />
     <ClCompile Include="..\..\..\..\common\application\Maths.c" />
-    <ClCompile Include="..\..\Src\App.c" />
     <ClCompile Include="..\..\Src\DemoLift2.c" />
     <ClCompile Include="..\..\Src\Lift_DisplayPanel.c" />
     <ClCompile Include="..\..\Src\Lif_Control.c" />
@@ -110,7 +109,6 @@
     <ClInclude Include="..\..\..\..\common\application\Gesture.h" />
     <ClInclude Include="..\..\..\..\common\application\Logo.h" />
     <ClInclude Include="..\..\..\..\common\application\Maths.h" />
-    <ClInclude Include="..\..\Hdr\App.h" />
     <ClInclude Include="..\..\Hdr\DemoLift2.h" />
     <ClInclude Include="..\..\Hdr\Lift_DisplayPanel.h" />
     <ClInclude Include="..\..\Hdr\Lift_Control.h" />

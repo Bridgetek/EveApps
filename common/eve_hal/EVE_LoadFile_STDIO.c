@@ -74,18 +74,21 @@ EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
 	uint32_t addr = address;
+	errno_t err = 0;
 
-#pragma warning(push)
-#pragma warning(disable : 4996)
 #ifdef _WIN32
-	afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	afile = fopen(filename, "rb"); // read Binary (rb)
+	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
 #endif
-#pragma warning(pop)
-	if (afile == NULL)
+	if (err || afile == NULL)
 	{
-		eve_printf_debug("Unable to open: %s\n", filename);
+#ifdef _WIN32
+		if (!filename)
+			eve_printf_debug("Unable to open: %ls\n", filenameW);
+		else
+#endif
+			eve_printf_debug("Unable to open: %s\n", filename);
 		return false;
 	}
 	fseek(afile, 0, SEEK_END);
@@ -137,21 +140,25 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t add
 	uint32_t ftsize = 0;
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
+	errno_t err = 0;
 
 	if (!EVE_Cmd_waitSpace(phost, 8))
 		return false; // Space for CMD_INFLATE
 
-#pragma warning(push)
-#pragma warning(disable : 4996)
 #ifdef _WIN32
-	afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	afile = fopen(filename, "rb"); // read Binary (rb)
+	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
 #endif
-#pragma warning(pop)
-	if (afile == NULL)
+	if (err || afile == NULL)
 	{
-		eve_printf_debug("Unable to open: %s\n", filename);
+#ifdef _WIN32
+		if (!filename)
+			eve_printf_debug("Unable to open: %ls\n", filenameW);
+		else
+#endif
+			eve_printf_debug("Unable to open: %s\n", filename);
 		return false;
 	}
 	EVE_Cmd_wr32(phost, CMD_INFLATE);
@@ -167,7 +174,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t add
 		blocklen += 3;
 		blocklen &= ~3U;
 
-		if (!EVE_Cmd_wrMem(phost, (char *)pbuff, blocklen)) /* copy data continuously into command memory */
+		if (!EVE_Cmd_wrMem(phost, pbuff, blocklen)) /* copy data continuously into command memory */
 			break;
 	}
 
@@ -210,21 +217,25 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 	uint32_t ftsize = 0;
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
+	errno_t err = 0;
 
 	if (phost->CmdFault)
 		return false;
 
-#pragma warning(push)
-#pragma warning(disable : 4996)
 #ifdef _WIN32
-	afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	afile = fopen(filename, "rb"); // read Binary (rb)
+	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
 #endif
-#pragma warning(pop)
-	if (afile == NULL)
+	if (err || afile == NULL)
 	{
-		eve_printf_debug("Unable to open: %s\n", filename);
+#ifdef _WIN32
+		if (!filename)
+			eve_printf_debug("Unable to open: %ls\n", filenameW);
+		else
+#endif
+			eve_printf_debug("Unable to open: %s\n", filename);
 		return 0;
 	}
 	EVE_Cmd_wr32(phost, CMD_LOADIMAGE);
@@ -245,7 +256,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 		blocklen += 3;
 		blocklen &= ~3U;
 
-		if (!EVE_Cmd_wrMem(phost, (char *)pbuff, blocklen))
+		if (!EVE_Cmd_wrMem(phost, pbuff, blocklen))
 			break;
 	}
 
@@ -284,18 +295,22 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *file
 	uint32_t ftsize = 0;
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
+	errno_t err = 0;
 
-#pragma warning(push)
-#pragma warning(disable : 4996)
 #ifdef _WIN32
-	afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	afile = fopen(filename, "rb"); // read Binary (rb)
+	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
 #endif
-#pragma warning(pop)
-	if (afile == NULL)
+	if (err || afile == NULL)
 	{
-		eve_printf_debug("Unable to open: %s\n", filename);
+#ifdef _WIN32
+		if (!filename)
+			eve_printf_debug("Unable to open: %ls\n", filenameW);
+		else
+#endif
+			eve_printf_debug("Unable to open: %s\n", filename);
 		return false;
 	}
 	fseek(afile, 0, SEEK_END);
@@ -308,7 +323,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *file
 		ftsize -= blocklen;
 		blocklen += 3;
 		blocklen &= ~3U;
-		if (!EVE_Cmd_wrMem(phost, (char *)pbuff, blocklen)) /* copy data continuously into command memory */
+		if (!EVE_Cmd_wrMem(phost, pbuff, blocklen)) /* copy data continuously into command memory */
 			break;
 		if (transfered)
 			*transfered += blocklen;
@@ -333,6 +348,52 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *
 
 #endif
 
+#ifdef _WIN32
+static size_t readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename, const wchar_t *filenameW)
+#else
+EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+#endif
+{
+	// Read up to `size` number of bytes from the file into `buffer`, then return the number of read bytes
+	FILE *afile;
+	size_t read;
+	errno_t err = 0;
+
+#ifdef _WIN32
+	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
+#else
+	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
+#endif
+	if (err || afile == NULL)
+	{
+#ifdef _WIN32
+		if (!filename)
+			eve_printf_debug("Unable to open: %ls\n", filenameW);
+		else
+#endif
+			eve_printf_debug("Unable to open: %s\n", filename);
+		return 0;
+	}
+	read = fread(buffer, 1, size, afile);
+	fclose(afile);
+	return read;
+}
+
+#ifdef _WIN32
+
+EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+{
+	return readFile(phost, buffer, size, filename, NULL);
+}
+
+EVE_HAL_EXPORT size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename)
+{
+	return readFile(phost, buffer, size, NULL, filename);
+}
+
+#endif
+
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #ifdef _WIN32
 static bool loadMediaFile(EVE_HalContext *phost, const char *filename, const wchar_t *filenameW, uint32_t *transfered)
@@ -348,32 +409,33 @@ EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *fi
 	uint8_t *pbuff = (uint8_t *)_alloca(blockSize);
 #pragma warning(pop)
 	uint16_t blocklen;
+	errno_t err = 0;
 	if (!transfered)
 		EVE_Util_closeFile(phost);
 	if (phost->CmdFault)
 		return false;
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#ifdef _WIN32
 	if (phost->LoadFileHandle)
 	{
 		afile = phost->LoadFileHandle;
 	}
-	else if (filename)
+#ifdef _WIN32
+	else if (!filename)
 	{
-		afile = fopen(filename, "rb");
+		err = _wfopen_s(&afile, filenameW, L"rb");
 	}
+#endif
 	else
 	{
-		afile = _wfopen(filenameW, L"rb");
+		err = fopen_s(&afile, filename, "rb");
 	}
-#else
-	afile = phost->LoadFileHandle ? phost->LoadFileHandle : fopen(filename, "rb"); // read Binary (rb)
-#endif
-#pragma warning(pop)
-	if (afile == NULL)
+	if (err || afile == NULL)
 	{
-		eve_printf_debug("Unable to open: %s\n", filename);
+#ifdef _WIN32
+		if (!filename)
+			eve_printf_debug("Unable to open: %ls\n", filenameW);
+		else
+#endif
+			eve_printf_debug("Unable to open: %s\n", filename);
 		return false;
 	}
 	if (!phost->LoadFileHandle)

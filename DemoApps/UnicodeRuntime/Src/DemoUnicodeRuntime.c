@@ -28,15 +28,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "Common.h"
 #include "Platform.h"
 #include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
+#include "DemoUnicodeRuntime.h"
+
 #if EVE_CHIPID >= EVE_BT815
 
-static EVE_HalContext *s_pHalContext;
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoUnicodeRuntime();
 
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+    s_pHalContext = &s_halContext;
+    Gpu_Init(s_pHalContext);
+
+    // read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+    Esd_Calibrate(s_pHalContext);
+    Calibration_Save(s_pHalContext);
+#endif
+
+    EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Unicode demo with runtime determined characters",
+		"Support QVGA, WQVGA, WVGA",
+		"EVE3/4",
+		"WIN32 only"
+	};
+
+    while (TRUE) {
+        WelcomeScreen(s_pHalContext, info);
+        DemoUnicodeRuntime();
+        EVE_Util_clearScreen(s_pHalContext);
+        EVE_Hal_close(s_pHalContext);
+        EVE_Hal_release();
+
+        /* Init HW Hal for next loop*/
+        Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+        Calibration_Restore(s_pHalContext);
+#endif
+    }
+    return 0;
+}
+
+// ************************************ application ************************************
 #include "Common.h"
 #include "Mmngr.h"
 #include "Filemngr.h"
@@ -418,8 +458,7 @@ static void createSampleTXT(char *utfTxt) {
 	buff2File(utfTxt, bufferTest, sizeof(bufferTest), fl_write);
 }
 
-void DemoUnicodeRuntime(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoUnicodeRuntime() {
 #define TESTFOLDER TEST_DIR "\\NotoSans\\"
 
 	// congifuration
@@ -496,4 +535,8 @@ void DemoUnicodeRuntime(EVE_HalContext* pHalContext) {
 	memfree(xfontBuffIn, 0);
 	memfree(glyphBuffIn, 0);
 }
+
+#else
+#warning Platform is not supported
+int main(int argc, char* argv[]) {}
 #endif

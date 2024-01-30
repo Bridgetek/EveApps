@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['o_5fdata_0',['o_data',['../classsdcard.html#a99f188a5808bc5c301d816c7d0f73eec',1,'sdcard']]],
+  ['o_5ffat_1',['o_fat',['../classsdcard.html#ac4c541420fd75b490b1e104023995e27',1,'sdcard']]],
+  ['o_5fpartition_2',['o_partition',['../classsdcard.html#ae739768f33f60d87bafe7eb4a0ec5e20',1,'sdcard']]],
+  ['o_5froot_3',['o_root',['../classsdcard.html#aaec9672397680a7e318a557a0382dc9f',1,'sdcard']]],
+  ['obj_4',['obj',['../struct_f_i_l.html#ad95b6e85106673b0d7a1855da4d264f4',1,'FIL::obj'],['../struct_d_i_r.html#a8fa2dfd8198410ea92a98281d982cf44',1,'DIR::obj']]],
+  ['object_5',['Object',['../struct_esd___animation_info.html#ab7e65e020b61b8a92b3921e3771ba5ef',1,'Esd_AnimationInfo']]],
+  ['objsize_6',['objsize',['../struct_f_f_o_b_j_i_d.html#a83c51ba99687054f0cc653b45f195268',1,'FFOBJID']]],
+  ['offset_7',['offset',['../class_reader.html#ae41f3bf6d3beb2bb55cbe428528cf8b3',1,'Reader::offset'],['../struct___o_v_e_r_l_a_p_p_e_d.html#a60b84fb65a45c8383a5274b38a3f4896',1,'_OVERLAPPED::Offset'],['../structbitmap__header__t.html#a02b72a914fe4baeeda3e3d28bf3c9032',1,'bitmap_header_t::Offset']]],
+  ['offsetglyphdata_8',['OffsetGlyphData',['../struct_e_v_e___gpu___fonts_ext.html#a4d1ced4e8b343ad53968eb4c451771e1',1,'EVE_Gpu_FontsExt']]],
+  ['offsethigh_9',['OffsetHigh',['../struct___o_v_e_r_l_a_p_p_e_d.html#a07370c1d35023959e51450a8e91c5a32',1,'_OVERLAPPED']]],
+  ['ofs_10',['ofs',['../struct_f_i_l_e_s_e_m.html#aa0181a44ea72df9a8921331b763b371e',1,'FILESEM']]],
+  ['oldvideodroppedframes_11',['OldVideoDroppedFrames',['../struct_f_t___a_v_i_player.html#afc4e88fd01d7a75eebf0a4b9a0c247a0',1,'FT_AVIPlayer']]],
+  ['opened_12',['Opened',['../struct_e_v_e___device_info.html#acde8e20d6a4172b480a8aa2a1bc26c55',1,'EVE_DeviceInfo']]],
+  ['openeddevices_13',['OpenedDevices',['../struct_e_v_e___hal_platform.html#a2db2ade6428e280daa4791fa63992425',1,'EVE_HalPlatform']]],
+  ['ops_14',['ops',['../struct_gui_internal__t.html#a6663560fdb9fd3bf6233c22778a41681',1,'GuiInternal_t']]],
+  ['opt_15',['opt',['../struct___a_p_p_b_u_t_t_o_n.html#a6be1682195263824198ef66998cfbb03',1,'_APPBUTTON']]],
+  ['option_16',['Option',['../struct_f_t___ring_buffer.html#aef61e1e27237afb8a211c1e6f8c1d9e3',1,'FT_RingBuffer']]],
+  ['orientation_17',['Orientation',['../struct_s___lift_app_ctxt.html#abc0865d14cc26252869b39b808a581b5',1,'S_LiftAppCtxt']]],
+  ['origin_5fxy_18',['origin_xy',['../_demo_refrigerator_8c.html#ad4eab53434135c3f20e79a33a96a0e2e',1,'DemoRefrigerator.c']]],
+  ['otpfilepath_19',['OtpFilePath',['../struct_b_t8_x_x_e_m_u___emulator_parameters.html#a0d8014d3373133d4cfe23cc5543b796e',1,'BT8XXEMU_EmulatorParameters']]],
+  ['outbitsb_20',['OutBitsB',['../struct_e_v_e___config_parameters.html#ae3da80eed715dd4bae6e8f896f6f3e7f',1,'EVE_ConfigParameters']]],
+  ['outbitsg_21',['OutBitsG',['../struct_e_v_e___config_parameters.html#ac90ba667033b7fad2575fcadc88a8c5d',1,'EVE_ConfigParameters']]],
+  ['outbitsr_22',['OutBitsR',['../struct_e_v_e___config_parameters.html#acaeec0dda7aba602778e485a648a5f7b',1,'EVE_ConfigParameters']]],
+  ['owner_23',['Owner',['../struct_esd___touch_tag.html#a78c452138d608fca2b42e0023ac3d01b',1,'Esd_TouchTag']]],
+  ['ox_24',['ox',['../_demo_gauges_8c.html#af5293ccd348be6fd9d7ad8e6fd3c3bad',1,'DemoGauges.c']]]
+];

@@ -3,7 +3,7 @@
 
 #include "platform.h"
 
-// Path to UI assets Folder
+/** Path to UI assets Folder */
 #if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
 #define TEST_DIR                            "..\\..\\..\\Test\\"
 #else

@@ -28,15 +28,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-#include "Platform.h"
-#include "EVE_CoCmd.h"
-#include "Common.h"
-#include "App.h"
 #ifndef DISPLAY_RESOLUTION_QVGA
 
-static EVE_HalContext *s_pHalContext;
+#include "Common.h"
+#include "Platform.h"
+#include "EVE_CoCmd.h"
+#include "DemoRefrigerator.h"
 
+static EVE_HalContext s_halContext;
+static EVE_HalContext* s_pHalContext;
+void DemoRefrigerator();
+
+// ************************************ main loop ************************************
+int main(int argc, char* argv[])
+{
+	s_pHalContext = &s_halContext;
+	Gpu_Init(s_pHalContext);
+
+	// read and store calibration setting
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+	Esd_Calibrate(s_pHalContext);
+	Calibration_Save(s_pHalContext);
+#endif
+
+	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
+	EVE_Util_clearScreen(s_pHalContext);
+
+	char* info[] =
+	{ "Refrigerator demo",
+		"Support WQVGA, WVGA",
+		"EVE1/2/3/4",
+		"WIN32, FT9XX"
+	};
+
+	while (TRUE) {
+		WelcomeScreen(s_pHalContext, info);
+		DemoRefrigerator();
+		EVE_Util_clearScreen(s_pHalContext);
+		EVE_Hal_close(s_pHalContext);
+		EVE_Hal_release();
+
+		/* Init HW Hal for next loop*/
+		Gpu_Init(s_pHalContext);
+#if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
+		Calibration_Restore(s_pHalContext);
+#endif
+	}
+	return 0;
+}
+
+// ************************************ application ************************************
 #if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
 #include "time.h"
 #include "math.h"
@@ -89,7 +130,9 @@ DWORD get_fattime(void)
 uint32_t music_playing = 0, fileszsave = 0;
 float_t theta;
 
-/* API to load raw data from file into perticular locatio of ft800 */
+/**
+ * @brief API to load raw data from file into perticular locatio of ft800 
+ */
 void DemoLoadRawFromFile(char8_t *pFileName, uint32_t DstAddr)
 {
 	char8_t fileName[255] = TEST_DIR "\\";
@@ -858,8 +901,7 @@ void scrensaver()
 	}
 }
 
-void DemoRefrigerator(EVE_HalContext* pHalContext) {
-	s_pHalContext = pHalContext;
+void DemoRefrigerator() {
 	int32_t xoffset1, xoffest2, BMoffsetx1, BMoffsety1, BMoffsetx2, BMoffsety2, y, j;
 	uint32_t val = 0, tracker = 0, tracking_tag = 0, track_val_min, track_val_max, unit_val, val_font = 0;
 	char8_t img_n;
