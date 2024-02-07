@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['begin_0',['begin',['../classsdcard.html#a1bcac5c413fa34eec8df9d087a3d24ca',1,'sdcard::begin()'],['../class_reader.html#a20edcd2bfdb9e3dfa57a55e923497529',1,'Reader::begin()']]],
+  ['bootupconfig_1',['BootupConfig',['../_gpu___hal_8cpp.html#acdb3c9500a029e3781e975ab0e5fb98a',1,'Gpu_Hal.cpp']]],
+  ['bt8xxemu_5fchipselect_2',['BT8XXEMU_chipSelect',['../bt8xxemu_8h.html#acb5030b38c02a67f177c57df97af5956',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fdefaults_3',['BT8XXEMU_defaults',['../bt8xxemu_8h.html#a144ffbcf9dd7406c8aeb20f0b3e031c9',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fdestroy_4',['BT8XXEMU_destroy',['../bt8xxemu_8h.html#abed128aa3e72306459fec728f84a2643',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5fcreate_5',['BT8XXEMU_Flash_create',['../bt8xxemu_8h.html#a33f452d0f115a6493061e2441c3adf00',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5fdefaults_6',['BT8XXEMU_Flash_defaults',['../bt8xxemu_8h.html#a21cef5920870e716cb349769ac964447',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5fdestroy_7',['BT8XXEMU_Flash_destroy',['../bt8xxemu_8h.html#a2ddae3999e6181ee9c0952c52af167c5',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fflash_5ftransferspi4_8',['BT8XXEMU_Flash_transferSpi4',['../bt8xxemu_8h.html#a0f08c35ceefb81c2a96ca3358f7d04ae',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fhasinterrupt_9',['BT8XXEMU_hasInterrupt',['../bt8xxemu_8h.html#aab3084e970811db90d8a96463818b090',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fisrunning_10',['BT8XXEMU_isRunning',['../bt8xxemu_8h.html#a27fa5f7932fec0fbe41c7a6300263605',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5frun_11',['BT8XXEMU_run',['../bt8xxemu_8h.html#afba34c22b4d95352811161ea459fc09f',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fsetflag_12',['BT8XXEMU_setFlag',['../bt8xxemu_8h.html#a8b1e1d6103b8f5aab6695bbda0da085f',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fstop_13',['BT8XXEMU_stop',['../bt8xxemu_8h.html#a2ccced1945e528b8a1683cebd164a3a3',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5ftouchresetxy_14',['BT8XXEMU_touchResetXY',['../bt8xxemu_8h.html#abe2e24fedff0e501840ab850b9b5b749',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5ftouchsetxy_15',['BT8XXEMU_touchSetXY',['../bt8xxemu_8h.html#a15c596767ffafb46567c9c2396539992',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5ftransfer_16',['BT8XXEMU_transfer',['../bt8xxemu_8h.html#ab8ac6c6536f3b111dec9684070f7ffd4',1,'bt8xxemu.h']]],
+  ['bt8xxemu_5fversion_17',['BT8XXEMU_version',['../bt8xxemu_8h.html#acc05d8446d7dc972632382cdcd7f68c7',1,'bt8xxemu.h']]]
+];

@@ -1,0 +1,904 @@
+<!-- HTML header for doxygen 1.9.3-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>EveApps Project: D:/eclipse-workspace/BridgeTek/EveApps/EveApps/common/eve_hal/Hdr/Gpu_Hal.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div style="z-index:3; width: 100vw; height: 100px; left: 0px;" > 
+  <a href="index.html" ><svg style="z-index:2; height: 80%; width: auto; float: left;"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:svg="http://www.w3.org/2000/svg"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 704.8667 213.38667"
+     height="213.38667"
+     width="704.8667"
+     xml:space="preserve"
+     id="svg2"
+     version="1.1">
+    <metadata
+       id="metadata8">
+      <rdf:RDF>
+        <cc:Work
+           rdf:about="">
+          <dc:format>image/svg+xml</dc:format>
+          <dc:type
+             rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        </cc:Work>
+      </rdf:RDF>
+    </metadata>
+    <defs
+       id="defs6" />
+    <g
+       transform="matrix(1.3333333,0,0,-1.3333333,0,213.38667)"
+       id="g10">
+      <g
+         transform="scale(0.1)"
+         id="g12">
+        <path
+           id="path14"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="M 783.457,192.039 192.074,783.426 c -9.261,9.258 -9.261,24.285 -0.015,33.527 l 591.382,591.377 c 4.664,4.67 10.688,6.99 16.711,7 v 114.7 c -35.582,-0.01 -71.16,-13.46 -98.05,-40.35 L 110.719,898.293 C 56.8047,844.379 56.7734,756.047 110.734,702.086 L 702.117,110.699 C 729.066,83.75 764.609,70.2813 800.152,70.2813 V 185.129 c -6.047,0.012 -12.097,2.32 -16.695,6.91" />
+        <path
+           id="path16"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="M 791.809,1281.92 318.488,808.598 c -4.621,-4.621 -4.636,-12.168 -0.015,-16.789 l 473.336,-473.34 c 2.296,-2.297 5.32,-3.438 8.343,-3.438 v 970.349 c -3.023,-0.01 -6.043,-1.16 -8.343,-3.46" />
+        <path
+           id="path18"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="M 179.672,1059.81 81.3398,1158.14 0,1076.8 l 98.332,-98.331 81.34,81.341" />
+        <path
+           id="path20"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 327.094,1207.23 -98.332,98.33 -81.34,-81.33 98.332,-98.34 81.34,81.34" />
+        <path
+           id="path22"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 474.516,1354.65 -98.332,98.33 -81.34,-81.34 98.332,-98.32 81.34,81.33" />
+        <path
+           id="path24"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 621.922,1502.06 -98.332,98.33 -81.324,-81.32 98.332,-98.34 81.324,81.33" />
+        <path
+           id="path26"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="M 98.3516,621.934 0,523.59 81.3398,442.25 179.691,540.602 98.3516,621.934" />
+        <path
+           id="path28"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 245.754,474.531 -98.348,-98.351 81.34,-81.34 98.348,98.351 -81.34,81.34" />
+        <path
+           id="path30"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 393.191,327.09 -98.347,-98.34 81.34,-81.34 98.347,98.34 -81.34,81.34" />
+        <path
+           id="path32"
+           style="fill:#ed1c24;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="M 442.246,81.3398 523.59,0 621.938,98.3516 540.598,179.691 442.246,81.3398" />
+        <path
+           id="path34"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1264.65,213.852 h 9.29 c 16.51,0 22.19,6.199 22.19,26.828 0,20.64 -5.68,26.57 -22.19,26.57 h -9.29 c -1.04,0 -1.54,-0.52 -1.54,-1.551 v -50.301 c 0,-1.027 0.5,-1.546 1.54,-1.546 z m 9.29,77.128 c 15.22,0 20.37,4.641 20.37,23.989 0,19.351 -5.15,24.25 -20.37,24.25 h -9.29 c -1.04,0 -1.54,-0.52 -1.54,-1.559 v -45.129 c 0,-1.031 0.5,-1.551 1.54,-1.551 z m -38.42,70.68 c 0,1.551 1.01,2.57 2.58,2.57 h 38.41 c 31.48,0 45.41,-14.191 45.41,-45.378 0,-21.672 -7.47,-32.25 -20.36,-37.93 v -0.524 c 13.15,-3.859 22.44,-16.757 22.44,-39.976 0,-38.953 -17.04,-51.582 -51.1,-51.582 h -34.8 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25" />
+        <path
+           id="path36"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1482.31,312.129 c 0,20.641 -6.72,27.09 -22.19,27.09 h -9.04 c -1.03,0 -1.54,-0.52 -1.54,-1.559 v -51.058 c 0,-1.043 0.51,-1.551 1.54,-1.551 h 9.04 c 15.47,0 22.19,6.187 22.19,27.078 z m 6.18,-123.289 c -1.54,0 -2.32,0.512 -2.83,1.801 l -21.43,69.91 h -4.36 -8.79 c -1.03,0 -1.54,-0.52 -1.54,-1.551 v -67.59 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -22.44 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25 c 0,1.551 1.01,2.57 2.58,2.57 h 35.34 c 31.19,0 50.03,-13.671 50.03,-52.101 0,-22.957 -7.73,-37.391 -20.91,-44.879 l 24.77,-75.84 c 0.53,-1.289 0,-2.57 -1.29,-2.57 h -23.98" />
+        <path
+           id="path38"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1610.71,361.66 c 0,1.551 1,2.57 2.57,2.57 h 22.44 c 1.54,0 2.58,-1.019 2.58,-2.57 V 191.41 c 0,-1.539 -1.04,-2.57 -2.58,-2.57 h -22.44 c -1.57,0 -2.57,1.031 -2.57,2.57 v 170.25" />
+        <path
+           id="path40"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1771.09,213.852 h 11.11 c 9.79,0 15.47,3.878 18.55,12.648 2.07,6.449 3.1,14.949 3.1,50.039 0,35.07 -1.03,43.59 -3.1,50.043 -3.08,8.77 -8.76,12.637 -18.55,12.637 h -11.11 c -1.04,0 -1.54,-0.52 -1.54,-1.559 V 215.398 c 0,-1.027 0.5,-1.546 1.54,-1.546 z m -29.13,147.808 c 0,1.551 1.01,2.57 2.58,2.57 h 40.48 c 22.97,0 36.38,-9.281 42.56,-28.109 3.11,-9.539 4.39,-21.422 4.39,-59.582 0,-38.18 -1.28,-50.039 -4.39,-59.578 -6.18,-18.832 -19.59,-28.121 -42.56,-28.121 h -40.48 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25" />
+        <path
+           id="path42"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1929.43,276.539 c 0,48.742 0.78,54.941 3.36,62.68 5.68,17.269 19.86,27.332 41.52,27.332 25.26,0 40.77,-13.403 43.59,-41 0.25,-1.563 -0.78,-2.84 -2.07,-3.09 l -20.87,-3.609 c -1.57,-0.274 -2.6,0.5 -2.86,2.046 -1.28,13.672 -7.21,20.641 -17.54,20.641 -7.47,0 -13.4,-3.879 -15.22,-9.809 -1.54,-4.902 -1.79,-6.949 -1.79,-55.191 0,-48.238 0.25,-50.309 1.79,-55.199 1.82,-5.942 8.25,-9.801 15.47,-9.801 7.5,0 13.94,3.859 15.76,9.801 1.28,4.39 1.79,6.961 1.79,39.461 0,1.039 -0.51,1.551 -1.54,1.551 h -13.69 c -1.53,0 -2.57,1.027 -2.57,2.578 v 19.082 c 0,1.547 1.04,2.59 2.57,2.59 h 39.23 c 1.54,0 2.58,-1.043 2.58,-2.59 v -7.742 c 0,-48.489 -0.79,-54.668 -3.36,-62.418 -5.68,-17.282 -19.87,-27.34 -41.27,-27.34 -21.66,0 -35.84,10.058 -41.52,27.34 -2.58,7.75 -3.36,13.929 -3.36,62.687" />
+        <path
+           id="path44"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 2118.71,361.66 c 0,1.551 1.01,2.57 2.58,2.57 h 22.44 c 1.54,0 2.57,-1.019 2.57,-2.57 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -22.44 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25" />
+        <path
+           id="path46"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 2249.97,361.66 c 0,1.551 1.01,2.57 2.57,2.57 h 27.34 c 2.07,0 3.11,-0.769 3.61,-2.57 L 2316,240.422 h 1.29 V 361.66 c 0,1.551 1.03,2.57 2.57,2.57 h 19.09 c 1.53,0 2.57,-1.019 2.57,-2.57 V 191.41 c 0,-1.539 -1.04,-2.57 -2.57,-2.57 h -25.55 c -2.04,0 -3.08,0.769 -3.61,2.57 l -34.05,121.238 h -1.54 V 191.41 c 0,-1.539 -1.04,-2.57 -2.57,-2.57 h -19.09 c -1.56,0 -2.57,1.031 -2.57,2.57 v 170.25" />
+        <path
+           id="path48"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 2442.08,276.539 c 0,48.742 0.78,54.941 3.36,62.68 5.68,17.269 19.86,27.332 41.52,27.332 25.27,0 40.77,-13.403 43.59,-41 0.25,-1.563 -0.78,-2.84 -2.07,-3.09 l -20.87,-3.609 c -1.57,-0.274 -2.6,0.5 -2.85,2.046 -1.29,13.672 -7.22,20.641 -17.55,20.641 -7.47,0 -13.4,-3.879 -15.22,-9.809 -1.54,-4.902 -1.79,-6.949 -1.79,-55.191 0,-48.238 0.25,-50.309 1.79,-55.199 1.82,-5.942 8.25,-9.801 15.47,-9.801 7.5,0 13.94,3.859 15.76,9.801 1.28,4.39 1.79,6.961 1.79,39.461 0,1.039 -0.51,1.551 -1.54,1.551 h -13.68 c -1.54,0 -2.58,1.027 -2.58,2.578 v 19.082 c 0,1.547 1.04,2.59 2.58,2.59 h 39.22 c 1.54,0 2.58,-1.043 2.58,-2.59 v -7.742 c 0,-48.489 -0.79,-54.668 -3.36,-62.418 -5.68,-17.282 -19.87,-27.34 -41.27,-27.34 -21.66,0 -35.84,10.058 -41.52,27.34 -2.58,7.75 -3.36,13.929 -3.36,62.687" />
+        <path
+           id="path50"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3596.01,188.84 c -1.54,0 -2.58,1.031 -2.58,2.57 v 146.25 c 0,1.039 -0.5,1.559 -1.54,1.559 h -26.83 c -1.54,0 -2.57,1.031 -2.57,2.57 v 19.871 c 0,1.551 1.03,2.57 2.57,2.57 h 84.36 c 1.54,0 2.58,-1.019 2.58,-2.57 v -19.871 c 0,-1.539 -1.04,-2.57 -2.58,-2.57 h -26.83 c -1.04,0 -1.54,-0.52 -1.54,-1.559 V 191.41 c 0,-1.539 -1.04,-2.57 -2.57,-2.57 h -22.47" />
+        <path
+           id="path52"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3745.59,361.66 c 0,1.551 1.01,2.57 2.57,2.57 h 71.97 c 1.54,0 2.57,-1.019 2.57,-2.57 v -19.871 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -45.41 c -1.04,0 -1.54,-0.52 -1.54,-1.559 V 291.5 c 0,-1.039 0.5,-1.559 1.54,-1.559 h 39.22 c 1.54,0 2.58,-1.019 2.58,-2.57 V 267.5 c 0,-1.539 -1.04,-2.57 -2.58,-2.57 h -39.22 c -1.04,0 -1.54,-0.52 -1.54,-1.551 v -47.981 c 0,-1.027 0.5,-1.546 1.54,-1.546 h 45.41 c 1.54,0 2.57,-1.02 2.57,-2.571 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -71.97 c -1.56,0 -2.57,1.031 -2.57,2.57 v 170.25" />
+        <path
+           id="path54"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3917.05,276.539 c 0,48.742 1.04,55.973 3.36,63.191 5.4,16.758 18.3,26.821 39.73,26.821 25.01,0 40.74,-12.879 42.28,-42.039 0.28,-1.551 -0.25,-2.84 -1.79,-3.09 l -20.9,-3.613 c -1.54,-0.27 -2.83,0.523 -2.83,2.32 -0.78,14.961 -5.93,21.41 -16,21.41 -7.73,0 -11.87,-3.359 -13.94,-9.809 -1.29,-4.128 -1.79,-7.742 -1.79,-55.191 0,-47.469 0.5,-51.078 1.79,-55.199 2.07,-6.449 6.21,-9.801 13.94,-9.801 10.07,0 15.22,6.441 16,21.41 0,1.801 1.29,2.571 2.83,2.321 l 20.9,-3.61 c 1.54,-0.269 2.07,-1.551 1.79,-3.109 -1.54,-29.141 -17.27,-42.039 -42.28,-42.039 -21.43,0 -34.33,10.058 -39.73,26.84 -2.32,7.218 -3.36,14.429 -3.36,63.187" />
+        <path
+           id="path56"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4096.29,361.66 c 0,1.551 1.01,2.57 2.58,2.57 h 22.44 c 1.53,0 2.57,-1.019 2.57,-2.57 v -69.129 c 0,-1.031 0.5,-1.551 1.54,-1.551 h 29.66 c 1.03,0 1.56,0.52 1.56,1.551 v 69.129 c 0,1.551 1.04,2.57 2.58,2.57 h 22.44 c 1.54,0 2.57,-1.019 2.57,-2.57 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -22.44 c -1.54,0 -2.58,1.031 -2.58,2.57 v 73 c 0,1.039 -0.53,1.551 -1.56,1.551 h -29.66 c -1.04,0 -1.54,-0.512 -1.54,-1.551 v -73 c 0,-1.539 -1.04,-2.57 -2.57,-2.57 h -22.44 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25" />
+        <path
+           id="path58"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4287.87,361.66 c 0,1.551 1.01,2.57 2.58,2.57 h 27.33 c 2.07,0 3.11,-0.769 3.61,-2.57 l 32.51,-121.238 h 1.29 V 361.66 c 0,1.551 1.04,2.57 2.58,2.57 h 19.08 c 1.54,0 2.57,-1.019 2.57,-2.57 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -25.55 c -2.04,0 -3.08,0.769 -3.61,2.57 l -34.05,121.238 h -1.54 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -19.08 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25" />
+        <path
+           id="path60"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4539.55,221.34 c 1.57,4.89 1.82,6.961 1.82,55.199 0,48.242 -0.25,50.289 -1.82,55.191 -1.79,5.93 -7.47,9.809 -14.69,9.809 -7.47,0 -13.15,-3.879 -14.97,-9.809 -1.54,-4.902 -1.79,-6.949 -1.79,-55.191 0,-48.238 0.25,-50.309 1.79,-55.199 1.82,-5.942 7.5,-9.801 14.97,-9.801 7.22,0 12.9,3.859 14.69,9.801 z m -56.21,-7.488 c -2.57,7.75 -3.36,13.929 -3.36,62.687 0,48.742 0.79,54.941 3.36,62.68 5.68,17.269 19.87,27.332 41.52,27.332 21.41,0 35.59,-10.063 41.27,-27.332 2.58,-7.739 3.36,-13.938 3.36,-62.68 0,-48.758 -0.78,-54.937 -3.36,-62.687 -5.68,-17.282 -19.86,-27.34 -41.27,-27.34 -21.65,0 -35.84,10.058 -41.52,27.34" />
+        <path
+           id="path62"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4670.05,361.66 c 0,1.551 1.01,2.57 2.58,2.57 h 22.44 c 1.53,0 2.57,-1.019 2.57,-2.57 V 215.398 c 0,-1.027 0.5,-1.546 1.54,-1.546 h 45.41 c 1.54,0 2.57,-1.02 2.57,-2.571 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -71.96 c -1.57,0 -2.58,1.031 -2.58,2.57 v 170.25" />
+        <path
+           id="path64"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4892.6,221.34 c 1.54,4.89 1.8,6.961 1.8,55.199 0,48.242 -0.26,50.289 -1.8,55.191 -1.81,5.93 -7.49,9.809 -14.71,9.809 -7.47,0 -13.15,-3.879 -14.97,-9.809 -1.54,-4.902 -1.79,-6.949 -1.79,-55.191 0,-48.238 0.25,-50.309 1.79,-55.199 1.82,-5.942 7.5,-9.801 14.97,-9.801 7.22,0 12.9,3.859 14.71,9.801 z m -56.23,-7.488 c -2.58,7.75 -3.36,13.929 -3.36,62.687 0,48.742 0.78,54.941 3.36,62.68 5.67,17.269 19.86,27.332 41.52,27.332 21.4,0 35.59,-10.063 41.27,-27.332 2.57,-7.739 3.36,-13.938 3.36,-62.68 0,-48.758 -0.79,-54.937 -3.36,-62.687 -5.68,-17.282 -19.87,-27.34 -41.27,-27.34 -21.66,0 -35.85,10.058 -41.52,27.34" />
+        <path
+           id="path66"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 5019.97,276.539 c 0,48.742 0.78,54.941 3.36,62.68 5.68,17.269 19.86,27.332 41.52,27.332 25.27,0 40.77,-13.403 43.59,-41 0.26,-1.563 -0.78,-2.84 -2.07,-3.09 l -20.87,-3.609 c -1.57,-0.274 -2.6,0.5 -2.85,2.046 -1.29,13.672 -7.22,20.641 -17.55,20.641 -7.47,0 -13.4,-3.879 -15.22,-9.809 -1.54,-4.902 -1.79,-6.949 -1.79,-55.191 0,-48.238 0.25,-50.309 1.79,-55.199 1.82,-5.942 8.26,-9.801 15.47,-9.801 7.5,0 13.94,3.859 15.76,9.801 1.28,4.39 1.79,6.961 1.79,39.461 0,1.039 -0.51,1.551 -1.54,1.551 h -13.68 c -1.54,0 -2.58,1.027 -2.58,2.578 v 19.082 c 0,1.547 1.04,2.59 2.58,2.59 h 39.22 c 1.54,0 2.58,-1.043 2.58,-2.59 v -7.742 c 0,-48.489 -0.78,-54.668 -3.36,-62.418 -5.68,-17.282 -19.86,-27.34 -41.27,-27.34 -21.66,0 -35.84,10.058 -41.52,27.34 -2.58,7.75 -3.36,13.929 -3.36,62.687" />
+        <path
+           id="path68"
+           style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 5227.81,188.84 c -1.57,0 -2.58,1.031 -2.58,2.57 v 69.391 l -33.55,100.859 c -0.5,1.551 0,2.57 2.07,2.57 h 22.7 c 1.82,0 2.57,-0.769 3.1,-2.57 l 19.59,-67.84 h 0.78 l 19.08,67.84 c 0.54,1.801 1.29,2.57 3.11,2.57 h 22.19 c 2.04,0 2.57,-1.019 2.04,-2.57 L 5252.82,260.801 V 191.41 c 0,-1.539 -1.03,-2.57 -2.57,-2.57 h -22.44" />
+        <path
+           id="path70"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1413.48,632.223 h 53.35 c 44.63,0 55.52,13.054 55.52,72.929 v 58.786 c 0,58.789 -13.07,71.855 -55.52,71.855 h -53.35 z m 0,332.027 h 43.56 c 52.24,0 58.76,17.418 58.76,69.67 v 47.89 c 0,51.16 -6.52,68.59 -58.76,68.59 h -43.56 z m -180.7,321.13 h 266.71 c 156.74,0 197.03,-32.66 197.03,-190.5 0,-103.419 -7.61,-168.739 -117.57,-187.247 v -2.168 c 112.12,-8.719 130.64,-88.184 130.64,-183.985 0,-165.46 -38.11,-224.25 -180.72,-224.25 h -296.09 v 788.15" />
+        <path
+           id="path72"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 1809.81,1052.41 h 154.57 v -55.508 h 2.18 c 21.77,51.158 47.9,64.228 109.96,64.228 57.69,0 93.62,-14.16 94.68,-82.735 V 828.168 h -134.97 v 82.738 c 0,17.414 -15.25,21.766 -32.65,21.766 -18.53,0 -32.66,-6.531 -32.66,-29.391 V 497.23 h -161.11 v 555.18" />
+        <path
+           id="path74"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 2233.32,1052.41 h 161.11 V 497.23 h -161.11 z m 0,232.97 h 161.11 v -128.46 h -161.11 v 128.46" />
+        <path
+           id="path76"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 2664.41,647.457 c 0,-20.676 13.07,-30.484 37.02,-30.484 23.95,0 37.02,9.808 37.02,30.484 v 254.731 c 0,20.691 -13.07,30.484 -37.02,30.484 -23.95,0 -37.02,-9.793 -37.02,-30.484 z M 2496.78,949 c 0,86 52.24,112.13 120.82,112.13 57.69,0 92.53,-20.69 118.66,-57.7 h 2.19 v 281.95 h 161.1 V 497.23 h -153.49 v 57.7 h -2.19 c -31.56,-57.7 -59.87,-66.399 -117.57,-66.399 -97.96,0 -129.52,38.098 -129.52,151.305 V 949" />
+        <path
+           id="path78"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3163.07,640.926 c 0,-23.953 10.89,-32.653 40.26,-32.653 29.41,0 40.3,8.7 40.3,32.653 v 265.629 c 0,23.937 -10.89,32.652 -40.3,32.652 -29.37,0 -40.26,-8.715 -40.26,-32.652 z m -161.11,274.332 c 0,95.802 42.45,145.872 117.55,145.872 63.15,0 99.07,-13.07 133.91,-59.88 h 2.18 v 51.16 h 149.14 V 448.238 c 0,-126.269 -70.77,-155.668 -217.72,-155.668 -127.36,0 -167.65,50.09 -167.65,123.02 v 29.39 h 141.52 V 433 c 0,-17.41 11.97,-25.039 41.35,-25.039 29.41,0 41.39,7.629 41.39,37.019 v 99.059 h -2.19 c -25.04,-33.738 -62.06,-51.16 -109.96,-51.16 -101.23,0 -129.52,62.051 -129.52,136.07 v 286.309" />
+        <path
+           id="path80"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3663.89,837.961 h 89.25 v 81.644 c 0,22.86 -7.61,32.668 -44.62,32.668 -37.02,0 -44.63,-9.808 -44.63,-32.668 z m -167.63,46.809 c 0,149.15 74.01,176.36 212.26,176.36 176.35,0 212.28,-66.411 212.28,-153.497 V 735.637 h -256.91 v -93.621 c 0,-29.395 6.54,-38.094 47.9,-38.094 31.56,0 45.72,6.519 45.72,39.183 v 26.122 h 163.29 v -31.563 c 0,-116.484 -48.99,-149.133 -212.28,-149.133 -138.25,0 -212.26,27.207 -212.26,176.344 V 884.77" />
+        <path
+           id="path82"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 3986.19,1052.41 h 45.72 v 144.79 h 161.11 v -144.79 h 93.62 V 930.492 h -93.62 V 652.898 c 0,-28.3 6.52,-42.457 41.35,-42.457 14.16,0 28.32,2.18 41.39,3.274 V 492.879 c -30.47,-1.09 -68.58,-4.348 -102.33,-4.348 -97.98,0 -141.52,37 -141.52,121.91 v 320.051 h -45.72 v 121.918" />
+        <path
+           id="path84"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4512.02,837.961 h 89.26 v 81.644 c 0,22.86 -7.61,32.668 -44.63,32.668 -37.02,0 -44.63,-9.808 -44.63,-32.668 z m -167.63,46.809 c 0,149.15 74.01,176.36 212.26,176.36 176.36,0 212.28,-66.411 212.28,-153.497 V 735.637 h -256.91 v -93.621 c 0,-29.395 6.55,-38.094 47.9,-38.094 31.56,0 45.72,6.519 45.72,39.183 v 26.122 h 163.29 v -31.563 c 0,-116.484 -48.99,-149.133 -212.28,-149.133 -138.25,0 -212.26,27.207 -212.26,176.344 V 884.77" />
+        <path
+           id="path86"
+           style="fill:#0A25F3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           d="m 4860.46,1285.38 h 161.11 V 848.844 h 2.18 l 72.91,203.566 h 158.96 L 5172.88,808.566 5281.72,497.23 h -171.99 l -85.98,274.333 h -2.18 V 497.23 h -161.11 v 788.15" />
+      </g>
+    </g>
+  </svg></a>
+  </br>
+  <div style="float: left; height: 100%;">  
+    <div style="float: left; margin-left: 50px; font-family: 'Fugaz One', cursive;overflow: hidden; font-size: 20px;">
+    Brteve's API for EveApps
+    </div>  
+    <div style="padding-top:10px; float: left; margin-left: 50px; font-family: 'Fugaz One', cursive;overflow: hidden; font-size: 12px;">
+    Version 0.0.1
+    </div>
+    <div style="padding-top:10px; clear: both; margin-left: 50px; font-size: 14px;">
+    This folder contains the necessary files to use Eve device.</br>
+    </div>
+  </div>
+</div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('_gpu___hal_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Gpu_Hal.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="_gpu___hal_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#ifndef GPU_HAL__H</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#define GPU_HAL__H</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="_f_t___gpu___hal_8h.html">FT_Gpu_Hal.h</a>&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="_e_v_e___util_8h.html">EVE_Util.h</a>&quot;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="_gpu___co_cmd_8h.html">Gpu_CoCmd.h</a>&quot;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#ifdef BT8XXEMU_PLATFORM</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keywordtype">void</span> setupComp();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keywordtype">void</span> loop();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#define setup                               \</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">    EVE_emuMain(int32_t argc, char *argv[]) \</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">    {                                       \</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">        setupComp();                        \</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">        loop();                             \</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">    }                                       \</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">    void setupComp</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#ifdef FT4222_PLATFORM</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#define MSVC_PLATFORM</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#ifdef MPSSE_PLATFORM</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#define MSVC_PLATFORM</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#if defined(BT81XA_ENABLE)</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#define BT81X_ENABLE</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#if defined(BT81X_ENABLE)</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#define FT81X_ENABLE</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a75acaba9e781937468d0911423bc0c35">   72</a></span><span class="preprocessor">#define PROGMEM eve_progmem</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad205a0b342bf2abac05074a213eed9b9">   73</a></span><span class="preprocessor">#define PROGMEM_CONST eve_progmem_const</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a954c1b81e87f7f2cd05600c98cd9d991">   75</a></span><span class="preprocessor">#define FIFO_SIZE_MASK EVE_FIFO_SIZE_MASK</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5e198ee91477538ec3bc634b15f0bf04">   76</a></span><span class="preprocessor">#define FIFO_BYTE_ALIGNMENT_MASK EVE_FIFO_BYTE_ALIGNMENT_MASK</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a46d8c74b5360b1df7727d0ee6de59df2">   77</a></span><span class="preprocessor">#define CMD_SIZE 4</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a054e39e306fb3948d07aadf394da2fbf">   79</a></span><span class="preprocessor">#define char8_t int8_t</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3e11e866bc6d82a804a0ee4740a3a470">   80</a></span><span class="preprocessor">#define bool_t bool</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#acb0a9ffe7c29eaa127958416511e7fd6">   81</a></span><span class="preprocessor">#define uchar8_t uint8_t</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3ded656bbe9849ad9fa2b28530390f0a">   82</a></span><span class="keyword">typedef</span> <span class="keywordtype">float</span> <a class="code hl_typedef" href="_gpu___hal_8h.html#a3ded656bbe9849ad9fa2b28530390f0a">float_t</a>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ac340fde9f4743ef7a9398b79d7bea8bd">   83</a></span><span class="keyword">typedef</span> <span class="keywordtype">double</span> <a class="code hl_typedef" href="_gpu___hal_8h.html#ac340fde9f4743ef7a9398b79d7bea8bd">double_t</a>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">//#define float_t float</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">//#define double_t double</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#ifndef FALSE</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa93f0eb578d23995850d61f7d61c55c1">   88</a></span><span class="preprocessor">#define FALSE false</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#ifndef TRUE</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d">   91</a></span><span class="preprocessor">#define TRUE true</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">#ifndef FT800_PD_N</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad1223ba1db6637486f7acf3238839c21">   95</a></span><span class="preprocessor">#define FT800_PD_N 0</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#ifndef FT800_SEL_PIN</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa5bfc7a2bb2cc3993db33036c32bf01c">   98</a></span><span class="preprocessor">#define FT800_SEL_PIN 0</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ac21112f8695f2348666371c67dae264c">  101</a></span><span class="keyword">typedef</span> <a class="code hl_define" href="_e_v_e___config_8h.html#a6aa3f1c1e11720b70fb862a051161138">eve_progmem</a> <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a273cf69d639a59973b6019625df33e30">uint16_t</a> <a class="code hl_typedef" href="_gpu___hal_8h.html#ac21112f8695f2348666371c67dae264c">prog_uint16_t</a>;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad6ff38eb8b429f5a7c74ffb3da0500fe">  102</a></span><span class="keyword">typedef</span> <a class="code hl_define" href="_e_v_e___config_8h.html#a6aa3f1c1e11720b70fb862a051161138">eve_progmem</a> <span class="keywordtype">char</span> <a class="code hl_typedef" href="_gpu___hal_8h.html#ad6ff38eb8b429f5a7c74ffb3da0500fe">prog_uchar8_t</a>;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa6a6f9b9d90a2fc45cb34a4da3f34f59">  103</a></span><span class="keyword">typedef</span> <a class="code hl_define" href="_e_v_e___config_8h.html#a6aa3f1c1e11720b70fb862a051161138">eve_progmem</a> <span class="keywordtype">char</span> <a class="code hl_typedef" href="_gpu___hal_8h.html#aa6a6f9b9d90a2fc45cb34a4da3f34f59">prog_char8_t</a>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a6134d447e73fa64dcfd3c337b77f63ea">  105</a></span><span class="preprocessor">#define DispWidth phost-&gt;Width</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4c3c4403c7644ffa89e8646d790e78f7">  106</a></span><span class="preprocessor">#define DispHeight phost-&gt;Height</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af0ce99e78ced84b10742d2201cc87c2a">  108</a></span><span class="preprocessor">#define GPU_HAL_MODE_E EVE_MODE_T</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad01dbe5488e8cf5c0cd6ec4f85f00a03">  109</a></span><span class="preprocessor">#define GPU_I2C_MODE EVE_MODE_I2C</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a7f255eb49cbec367925174125be7e1e7">  110</a></span><span class="preprocessor">#define GPU_SPI_MODE EVE_MODE_SPI</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae4ca60729263eba0915b9ae25dc133f8">  112</a></span><span class="preprocessor">#define GPU_HAL_STATUS_E EVE_STATUS_T</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a442e2a2bd5373581478921b77073121f">  113</a></span><span class="preprocessor">#define GPU_HAL_CLOSED EVE_STATUS_CLOSED</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a01860d7d5c3350adc493ba0212cff64b">  114</a></span><span class="preprocessor">#define GPU_HAL_OPENED EVE_STATUS_OPENED</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab1a22183a74680a59375ebecde527855">  115</a></span><span class="preprocessor">#define GPU_HAL_READING EVE_STATUS_READING</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a60283367c60eec16d9cb318a669360e7">  116</a></span><span class="preprocessor">#define GPU_HAL_WRITING EVE_STATUS_WRITING</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af344d826b28b2096447568a94f07962c">  117</a></span><span class="preprocessor">#define GPU_HAL_STATUS_ERROR EVE_STATUS_ERROR</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a0a1487ff76d7390c210c716645c42986">  119</a></span><span class="preprocessor">#define GPU_TRANSFERDIR_T EVE_TRANSFER_T</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2beae6641c0535f2f0e11ad9ce07eabc">  120</a></span><span class="preprocessor">#define GPU_READ EVE_TRANSFER_READ</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a6abe53321d76f9919b2956dea20a2947">  121</a></span><span class="preprocessor">#define GPU_WRITE EVE_TRANSFER_WRITE</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a7cc0afc5bc07ced46b3f617dacd00a7a">  123</a></span><span class="preprocessor">#define Gpu_Hal_Callback_t EVE_Callback</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#acc0c3aa3b682e08b93a6ac7704391716">  124</a></span><span class="preprocessor">#define Gpu_Hal_Config_t EVE_HalParameters</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1db6c4068704b7afa505e8a4e7727b1b">  126</a></span><span class="preprocessor">#define EVE_FIFO_SIZE_MASK EVE_CMD_FIFO_MASK</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ac44110176e6112ab38af7077b5b7e718">  127</a></span><span class="preprocessor">#define EVE_FIFO_BYTE_ALIGNMENT_MASK EVE_CMD_FIFO_ALIGNMENT_MASK</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="foldopen" id="foldopen00129" data-start="{" data-end="};">
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="struct_gpu___hal_init__t.html">  129</a></span><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>{</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="struct_gpu___hal_init__t.html#a266353897f0e8c82c37f552461e98aed">  131</a></span>    <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a93f2b89c7b31b20a927753cce8342c02">ft_uint32_t</a> <a class="code hl_variable" href="struct_gpu___hal_init__t.html#a266353897f0e8c82c37f552461e98aed">TotalChannelNum</a>; </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>} <a class="code hl_struct" href="struct_gpu___hal_init__t.html">Gpu_HalInit_t</a>;</div>
+</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">  134</a></span><span class="preprocessor">#define Gpu_Hal_Context_t EVE_HalContext</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a65a9b21306c605f729882926c8e2aebf">  135</a></span><span class="preprocessor">#define hal_config Parameters</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ac38801cc00f5c9a7fbc70403a49ba277">  136</a></span><span class="preprocessor">#define spi_clockrate_khz SpiClockrateKHz</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4355a15479216d5cd8e782362badb3c9">  137</a></span><span class="preprocessor">#define pdn_pin_no PowerDownPin</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a80cf3892d238cc580b226565e0fbb0db">  138</a></span><span class="preprocessor">#define spi_cs_pin_no SpiCsPin</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2d227911f96ad7ac5e2dcb7e6cfab712">  139</a></span><span class="preprocessor">#define cmd_fifo_wp CmdWp</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">#ifdef MPSSE_PLATFORM</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">#define channel_no MpsseChannelNo</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aaa2251e31c446a9ef65478a6af08fba0">  144</a></span><span class="preprocessor">#define channel_no SpiCsPin</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2963a88f5432b9a2e7e7324a5370a5a0">  147</a></span><span class="preprocessor">#define MSVC_PLATFORM_SPI_LIBFT4222 1</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9ece54edaf3985b5f89da7406d8522c4">  148</a></span><span class="preprocessor">#define MSVC_PLATFORM_SPI_LIBMPSSE 2</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3872263effdd5509bc6410dfb230219c">  150</a></span><span class="preprocessor">#define BootupConfig EVE_Util_bootupConfig</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="foldopen" id="foldopen00152" data-start="{" data-end="};">
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="struct_fifo__t.html">  152</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct_fifo__t.html">Fifo_t</a></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>{</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="struct_fifo__t.html#a0ae80d52a57c70909349a9eb742fa04d">  154</a></span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="code hl_variable" href="struct_fifo__t.html#a0ae80d52a57c70909349a9eb742fa04d">fifo_buff</a>; </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="struct_fifo__t.html#a60ce9fce338ddae8526673c1fd3b6e63">  155</a></span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> <a class="code hl_variable" href="struct_fifo__t.html#a60ce9fce338ddae8526673c1fd3b6e63">fifo_len</a>; </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="struct_fifo__t.html#a6788da7931c54665980eac738b4871be">  156</a></span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> <a class="code hl_variable" href="struct_fifo__t.html#a6788da7931c54665980eac738b4871be">fifo_wp</a>; </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="struct_fifo__t.html#a8bf3f27103bb0b8b1bcded148873ae7a">  157</a></span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> <a class="code hl_variable" href="struct_fifo__t.html#a8bf3f27103bb0b8b1bcded148873ae7a">fifo_rp</a>; </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="struct_fifo__t.html#a8a1ecd6d454fe6cdee77446cd50a280b">  160</a></span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="code hl_variable" href="struct_fifo__t.html#a8a1ecd6d454fe6cdee77446cd50a280b">HW_Read_Reg</a>; </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="struct_fifo__t.html#a242f5297cb585c16ffbde3a7810c7293">  161</a></span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="code hl_variable" href="struct_fifo__t.html#a242f5297cb585c16ffbde3a7810c7293">HW_Write_Reg</a>; </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a04cdccce70f17f911958a39692ae4f87">  163</a></span>} <a class="code hl_struct" href="struct_fifo__t.html">Fifo_t</a>;</div>
+</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a10c9e6bc31bbd3bbdb9455974c6d0805">  167</a></span><span class="preprocessor">#define LOADIMAGE 1 </span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5fdb254577254cdede7433501a486535">  168</a></span><span class="preprocessor">#define INFLATE 2 </span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a0b674752cca6d434a1a69f40877eb2be">  169</a></span><span class="preprocessor">#define LOAD 3 </span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa27e244093d3ffe5bb75ce7d0b5d1da7">  170</a></span><span class="preprocessor">#define INFLATE2 4</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="comment">/* The basic APIs Level 1 */</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="foldopen" id="foldopen00177" data-start="{" data-end="}">
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a98b33b1d88d84617936a4bdf50eae62b">  177</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_define" href="_e_v_e___platform_8h.html#a81243dac9cf4807c4dfb42f398a1c7dc">eve_deprecated</a>(<span class="stringliteral">&quot;Use `EVE_Hal_initialize`&quot;</span>) <a class="code hl_define" href="_e_v_e___int_types___m_s_v_c12_8h.html#abb452686968e48b67397da5f97445f5b">bool</a> <a class="code hl_function" href="_gpu___hal_8cpp.html#a967f99fd043ceb30cc5513badf3735fe">Gpu_Hal_Init</a>(<a class="code hl_struct" href="struct_gpu___hal_init__t.html">Gpu_HalInit_t</a> *halinit)</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>{</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <a class="code hl_struct" href="struct_e_v_e___hal_platform.html">EVE_HalPlatform</a> *platform = <a class="code hl_function" href="_e_v_e___hal_8c.html#aed4438949f780f92933bea34c9753975">EVE_Hal_initialize</a>();</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    halinit-&gt;TotalChannelNum = (<a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>)<a class="code hl_function" href="_e_v_e___hal_defs_8h.html#a6bac8d3ca6ec749aad526e22eb186dbe">EVE_Hal_list</a>();</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keywordflow">return</span> !!platform;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>}</div>
+</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="foldopen" id="foldopen00184" data-start="{" data-end="}">
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a94b3646bfeee136a8107178f42a4003c">  184</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_define" href="_e_v_e___platform_8h.html#a81243dac9cf4807c4dfb42f398a1c7dc">eve_deprecated</a>(<span class="stringliteral">&quot;Use `EVE_Hal_open`&quot;</span>) <a class="code hl_define" href="_e_v_e___int_types___m_s_v_c12_8h.html#abb452686968e48b67397da5f97445f5b">bool</a> <a class="code hl_function" href="_gpu___hal_8cpp.html#a3f7610a6567db8ab5189bd6329ee6337">Gpu_Hal_Open</a>(<a class="code hl_struct" href="struct_e_v_e___hal_context.html">EVE_HalContext</a> *phost)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>{</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <a class="code hl_struct" href="struct_e_v_e___hal_parameters.html">EVE_HalParameters</a> parameters;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <a class="code hl_function" href="_e_v_e___hal_8c.html#ae6671c71c158de1f99f4dcc46ec8ac21">EVE_Hal_defaults</a>(&amp;parameters);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="_e_v_e___hal_8c.html#a4585f01a7762120a463c5fe4fdf98f37">EVE_Hal_open</a>(phost, &amp;parameters);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>}</div>
+</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aaef1edde0ceabb3a90074909ec8dce67">  193</a></span><span class="preprocessor">#define Gpu_Hal_Close EVE_Hal_close</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a897e87b40e8fae4bde8a21686990a253">  194</a></span><span class="preprocessor">#define Gpu_Hal_DeInit EVE_Hal_release</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af39d4e376f3ead98a481a010e36dd11e">  196</a></span><span class="preprocessor">#define Gpu_Hal_ESD_Idle EVE_Hal_idle</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae44b955dce81815c4e86da89964142e4">  198</a></span><span class="preprocessor">#define Gpu_Hal_StartTransfer EVE_Hal_startTransfer</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4e4370902253f7c37c927dce92465782">  199</a></span><span class="preprocessor">#define Gpu_Hal_Transfer8 EVE_Hal_transfer8</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a0132589e394fdf3b74288f8a3a426179">  200</a></span><span class="preprocessor">#define Gpu_Hal_Transfer16 EVE_Hal_transfer16</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab148778b1dd1643bf63db9904d1b4577">  201</a></span><span class="preprocessor">#define Gpu_Hal_Transfer32 EVE_Hal_transfer32</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a16b6f93378c9b7b3ed3152de1fcf8f56">  202</a></span><span class="preprocessor">#define Gpu_Hal_EndTransfer EVE_Hal_endTransfer</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae3d3b1a916a1dbc5f4e50f816ac4e50e">  204</a></span><span class="preprocessor">#define Gpu_Hal_Rd8 EVE_Hal_rd8</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa21faf91b62594b0095c174e5c06dd01">  205</a></span><span class="preprocessor">#define Gpu_Hal_Rd16 EVE_Hal_rd16</span></div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1d0faffd87c41adace84c7ab0623b026">  206</a></span><span class="preprocessor">#define Gpu_Hal_Rd32 EVE_Hal_rd32</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a92a89b3c69488f6a1697503f51347770">  207</a></span><span class="preprocessor">#define Gpu_Hal_Wr8 EVE_Hal_wr8</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aaf453d881ed76127df10faa0bf1ee18b">  208</a></span><span class="preprocessor">#define Gpu_Hal_Wr16 EVE_Hal_wr16</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3315d470487edb4a23418bf01e21a6f1">  209</a></span><span class="preprocessor">#define Gpu_Hal_Wr32 EVE_Hal_wr32</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a65426078b5cf9591c3998baffe51d6a5">  211</a></span><span class="preprocessor">#define Gpu_Hal_WrMem EVE_Hal_wrMem</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abb12537b9eb2b47e644250ed2636b302">  212</a></span><span class="preprocessor">#define Gpu_Hal_WrMem_ProgMem EVE_Hal_wrProgMem</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a03f5432627fd70d197b87fd588d73b29">  213</a></span><span class="preprocessor">#define Gpu_Hal_WrMemFromFlash EVE_Hal_wrProgMem</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad0223e227867aa9e61c76cfcfe0edb17">  216</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_define" href="_e_v_e___platform_8h.html#a81243dac9cf4807c4dfb42f398a1c7dc">eve_deprecated</a>(<span class="stringliteral">&quot;Use `EVE_Hal_rdMem` (note: buffer and addr are swapped)&quot;</span>) <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a25cc1b50140004ad8ca63dc91536e160">ft_void_t</a> <a class="code hl_function" href="_gpu___hal_8cpp.html#a51c3c0115982fdfbca0412358e8a2678">Gpu_Hal_RdMem</a>(<a class="code hl_struct" href="struct_e_v_e___hal_context.html">EVE_HalContext</a> *phost, <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a93f2b89c7b31b20a927753cce8342c02">ft_uint32_t</a> <a class="code hl_variable" href="_gpu___hal_8h.html#ad0223e227867aa9e61c76cfcfe0edb17">addr</a>, <a class="code hl_define" href="_f_t___gpu___hal_8h.html#acb728e7d7c81fbc004a1d985d10af365">ft_uint8_t</a> *<a class="code hl_variable" href="_gpu___hal_8h.html#a1994f04dbd8c6909f12ab768715538f5">buffer</a>, <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a93f2b89c7b31b20a927753cce8342c02">ft_uint32_t</a> <a class="code hl_variable" href="_gpu___hal_8h.html#a3eb7625040e75586c906bd53e09465c3">length</a>)</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>{</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <a class="code hl_function" href="_e_v_e___hal_8c.html#a208497f4aeb9d2a08be5f391b13341c8">EVE_Hal_rdMem</a>(phost, <a class="code hl_variable" href="_gpu___hal_8h.html#a1994f04dbd8c6909f12ab768715538f5">buffer</a>, <a class="code hl_variable" href="_gpu___hal_8h.html#ad0223e227867aa9e61c76cfcfe0edb17">addr</a>, <a class="code hl_variable" href="_gpu___hal_8h.html#a3eb7625040e75586c906bd53e09465c3">length</a>);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>}</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a8a239574b46dd74e21b92b0bc2f986db">  225</a></span><span class="preprocessor">#define Gpu_Hal_WrCmd32 EVE_Cmd_wr32</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad34892571304fb0d50a5105846f19eb0">  230</a></span><span class="preprocessor">#define Gpu_Hal_WrCmdBuf EVE_Cmd_wrMem</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a73bd82d983d8601829630ef49adfaa1b">  231</a></span><span class="preprocessor">#define Gpu_Hal_WrCmdBuf_nowait EVE_Cmd_wrMem</span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9efbd6320e963f467a3773a4e51d1970">  233</a></span><span class="preprocessor">#define Gpu_Hal_WrCmdBuf_ProgMem EVE_Cmd_wrProgMem</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ace6a6a1f68c4ff8ac7b5d7b7593c377f">  234</a></span><span class="preprocessor">#define Gpu_Hal_WrCmdBufFromFlash EVE_Cmd_wrProgMem</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae5571fc0d60cce016fccac73a0066baa">  239</a></span><span class="preprocessor">#define Gpu_Hal_WaitCmdFifoEmpty EVE_Cmd_waitFlush</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a562ef333e3318d72eae6b95f2883a636">  240</a></span><span class="preprocessor">#define Gpu_Hal_WaitCmdfifo_empty EVE_Cmd_waitFlush</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a60503b15545d4ca5c6c40061a4ceebee">  245</a></span><span class="preprocessor">#define Gpu_Hal_WaitCmdFreespace EVE_Cmd_waitSpace</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="comment">// Use the provided wait functions!</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="comment">static inline ft_void_t Gpu_Hal_RdCmdRpWp(EVE_HalContext *phost, ft_uint16_t *rp, ft_uint16_t *wp)</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="comment">{</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="comment">    *rp = EVE_Cmd_rp(phost);</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="comment">    *wp = EVE_Cmd_wp(phost);</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="comment">}</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="comment">*/</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="preprocessor">#pragma deprecated(Gpu_CoCmd_SendCmd) </span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">#pragma deprecated(Gpu_Copro_SendCmd) </span></div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="preprocessor">#pragma deprecated(Gpu_CoCmd_StartFrame) </span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="preprocessor">#pragma deprecated(Gpu_CoCmd_EndFrame) </span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="preprocessor">#pragma deprecated(Gpu_CoCmd_StartFunc) </span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><span class="preprocessor">#pragma deprecated(Gpu_CoCmd_EndFunc) </span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aae92209074415dc23efc42285abce2b7">  269</a></span><span class="preprocessor">#define Gpu_CoCmd_SendCmd EVE_Cmd_wr32</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a8860cabe959de39028236ca1ca12cfdb">  270</a></span><span class="keyword">inline</span> <span class="keyword">static</span> <a class="code hl_define" href="_e_v_e___platform_8h.html#a81243dac9cf4807c4dfb42f398a1c7dc">eve_deprecated</a>(<span class="stringliteral">&quot;Use `EVE_Cmd_startFunc`, `EVE_Cmd_wr32`, and `EVE_Cmd_endFunc`&quot;</span>) <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a25cc1b50140004ad8ca63dc91536e160">ft_void_t</a> Gpu_CoCmd_SendCmdArr(<a class="code hl_struct" href="struct_e_v_e___hal_context.html">EVE_HalContext</a> *phost, <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a93f2b89c7b31b20a927753cce8342c02">ft_uint32_t</a> *<a class="code hl_variable" href="_gpu___hal_8h.html#a8860cabe959de39028236ca1ca12cfdb">cmd</a>, <a class="code hl_define" href="_f_t___gpu___hal_8h.html#a42445978696918b8de40dee640ad7718">ft_size_t</a> <a class="code hl_variable" href="_gpu___hal_8h.html#a002f893ff431329476f75b695640d477">nb</a>)</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>{</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="comment">/* This is not valid behaviour on big endian CPU */</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <a class="code hl_function" href="_e_v_e___cmd_8c.html#a00e71b917c08418d21d9dff6b4d138b7">EVE_Cmd_wrMem</a>(phost, (<a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *)<a class="code hl_variable" href="_gpu___hal_8h.html#a8860cabe959de39028236ca1ca12cfdb">cmd</a>, (<a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a>)<a class="code hl_variable" href="_gpu___hal_8h.html#a002f893ff431329476f75b695640d477">nb</a> * 4);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>}</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9ec111779c7c38d5e654176798fa53c3">  275</a></span><span class="preprocessor">#define Gpu_CoCmd_SendStr(phost, str) EVE_Cmd_wrString(phost, str, EVE_CMD_STRING_MAX)</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a48e3d63a81ddc400f1c483668129c7a3">  276</a></span><span class="preprocessor">#define Gpu_CoCmd_SendStr_S EVE_Cmd_wrString</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abdb63957560ab57feb7808dac65437ec">  277</a></span><span class="preprocessor">#define Gpu_CoCmd_StartFrame(phost) eve_noop()</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9438a172eeb95a6ac6bb0c55921f20c3">  278</a></span><span class="preprocessor">#define Gpu_CoCmd_EndFrame(phost) eve_noop()</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af3e9f51db7214a69cc1d13e803a6dbdd">  280</a></span><span class="preprocessor">#define Gpu_Copro_SendCmd Gpu_CoCmd_SendCmd</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ada3093777251486c8cd8eb5002a8fd2d">  282</a></span><span class="preprocessor">#define Gpu_CoCmd_StartFunc(phost, size) EVE_Cmd_startFunc(phost)</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2e0b57d84d3be1fd7adea4e99f96e670">  283</a></span><span class="preprocessor">#define Gpu_CoCmd_EndFunc(phost, size) EVE_Cmd_endFunc(phost)</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af8468bf3e1445ea850b4332b4f637e28">  285</a></span><span class="preprocessor">#define Gpu_Fonts EVE_Gpu_Fonts</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab04a16061d6a6e073c1124ece75b81a5">  286</a></span><span class="preprocessor">#define Gpu_Fonts_t EVE_Gpu_Fonts</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#adcb6179a3552c44010f5811162accde9">  287</a></span><span class="preprocessor">#define Gpu_FontsExt EVE_Gpu_FontsExt</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a289a99647d0c990b80cd16e137af6df5">  288</a></span><span class="preprocessor">#define Gpu_FontsExt_t EVE_Gpu_FontsExt</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae9b143ed9e60256728ba63d2148529c1">  289</a></span><span class="preprocessor">#define GPU_NUMCHAR_PERFONT EVE_GPU_NUMCHAR_PERFONT</span></div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a884ced20eabfc79489c540c78c696505">  290</a></span><span class="preprocessor">#define GPU_FONT_TABLE_SIZE EVE_GPU_FONT_TABLE_SIZE</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment">/*******************************************************************************/</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a842719a8542621fc6a143388c01c3970">  296</a></span><span class="preprocessor">#define GPU_INTERNAL_OSC EVE_INTERNAL_OSC</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4fe31d009807e7b0a4f8af01ce3cefaf">  297</a></span><span class="preprocessor">#define GPU_EXTERNAL_OSC EVE_EXTERNAL_OSC</span></div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a40df8ce67d87373e829b21b251035345">  298</a></span><span class="preprocessor">#define GPU_PLL_SOURCE_T EVE_PLL_SOURCE_T</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ac6f4a5eaab5ba3a1cd6d0f2ba87c71ae">  300</a></span><span class="preprocessor">#define GPU_PLL_48M EVE_PLL_48M</span></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a7ee23a502276e19ecdd7aea1f8677236">  301</a></span><span class="preprocessor">#define GPU_PLL_36M EVE_PLL_36M</span></div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad436a8d3351c729c34dedcce0aa83dbb">  302</a></span><span class="preprocessor">#define GPU_PLL_24M EVE_PLL_24M</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a789d0654a07d65c17d7ee5f43d9683f8">  303</a></span><span class="preprocessor">#define GPU_PLL_FREQ_T EVE_PLL_FREQ_T</span></div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1f077d382d6f3cba796b6a4e90c74cfc">  305</a></span><span class="preprocessor">#define GPU_ACTIVE_M EVE_ACTIVE_M</span></div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab956ef3ab0f1d6e45686cc8baf2325bc">  306</a></span><span class="preprocessor">#define GPU_STANDBY_M EVE_STANDBY_M</span></div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a24f31ba1c4a3ede41bd98d9740b2209e">  307</a></span><span class="preprocessor">#define GPU_SLEEP_M EVE_SLEEP_M</span></div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a7417619bbf800f95de7f789c2fe493f4">  308</a></span><span class="preprocessor">#define GPU_POWERDOWN_M EVE_POWERDOWN_M</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa4d391046ed4da5a131045145f76c6ff">  309</a></span><span class="preprocessor">#define GPU_POWER_MODE_T EVE_POWER_MODE_T</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="preprocessor">#if (EVE_SUPPORT_CHIPID &gt;= EVE_FT810)</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aaa4e417087627cc6738f6a4656925252">  312</a></span><span class="preprocessor">#define GPU_SYSCLK_DEFAULT EVE_SYSCLK_DEFAULT</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a7ae1441a631f271ea56e42bac8197656">  313</a></span><span class="preprocessor">#define GPU_SYSCLK_72M EVE_SYSCLK_72M</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae710b03218ea684473f7c47a8da58151">  314</a></span><span class="preprocessor">#define GPU_SYSCLK_60M EVE_SYSCLK_60M</span></div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abb24f34be3e811b8b442d63417d315ff">  315</a></span><span class="preprocessor">#define GPU_SYSCLK_48M EVE_SYSCLK_48M</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a74865c7101ae095a93b5a6282bb61755">  316</a></span><span class="preprocessor">#define GPU_SYSCLK_36M EVE_SYSCLK_36M</span></div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a74068adc1e86b01b6ffeb1ccf06f261d">  317</a></span><span class="preprocessor">#define GPU_SYSCLK_24M EVE_SYSCLK_24M</span></div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3886426f1c93790bc9875f2c5bf275ce">  318</a></span><span class="preprocessor">#define GPU_81X_PLL_FREQ_T EVE_81X_PLL_FREQ_T</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a6b361d96bd1203e3cbf394610da21fdc">  320</a></span><span class="preprocessor">#define GPU_5MA EVE_5MA</span></div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae4e15436aab81ae6849fb30ad52e13dd">  321</a></span><span class="preprocessor">#define GPU_10MA EVE_10MA</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a35821419908629671811bf9ef0292d13">  322</a></span><span class="preprocessor">#define GPU_15MA EVE_15MA</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af2e23158a3354d488da45502d8e897a2">  323</a></span><span class="preprocessor">#define GPU_20MA EVE_20MA</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a102978212e6c645bf2be4d3fac99c50a">  324</a></span><span class="preprocessor">#define GPU_81X_GPIO_DRIVE_STRENGTH_T EVE_81X_GPIO_DRIVE_STRENGTH_T</span></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#adabeb9ca908cef29d34418f7f6d39645">  326</a></span><span class="preprocessor">#define GPU_GPIO0 EVE_GPIO0</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2c16519f6c6c6eb89a57d24c60de6c6a">  327</a></span><span class="preprocessor">#define GPU_GPIO1 EVE_GPIO1</span></div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1bdc64169fe8d57b4fde34e455ad19ea">  328</a></span><span class="preprocessor">#define GPU_GPIO2 EVE_GPIO2</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a120203645b5fae9ae2586948af7a1d44">  329</a></span><span class="preprocessor">#define GPU_GPIO3 EVE_GPIO3</span></div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ada6bf5cf2f2a3f32fb3e3dcd2758ca0f">  330</a></span><span class="preprocessor">#define GPU_GPIO4 EVE_GPIO4</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5abd732a570222e5cfa0fb9d049a67ab">  331</a></span><span class="preprocessor">#define GPU_DISP EVE_DISP</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#afcdeb1f5ba62f0e10b906eb17f8f9f7f">  332</a></span><span class="preprocessor">#define GPU_DE EVE_DE</span></div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a960a8b84bc5929c70bc43610e1253914">  333</a></span><span class="preprocessor">#define GPU_VSYNC_HSYNC EVE_VSYNC_HSYNC</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9d5930ab45bfea129c60f66c5d222b9f">  334</a></span><span class="preprocessor">#define GPU_PCLK EVE_PCLK</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4743f8be2edbb8cf7f30a51387614a1a">  335</a></span><span class="preprocessor">#define GPU_BACKLIGHT EVE_BACKLIGHT</span></div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae9c69119fe1bc9b2c69f4b326135faa0">  336</a></span><span class="preprocessor">#define GPU_R_G_B EVE_R_G_B</span></div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#adde7e26d216c3167f20c2eab84be3021">  337</a></span><span class="preprocessor">#define GPU_AUDIO_L EVE_AUDIO_L</span></div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2873f697f8a5d3fe4ad782836eb97a26">  338</a></span><span class="preprocessor">#define GPU_INT_N EVE_INT_N</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5eb422c426f8914907501fde230c4a00">  339</a></span><span class="preprocessor">#define GPU_TOUCHWAKE EVE_TOUCHWAKE</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abc010e1258e22272db38e2c044795a5b">  340</a></span><span class="preprocessor">#define GPU_SCL EVE_SCL</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a14bfbb1911e828f7ec2046c0f45fc091">  341</a></span><span class="preprocessor">#define GPU_SDAEVE_SDA</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a58c8ee7198191e7a6c04da24c6f91ce6">  342</a></span><span class="preprocessor">#define GPU_SPI_MISO_MOSI_IO2_IO3 EVE_SPI_MISO_MOSI_IO2_IO3</span></div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1e02cea4fba6425bc2ef53fcdf673dcd">  343</a></span><span class="preprocessor">#define GPU_81X_GPIO_GROUP_T EVE_81X_GPIO_GROUP_T</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span> </div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a00cedbc297b7a7888bf4a79e9055387f">  345</a></span><span class="preprocessor">#define GPU_81X_RESET_ACTIVE EVE_81X_RESET_ACTIVE</span></div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9057bc969f3ee085d9761b39979fd4ca">  346</a></span><span class="preprocessor">#define GPU_81X_RESET_REMOVAL EVE_81X_RESET_REMOVAL</span></div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a01e9c885358fe511e08c30ae43dc9c75">  349</a></span><span class="preprocessor">#define GPU_CORE_RESET EVE_CORE_RESET</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad3cb54ee346542203ef3498b3be03020">  351</a></span><span class="preprocessor">#define COCMD_FAULT(rp) EVE_CMD_FAULT(rp)</span></div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abe6145f939902c8fc928807550f6b33b">  353</a></span><span class="preprocessor">#define GPU_SPI_NUMCHANNELS_T EVE_SPI_CHANNELS_T</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a539bde03078d152b1d489e242bc6507f">  354</a></span><span class="preprocessor">#define GPU_SPI_SINGLE_CHANNEL EVE_SPI_SINGLE_CHANNEL</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa870581364d12198fccfec541b1b1523">  355</a></span><span class="preprocessor">#define GPU_SPI_DUAL_CHANNEL EVE_SPI_DUAL_CHANNEL</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a462ec10190fe92bc94d5bbdf820d128a">  356</a></span><span class="preprocessor">#define GPU_SPI_QUAD_CHANNEL EVE_SPI_QUAD_CHANNEL</span></div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span> </div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a6af16db77c89298b9eb80efa97a51255">  358</a></span><span class="preprocessor">#define GPU_SPI_NUMDUMMYBYTES uint8_t</span></div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a01a304893a30d8237c89f5d71c4f5351">  359</a></span><span class="preprocessor">#define GPU_SPI_ONEDUMMY 1</span></div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae1ab09741a707e0151eb3138eeb3e480">  360</a></span><span class="preprocessor">#define GPU_SPI_TWODUMMY 2</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a26ac00013b6e1ea453dab4b4b6fbad6b">  362</a></span><span class="preprocessor">#define SPI_SINGLE_CHANNEL EVE_SPI_SINGLE_CHANNEL</span></div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abb95e5ccb47a85f9e3a5d64c70ba1082">  363</a></span><span class="preprocessor">#define SPI_DUAL_CHANNEL EVE_SPI_DUAL_CHANNEL</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5146be019bd3e309df2e2a2f754daa43">  364</a></span><span class="preprocessor">#define SPI_QUAD_CHANNEL EVE_SPI_QUAD_CHANNEL</span></div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#af9ea8d20d2bedcf07205c1482a01f8bb">  366</a></span><span class="preprocessor">#define SPI_ONE_DUMMY_BYTE EVE_SPI_ONE_DUMMY_BYTE</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abdccc8f43fb800085799d71a13b55807">  367</a></span><span class="preprocessor">#define SPI_TWO_DUMMY_BYTE EVE_SPI_TWO_DUMMY_BYTES</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a06901fa43291d9992a5d6bb4ac6f097e">  369</a></span><span class="preprocessor">#define ft_delay EVE_sleep</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab1c2fa2dd2bd2b469e16ff9a99c1d6c4">  371</a></span><span class="preprocessor">#define Gpu_Hal_WaitLogo_Finish EVE_Cmd_waitLogo</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
+<div class="foldopen" id="foldopen00374" data-start="{" data-end="}">
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a37cd8b3387e4335ed33dd6c724f5c4d1">  374</a></span><span class="keyword">inline</span> <span class="keyword">static</span> <a class="code hl_define" href="_f_t___gpu___hal_8h.html#afcc26b8b3eec493e51140f9b3cfdad0a">ft_int16_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a37cd8b3387e4335ed33dd6c724f5c4d1">Gpu_Hal_TransferString</a>(<a class="code hl_struct" href="struct_e_v_e___hal_context.html">EVE_HalContext</a> *phost, <span class="keyword">const</span> <a class="code hl_define" href="_f_t___gpu___hal_8h.html#ad3738fdd3320a259d25ebc70a518facd">ft_char8_t</a> *str)</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>{</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="_e_v_e___hal_defs_8h.html#a472b4e15ed07a69ce632ee8d463aea51">EVE_Hal_transferString</a>(phost, str, 0, <a class="code hl_define" href="_e_v_e___cmd_8h.html#afb254ac926ccaa5d106dce051b16a43a">EVE_CMD_STRING_MAX</a>, 0) - 1;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>}</div>
+</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="foldopen" id="foldopen00379" data-start="{" data-end="}">
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aef7310fc9365b0b6b259bac019b13a5b">  379</a></span><span class="keyword">inline</span> <span class="keyword">static</span> <a class="code hl_define" href="_f_t___gpu___hal_8h.html#afcc26b8b3eec493e51140f9b3cfdad0a">ft_int16_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#aef7310fc9365b0b6b259bac019b13a5b">Gpu_Hal_TransferString_S</a>(<a class="code hl_struct" href="struct_e_v_e___hal_context.html">EVE_HalContext</a> *phost, <span class="keyword">const</span> <a class="code hl_define" href="_f_t___gpu___hal_8h.html#ad3738fdd3320a259d25ebc70a518facd">ft_char8_t</a> *str, <span class="keywordtype">int</span> <a class="code hl_variable" href="_gpu___hal_8h.html#a3eb7625040e75586c906bd53e09465c3">length</a>)</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>{</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="_e_v_e___hal_defs_8h.html#a472b4e15ed07a69ce632ee8d463aea51">EVE_Hal_transferString</a>(phost, str, 0, <a class="code hl_variable" href="_gpu___hal_8h.html#a3eb7625040e75586c906bd53e09465c3">length</a>, 0) - 1;</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>}</div>
+</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9be6d72b37a672aec17eeb3a2b3e9eef">  385</a></span><span class="preprocessor">#define Gpu_Hal_Sleep EVE_sleep</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abb6c37cd6475e4e4b8c5bc33ab6eb595">  387</a></span><span class="preprocessor">#define Gpu_HostCommand EVE_Hal_hostCommand</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa256759a814e1a07253db35a2a358519">  388</a></span><span class="preprocessor">#define Gpu_HostCommand_Ext3 EVE_Hal_hostCommandExt3</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad4ac51ed33d703491821b2e93d93744e">  389</a></span><span class="preprocessor">#define Gpu_Hal_Powercycle EVE_Hal_powerCycle</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab14c48a74b75bb1d87f202746c42916d">  390</a></span><span class="preprocessor">#define Gpu_Hal_SetSPI EVE_Hal_setSPI</span></div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5b4375ba75241d90ccda9bb95faddd9d">  391</a></span><span class="preprocessor">#define Gpu_CurrentFrequency EVE_Hal_currentFrequency</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span> </div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5f1dd33ed6be3dc2ac85600cf193cfe2">  393</a></span><span class="preprocessor">#define Gpu_ClockTrimming EVE_Hal_clockTrimming</span></div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a98495fb59c846b4958cd723b97eb3992">  395</a></span><span class="preprocessor">#define Gpu_ClockSelect EVE_Host_clockSelect</span></div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ada339c35149e0259a4cfdbca949fc564">  396</a></span><span class="preprocessor">#define Gpu_PLL_FreqSelect EVE_Host_pllFreqSelect</span></div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa07e315eb1e375099adca911326acb64">  397</a></span><span class="preprocessor">#define Gpu_PowerModeSwitch EVE_Host_powerModeSwitch</span></div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#acad93caf7b4ba6d1e4e94234aaae7894">  398</a></span><span class="preprocessor">#define Gpu_CoreReset EVE_Host_coreReset</span></div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span><span class="preprocessor">#if (EVE_SUPPORT_CHIPID &gt;= EVE_FT810)</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1a124b309657862a08e10ae24700b7e9">  401</a></span><span class="preprocessor">#define Gpu_81X_SelectSysCLK EVE_Host_selectSysClk</span></div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ac042f3aeb4ae5a0ec13edd5afaf6a28d">  402</a></span><span class="preprocessor">#define GPU_81X_PowerOffComponents EVE_Host_powerOffComponents</span></div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3d6874cf99c8fecfc4f5dfcd55562fb7">  403</a></span><span class="preprocessor">#define GPU_81X_PadDriveStrength EVE_Host_padDriveStrength</span></div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a0cf8ba88bc883c7c2fe65c4d4ffadf6c">  404</a></span><span class="preprocessor">#define Gpu_81X_ResetActive EVE_Host_resetActive</span></div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a721e3dec8e9db3f1dc7abe7770807fa5">  405</a></span><span class="preprocessor">#define Gpu_81X_ResetRemoval EVE_Host_resetRemoval</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a20a003398625553ded46e3e1479ed94e">  408</a></span><span class="preprocessor">#define Hal_LoadSDCard() EVE_Util_loadSdCard(NULL)</span></div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a966956ee364c3d8351c083a840fbe589">  410</a></span><span class="preprocessor">#define Gpu_ClearScreen EVE_Util_clearScreen</span></div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span> </div>
+<div class="foldopen" id="foldopen00412" data-start="{" data-end="};">
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754">  412</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span></div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>{</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754a3013ce7c30fd41115042d2021ecabd98">  414</a></span>    <a class="code hl_enumvalue" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754a3013ce7c30fd41115042d2021ecabd98">FLASH_CMD_SUCCESS</a> = 0, </div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <a class="code hl_enumvalue" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754a6c5c1aafa7c87118ac8c4e30503ac752">FLASH_CMD_ALIGNED_ERR</a> </div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754a6c5c1aafa7c87118ac8c4e30503ac752">  416</a></span>} <a class="code hl_enumeration" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754">Flash_Cmd_Status_t</a>;</div>
+</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span> </div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a6beb0281821448ebebd1fde37df1ce2a">  418</a></span><span class="preprocessor">#define FLASH_WRITE_ALIGN_BYTE (256)</span></div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a903b4d493eff7f4a0d980b73be9137e3">  419</a></span><span class="preprocessor">#define FLASH_UPDATE_ALIGN_BYTE (4096)</span></div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4f650e156ae053d6dcda443f36913623">  420</a></span><span class="preprocessor">#define FLASH_READ_ALIGN_BYTE (64)</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a25b7ec92daf8dc8d30b275bbf40269f1">  424</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#a25b7ec92daf8dc8d30b275bbf40269f1">Gpu_CoCmd_FlashHelper_Init</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9363376f201f22f1769bfb1eccfefe3c">  425</a></span><a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a9363376f201f22f1769bfb1eccfefe3c">Gpu_CoCmd_FlashHelper_SwitchState</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> nextState);</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a93b9d2d5e7c70a50ff9143783154e75f">  426</a></span><a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a93b9d2d5e7c70a50ff9143783154e75f">Gpu_CoCmd_FlashHelper_SwitchFullMode</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a2f4b8d12541a6c892b73a1e4f30d4651">  427</a></span><a class="code hl_enumeration" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754">Flash_Cmd_Status_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a2f4b8d12541a6c892b73a1e4f30d4651">Gpu_CoCmd_FlashHelper_Write</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> dest_flash, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> num, <span class="keyword">const</span> <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *write_data);</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad96322f3a1c6af0593c92f7ed322e02c">  428</a></span><a class="code hl_enumeration" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754">Flash_Cmd_Status_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#ad96322f3a1c6af0593c92f7ed322e02c">Gpu_CoCmd_FlashHelper_Update</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> dest_flash, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> src_ram, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> num);</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1ad1f17a2a87e4d54e3e0053624c2a95">  429</a></span><a class="code hl_enumeration" href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754">Flash_Cmd_Status_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a1ad1f17a2a87e4d54e3e0053624c2a95">Gpu_CoCmd_FlashHelper_Read</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> dest_ram, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> src_flash, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> num, <span class="keyword">const</span> <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *read_data);</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#abffb91ff6cd2983325337ed58c088897">  430</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#abffb91ff6cd2983325337ed58c088897">Gpu_CoCmd_FlashHelper_Erase</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aac265146aeae98de3e25a4acabe86bcb">  431</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#aac265146aeae98de3e25a4acabe86bcb">Gpu_CoCmd_FlashHelper_ClearCache</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4a8df36ca14bd18ad34e4613453bd27b">  432</a></span><a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a4a8df36ca14bd18ad34e4613453bd27b">Gpu_CoCmd_FlashHelper_GetState</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa12031e0bcb3ec28ce92e58dca153bc6">  437</a></span><span class="preprocessor">#define App_WrCoCmd_Buffer(phost, cmd) EVE_Cmd_wr32((phost), (cmd))</span></div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aafbcdd23f1e6befba94592cfac40c623">  438</a></span><span class="preprocessor">#define App_WrCoStr_Buffer(phost, s) EVE_Cmd_wrString((phost), (s), EVE_CMD_STRING_MAX)</span></div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad68dc561135e86d6bab66a989d06ba17">  439</a></span><span class="preprocessor">#define App_Flush_Co_Buffer(phost) EVE_Cmd_waitFlush((phost))</span></div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa0e649a486aa6cf28c9ff4e731beb700">  440</a></span><span class="preprocessor">#define App_Flush_Co_Buffer_nowait(phost) EVE_Cmd_waitFlush((phost))</span></div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aeccc95990f456b93e6d2b4b3b7174ce4">  441</a></span><span class="preprocessor">#define App_Set_CmdBuffer_Index(idx) eve_noop()</span></div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span> </div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a9a57e843bd9f6395c15eaea779fb3649">  444</a></span><span class="preprocessor">#define POLAR_UTIL </span></div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span><span class="preprocessor">#ifdef RGB </span><span class="comment">//Undefine RGB from wingdi.h in Visual Studio</span></div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span><span class="preprocessor">#undef RGB</span></div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a4a118ad3ee36468a3fa616977a64864e">  449</a></span><span class="preprocessor">#define RGB(r, g, b) ((((vc_int32_t)(r)) &lt;&lt; 16) | (((vc_int32_t)(g)) &lt;&lt; 8) | (b))</span></div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a137ed5cfecff39c0c5132595f1c087e6">  450</a></span><span class="preprocessor">#define SQ(v) ((v) * (v))</span></div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span><span class="preprocessor">#ifndef MIN</span></div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a74e75242132eaabbc1c512488a135926">  452</a></span><span class="preprocessor">#define MIN(x, y) ((x) &gt; (y) ? (y) : (x))</span></div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span><span class="preprocessor">#ifndef MAX</span></div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aacc3ee1a7f283f8ef65cea31f4436a95">  455</a></span><span class="preprocessor">#define MAX(x, y) ((x) &gt; (y) ? (x) : (y))</span></div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a5e4c62d1bb9a5dad15696a816905cfcc">  457</a></span><span class="preprocessor">#define PLAYCOLOR 0x00A0A080</span></div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ae40dfdeeb32341df2b9990b778165408">  458</a></span><span class="preprocessor">#define NOTE(n, sharp) (((n) - &#39;C&#39;) + ((sharp)*128))</span></div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a1a0e19f3131b0b08f9c898c4f2f247af">  459</a></span><span class="preprocessor">#define F16(s) ((int32_t)((s)*65536))</span></div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a269fbd6e76daccf828089a226168a6b5">  460</a></span><span class="preprocessor">#define INVALID_TOUCH_XY 0x8000</span></div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a996f7be338ccb40d1a2a5abc1ad61759">  461</a></span><span class="preprocessor">#define ABS(x) ((x) &gt; (0) ? (x) : (-x))</span></div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a3babf1a2e9b2b90e5fc838e9c3ebd5b6">  462</a></span><span class="preprocessor">#define ALIGN_TWO_POWER_N(Value, alignval) (((Value) + (alignval - 1)) &amp; (~(alignval - 1)))</span></div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span> </div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span><span class="preprocessor">#if !defined(ARDUINO_PLATFORM) </span><span class="comment">//Arduino support these keyword</span></div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad36413d98f7e61d62238254a870f59b2">  465</a></span><span class="preprocessor">#define pgm_read_byte_near(x) (*(x))</span></div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ab7ad001d0fc6bc6ac48af63aba8778b4">  466</a></span><span class="preprocessor">#define pgm_read_byte(x) (*(x))</span></div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a910fb5f01313d339d3b835d45e1e5ad0">  467</a></span><span class="preprocessor">#define pgm_read_word(addr) (*((prog_uint16_t *)(addr)))</span></div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a524f992188578dc1b5b0baed174bec0a">  468</a></span><span class="preprocessor">#define delay(x) EVE_sleep(x)</span></div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a970311ee5504bf0e1c421be1bbd78d39">  469</a></span><span class="preprocessor">#define random(x) (rand() % (x))</span></div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#ad1fdce94d4fd16b4bb5983c14398f1ae">  470</a></span><span class="preprocessor">#define DBGPRINT(x) printf(x)</span></div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span> </div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span><span class="preprocessor">#if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)</span></div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span><span class="preprocessor">#define strcpy_P strcpy</span></div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span><span class="preprocessor">#define strlen_P strlen</span></div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span> </div>
+<div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span><span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#ab9e5e065d17c60ab3099f70d251d693e">GPU_DLSwap</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> DL_Swap_Type);</div>
+<div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span> </div>
+<div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span><span class="preprocessor">#if defined(FT9XX_PLATFORM)</span></div>
+<div class="line"><a id="l00482" name="l00482"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a508b0b776439be7e8fa5a072b3a8e734">  482</a></span><span class="preprocessor">#define GET_CURR_MILLIS() EVE_millis()</span></div>
+<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span><span class="preprocessor">#elif defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)</span></div>
+<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span><span class="preprocessor">#define GET_CURR_MILLIS() time(NULL)</span></div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span><span class="preprocessor">#elif defined(ARDUINO_PLATFORM)</span></div>
+<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span><span class="preprocessor">#define GET_CURR_MILLIS() millis()</span></div>
+<div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span><span class="preprocessor">#define GET_CURR_MILLIS() 0</span></div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span> </div>
+<div class="line"><a id="l00491" name="l00491"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a84268825e133dbe3b1e64b789183bcb8">  491</a></span><a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#a84268825e133dbe3b1e64b789183bcb8">GET_ASTC_FORMAT</a>(<a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a273cf69d639a59973b6019625df33e30">uint16_t</a> w, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a273cf69d639a59973b6019625df33e30">uint16_t</a> h);</div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#aa64ae616543e6e4d82593998ea9e3bf7">  492</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#aa64ae616543e6e4d82593998ea9e3bf7">astc_tile2</a>(<a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *iData, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a273cf69d639a59973b6019625df33e30">uint16_t</a> bw, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a273cf69d639a59973b6019625df33e30">uint16_t</a> bh, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> size, <span class="keyword">const</span> <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> *oData);</div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span><span class="preprocessor">#ifdef FT81X_ENABLE</span></div>
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span><span class="keywordtype">void</span> Set_GpuClock(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span><a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a> Get_GpuClock(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost);</div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span> </div>
+<div class="foldopen" id="foldopen00498" data-start="{" data-end="}">
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#acb6d99a9068a9964dfb3e2bda11ac521">  498</a></span><span class="keyword">static</span> <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> <a class="code hl_function" href="_gpu___hal_8h.html#acb6d99a9068a9964dfb3e2bda11ac521">Gpu_Hal_Dec2Ascii</a>(<span class="keywordtype">char8_t</span> *pSrc, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> value)</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>{</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aa343fa3b3d06292b959ffdd4c4703b06">int16_t</a> Length;</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>    <span class="keywordtype">char8_t</span> *pdst;</div>
+<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>    <span class="keywordtype">char8_t</span> charval;</div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> CurrVal = value;</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> tmpval;</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>    <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> i;</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    <span class="keywordtype">char8_t</span> tmparray[16];</div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>    <span class="keywordtype">char8_t</span> idx = 0;</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span> </div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>    Length = (<a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aa343fa3b3d06292b959ffdd4c4703b06">int16_t</a>)strlen((<span class="keywordtype">char</span> *)pSrc);</div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>    pdst = pSrc + Length;</div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span> </div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>    <span class="keywordflow">if</span> (0 == value)</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>    {</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>        *pdst++ = <span class="charliteral">&#39;0&#39;</span>;</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>        *pdst++ = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>    }</div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>    <span class="keywordflow">if</span> (CurrVal &lt; 0)</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>    {</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>        *pdst++ = <span class="charliteral">&#39;-&#39;</span>;</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>        CurrVal = -CurrVal;</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>    }</div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>    <span class="comment">/* insert the value */</span></div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>    <span class="keywordflow">while</span> (CurrVal &gt; 0)</div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>    {</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>        tmpval = CurrVal;</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>        CurrVal /= 10;</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>        tmpval = tmpval - CurrVal * 10;</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>        charval = <span class="charliteral">&#39;0&#39;</span> + tmpval;</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        tmparray[idx++] = charval;</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>    }</div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span> </div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    <span class="keywordflow">for</span> (i = 0; i &lt; idx; i++)</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>    {</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>        *pdst++ = tmparray[idx - i - 1];</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>    }</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>    *pdst++ = <span class="charliteral">&#39;\0&#39;</span>;</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span> </div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>}</div>
+</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span> </div>
+<div class="foldopen" id="foldopen00543" data-start="{" data-end="}">
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a467b4f567c730ffa031f0a3b43db3bb5">  543</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#a467b4f567c730ffa031f0a3b43db3bb5">Gpu_Hal_LoadImageToMemory</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost, <span class="keyword">const</span> <span class="keywordtype">char</span> *fileName, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a> destination, <a class="code hl_typedef" href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a> type)</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>{</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    <span class="keywordflow">if</span> (type == <a class="code hl_define" href="_gpu___hal_8h.html#a10c9e6bc31bbd3bbdb9455974c6d0805">LOADIMAGE</a>)</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    {</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>        <a class="code hl_function" href="_e_v_e___load_file_8h.html#a4a888479e7cf23afa7cc411dad2732b1">EVE_Util_loadImageFile</a>(phost, destination, fileName, NULL);</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>    }</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <a class="code hl_define" href="_gpu___hal_8h.html#a5fdb254577254cdede7433501a486535">INFLATE</a>)</div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>    {</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>        <a class="code hl_function" href="_e_v_e___load_file_8h.html#a0bec98789ee044fdf06cd1424f623f7d">EVE_Util_loadInflateFile</a>(phost, destination, fileName);</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>    }</div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <a class="code hl_define" href="_gpu___hal_8h.html#a0b674752cca6d434a1a69f40877eb2be">LOAD</a>)</div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>    {</div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        <a class="code hl_function" href="_e_v_e___load_file_8h.html#a19e0da7a2b068ed71482acaf5bf243f8">EVE_Util_loadRawFile</a>(phost, destination, fileName);</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>    }</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>}</div>
+</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span> </div>
+<div class="foldopen" id="foldopen00559" data-start="{" data-end="}">
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno"><a class="line" href="_gpu___hal_8h.html#a90cce0c99e80524b805886c8ad139e84">  559</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="_gpu___hal_8h.html#a90cce0c99e80524b805886c8ad139e84">Gpu_Hal_ResetCmdFifo</a>(<a class="code hl_define" href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a> *phost)</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>{</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>    <a class="code hl_function" href="_e_v_e___cmd_8c.html#af3655d18f5ae6b89f45c67a17ce3b9dc">EVE_Cmd_restore</a>(phost);</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>}</div>
+</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span><span class="preprocessor">#endif </span><span class="comment">/* GPU_HAL__H */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="a_e_v_e___cmd_8c_html_a00e71b917c08418d21d9dff6b4d138b7"><div class="ttname"><a href="_e_v_e___cmd_8c.html#a00e71b917c08418d21d9dff6b4d138b7">EVE_Cmd_wrMem</a></div><div class="ttdeci">EVE_HAL_EXPORT bool EVE_Cmd_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t size)</div><div class="ttdoc">Write buffer to Coprocessor's comand fifo.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___cmd_8c_source.html#l00291">EVE_Cmd.c:291</a></div></div>
+<div class="ttc" id="a_e_v_e___cmd_8c_html_af3655d18f5ae6b89f45c67a17ce3b9dc"><div class="ttname"><a href="_e_v_e___cmd_8c.html#af3655d18f5ae6b89f45c67a17ce3b9dc">EVE_Cmd_restore</a></div><div class="ttdeci">EVE_HAL_EXPORT void EVE_Cmd_restore(EVE_HalContext *phost)</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___cmd_8c_source.html#l00682">EVE_Cmd.c:682</a></div></div>
+<div class="ttc" id="a_e_v_e___cmd_8h_html_afb254ac926ccaa5d106dce051b16a43a"><div class="ttname"><a href="_e_v_e___cmd_8h.html#afb254ac926ccaa5d106dce051b16a43a">EVE_CMD_STRING_MAX</a></div><div class="ttdeci">#define EVE_CMD_STRING_MAX</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___cmd_8h_source.html#l00044">EVE_Cmd.h:44</a></div></div>
+<div class="ttc" id="a_e_v_e___config_8h_html_a6aa3f1c1e11720b70fb862a051161138"><div class="ttname"><a href="_e_v_e___config_8h.html#a6aa3f1c1e11720b70fb862a051161138">eve_progmem</a></div><div class="ttdeci">#define eve_progmem</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___config_8h_source.html#l01498">EVE_Config.h:1498</a></div></div>
+<div class="ttc" id="a_e_v_e___hal_8c_html_a208497f4aeb9d2a08be5f391b13341c8"><div class="ttname"><a href="_e_v_e___hal_8c.html#a208497f4aeb9d2a08be5f391b13341c8">EVE_Hal_rdMem</a></div><div class="ttdeci">EVE_HAL_EXPORT void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32_t addr, uint32_t size)</div><div class="ttdoc">Read a block data from Coprocessor's memory.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_8c_source.html#l00206">EVE_Hal.c:206</a></div></div>
+<div class="ttc" id="a_e_v_e___hal_8c_html_a4585f01a7762120a463c5fe4fdf98f37"><div class="ttname"><a href="_e_v_e___hal_8c.html#a4585f01a7762120a463c5fe4fdf98f37">EVE_Hal_open</a></div><div class="ttdeci">EVE_HAL_EXPORT bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters *parameters)</div><div class="ttdoc">Open the Eve_Hal framework.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_8c_source.html#l00103">EVE_Hal.c:103</a></div></div>
+<div class="ttc" id="a_e_v_e___hal_8c_html_ae6671c71c158de1f99f4dcc46ec8ac21"><div class="ttname"><a href="_e_v_e___hal_8c.html#ae6671c71c158de1f99f4dcc46ec8ac21">EVE_Hal_defaults</a></div><div class="ttdeci">EVE_HAL_EXPORT void EVE_Hal_defaults(EVE_HalParameters *parameters)</div><div class="ttdoc">Setup default parameters for Eve_Hal framework.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_8c_source.html#l00078">EVE_Hal.c:78</a></div></div>
+<div class="ttc" id="a_e_v_e___hal_8c_html_aed4438949f780f92933bea34c9753975"><div class="ttname"><a href="_e_v_e___hal_8c.html#aed4438949f780f92933bea34c9753975">EVE_Hal_initialize</a></div><div class="ttdeci">EVE_HAL_EXPORT EVE_HalPlatform * EVE_Hal_initialize()</div><div class="ttdoc">Eve_Hal framework initialization.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_8c_source.html#l00052">EVE_Hal.c:52</a></div></div>
+<div class="ttc" id="a_e_v_e___hal_defs_8h_html_a472b4e15ed07a69ce632ee8d463aea51"><div class="ttname"><a href="_e_v_e___hal_defs_8h.html#a472b4e15ed07a69ce632ee8d463aea51">EVE_Hal_transferString</a></div><div class="ttdeci">EVE_HAL_EXPORT uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t index, uint32_t size, uint32_t padMask)</div><div class="ttdoc">Transfer a string to EVE platform.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_impl___f_t9_x_x_8c_source.html#l00496">EVE_HalImpl_FT9XX.c:496</a></div></div>
+<div class="ttc" id="a_e_v_e___hal_defs_8h_html_a6bac8d3ca6ec749aad526e22eb186dbe"><div class="ttname"><a href="_e_v_e___hal_defs_8h.html#a6bac8d3ca6ec749aad526e22eb186dbe">EVE_Hal_list</a></div><div class="ttdeci">EVE_HAL_EXPORT size_t EVE_Hal_list()</div><div class="ttdoc">List the available devices.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_impl___f_t9_x_x_8c_source.html#l00076">EVE_HalImpl_FT9XX.c:76</a></div></div>
+<div class="ttc" id="a_e_v_e___int_types___m_s_v_c12_8h_html_a273cf69d639a59973b6019625df33e30"><div class="ttname"><a href="_e_v_e___int_types___m_s_v_c12_8h.html#a273cf69d639a59973b6019625df33e30">uint16_t</a></div><div class="ttdeci">unsigned short uint16_t</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___int_types___m_s_v_c12_8h_source.html#l00041">EVE_IntTypes_MSVC12.h:41</a></div></div>
+<div class="ttc" id="a_e_v_e___int_types___m_s_v_c12_8h_html_a32f2e37ee053cf2ce8ca28d1f74630e5"><div class="ttname"><a href="_e_v_e___int_types___m_s_v_c12_8h.html#a32f2e37ee053cf2ce8ca28d1f74630e5">int32_t</a></div><div class="ttdeci">int int32_t</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___int_types___m_s_v_c12_8h_source.html#l00038">EVE_IntTypes_MSVC12.h:38</a></div></div>
+<div class="ttc" id="a_e_v_e___int_types___m_s_v_c12_8h_html_a435d1572bf3f880d55459d9805097f62"><div class="ttname"><a href="_e_v_e___int_types___m_s_v_c12_8h.html#a435d1572bf3f880d55459d9805097f62">uint32_t</a></div><div class="ttdeci">unsigned int uint32_t</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___int_types___m_s_v_c12_8h_source.html#l00042">EVE_IntTypes_MSVC12.h:42</a></div></div>
+<div class="ttc" id="a_e_v_e___int_types___m_s_v_c12_8h_html_aa343fa3b3d06292b959ffdd4c4703b06"><div class="ttname"><a href="_e_v_e___int_types___m_s_v_c12_8h.html#aa343fa3b3d06292b959ffdd4c4703b06">int16_t</a></div><div class="ttdeci">short int16_t</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___int_types___m_s_v_c12_8h_source.html#l00037">EVE_IntTypes_MSVC12.h:37</a></div></div>
+<div class="ttc" id="a_e_v_e___int_types___m_s_v_c12_8h_html_aba7bc1797add20fe3efdf37ced1182c5"><div class="ttname"><a href="_e_v_e___int_types___m_s_v_c12_8h.html#aba7bc1797add20fe3efdf37ced1182c5">uint8_t</a></div><div class="ttdeci">unsigned char uint8_t</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___int_types___m_s_v_c12_8h_source.html#l00040">EVE_IntTypes_MSVC12.h:40</a></div></div>
+<div class="ttc" id="a_e_v_e___int_types___m_s_v_c12_8h_html_abb452686968e48b67397da5f97445f5b"><div class="ttname"><a href="_e_v_e___int_types___m_s_v_c12_8h.html#abb452686968e48b67397da5f97445f5b">bool</a></div><div class="ttdeci">#define bool</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___int_types___m_s_v_c12_8h_source.html#l00176">EVE_IntTypes_MSVC12.h:176</a></div></div>
+<div class="ttc" id="a_e_v_e___load_file_8h_html_a0bec98789ee044fdf06cd1424f623f7d"><div class="ttname"><a href="_e_v_e___load_file_8h.html#a0bec98789ee044fdf06cd1424f623f7d">EVE_Util_loadInflateFile</a></div><div class="ttdeci">EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename)</div><div class="ttdoc">Load file into RAM_G by CMD_INFLATE.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___load_file___f_a_t_f_s_8c_source.html#l00207">EVE_LoadFile_FATFS.c:207</a></div></div>
+<div class="ttc" id="a_e_v_e___load_file_8h_html_a19e0da7a2b068ed71482acaf5bf243f8"><div class="ttname"><a href="_e_v_e___load_file_8h.html#a19e0da7a2b068ed71482acaf5bf243f8">EVE_Util_loadRawFile</a></div><div class="ttdeci">EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename)</div><div class="ttdoc">Load a raw file into RAM_G.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___load_file___f_a_t_f_s_8c_source.html#l00148">EVE_LoadFile_FATFS.c:148</a></div></div>
+<div class="ttc" id="a_e_v_e___load_file_8h_html_a4a888479e7cf23afa7cc411dad2732b1"><div class="ttname"><a href="_e_v_e___load_file_8h.html#a4a888479e7cf23afa7cc411dad2732b1">EVE_Util_loadImageFile</a></div><div class="ttdeci">EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format)</div><div class="ttdoc">Load image into RAM_G.</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___load_file___f_a_t_f_s_8c_source.html#l00270">EVE_LoadFile_FATFS.c:270</a></div></div>
+<div class="ttc" id="a_e_v_e___platform_8h_html_a81243dac9cf4807c4dfb42f398a1c7dc"><div class="ttname"><a href="_e_v_e___platform_8h.html#a81243dac9cf4807c4dfb42f398a1c7dc">eve_deprecated</a></div><div class="ttdeci">#define eve_deprecated(msg)</div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___platform_8h_source.html#l00107">EVE_Platform.h:107</a></div></div>
+<div class="ttc" id="a_e_v_e___util_8h_html"><div class="ttname"><a href="_e_v_e___util_8h.html">EVE_Util.h</a></div><div class="ttdoc">EVE HAL framework utilities.</div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html"><div class="ttname"><a href="_f_t___gpu___hal_8h.html">FT_Gpu_Hal.h</a></div><div class="ttdoc">This file defines the generic APIs of phost access layer for the FT800 or EVE compatible silicon....</div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html_a25cc1b50140004ad8ca63dc91536e160"><div class="ttname"><a href="_f_t___gpu___hal_8h.html#a25cc1b50140004ad8ca63dc91536e160">ft_void_t</a></div><div class="ttdeci">#define ft_void_t</div><div class="ttdef"><b>Definition</b> <a href="_f_t___gpu___hal_8h_source.html#l00057">FT_Gpu_Hal.h:57</a></div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html_a42445978696918b8de40dee640ad7718"><div class="ttname"><a href="_f_t___gpu___hal_8h.html#a42445978696918b8de40dee640ad7718">ft_size_t</a></div><div class="ttdeci">#define ft_size_t</div><div class="ttdef"><b>Definition</b> <a href="_f_t___gpu___hal_8h_source.html#l00063">FT_Gpu_Hal.h:63</a></div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html_a93f2b89c7b31b20a927753cce8342c02"><div class="ttname"><a href="_f_t___gpu___hal_8h.html#a93f2b89c7b31b20a927753cce8342c02">ft_uint32_t</a></div><div class="ttdeci">#define ft_uint32_t</div><div class="ttdef"><b>Definition</b> <a href="_f_t___gpu___hal_8h_source.html#l00054">FT_Gpu_Hal.h:54</a></div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html_acb728e7d7c81fbc004a1d985d10af365"><div class="ttname"><a href="_f_t___gpu___hal_8h.html#acb728e7d7c81fbc004a1d985d10af365">ft_uint8_t</a></div><div class="ttdeci">#define ft_uint8_t</div><div class="ttdef"><b>Definition</b> <a href="_f_t___gpu___hal_8h_source.html#l00050">FT_Gpu_Hal.h:50</a></div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html_ad3738fdd3320a259d25ebc70a518facd"><div class="ttname"><a href="_f_t___gpu___hal_8h.html#ad3738fdd3320a259d25ebc70a518facd">ft_char8_t</a></div><div class="ttdeci">#define ft_char8_t</div><div class="ttdef"><b>Definition</b> <a href="_f_t___gpu___hal_8h_source.html#l00045">FT_Gpu_Hal.h:45</a></div></div>
+<div class="ttc" id="a_f_t___gpu___hal_8h_html_afcc26b8b3eec493e51140f9b3cfdad0a"><div class="ttname"><a href="_f_t___gpu___hal_8h.html#afcc26b8b3eec493e51140f9b3cfdad0a">ft_int16_t</a></div><div class="ttdeci">#define ft_int16_t</div><div class="ttdef"><b>Definition</b> <a href="_f_t___gpu___hal_8h_source.html#l00051">FT_Gpu_Hal.h:51</a></div></div>
+<div class="ttc" id="a_gpu___co_cmd_8h_html"><div class="ttname"><a href="_gpu___co_cmd_8h.html">Gpu_CoCmd.h</a></div><div class="ttdoc">Co-processor command definitions.</div></div>
+<div class="ttc" id="a_gpu___hal_8cpp_html_a3f7610a6567db8ab5189bd6329ee6337"><div class="ttname"><a href="_gpu___hal_8cpp.html#a3f7610a6567db8ab5189bd6329ee6337">Gpu_Hal_Open</a></div><div class="ttdeci">bool_t Gpu_Hal_Open(EVE_HalContext *host)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8cpp_source.html#l00072">Gpu_Hal.cpp:72</a></div></div>
+<div class="ttc" id="a_gpu___hal_8cpp_html_a51c3c0115982fdfbca0412358e8a2678"><div class="ttname"><a href="_gpu___hal_8cpp.html#a51c3c0115982fdfbca0412358e8a2678">Gpu_Hal_RdMem</a></div><div class="ttdeci">void Gpu_Hal_RdMem(EVE_HalContext *host, uint32_t addr, uint8_t *buffer, uint32_t length)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8cpp_source.html#l00474">Gpu_Hal.cpp:474</a></div></div>
+<div class="ttc" id="a_gpu___hal_8cpp_html_a967f99fd043ceb30cc5513badf3735fe"><div class="ttname"><a href="_gpu___hal_8cpp.html#a967f99fd043ceb30cc5513badf3735fe">Gpu_Hal_Init</a></div><div class="ttdeci">bool_t Gpu_Hal_Init(Gpu_HalInit_t *halinit)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8cpp_source.html#l00059">Gpu_Hal.cpp:59</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a002f893ff431329476f75b695640d477"><div class="ttname"><a href="_gpu___hal_8h.html#a002f893ff431329476f75b695640d477">nb</a></div><div class="ttdeci">static ft_uint32_t ft_size_t nb</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00270">Gpu_Hal.h:271</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a0b674752cca6d434a1a69f40877eb2be"><div class="ttname"><a href="_gpu___hal_8h.html#a0b674752cca6d434a1a69f40877eb2be">LOAD</a></div><div class="ttdeci">#define LOAD</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00169">Gpu_Hal.h:169</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a10c9e6bc31bbd3bbdb9455974c6d0805"><div class="ttname"><a href="_gpu___hal_8h.html#a10c9e6bc31bbd3bbdb9455974c6d0805">LOADIMAGE</a></div><div class="ttdeci">#define LOADIMAGE</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00167">Gpu_Hal.h:167</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a1994f04dbd8c6909f12ab768715538f5"><div class="ttname"><a href="_gpu___hal_8h.html#a1994f04dbd8c6909f12ab768715538f5">buffer</a></div><div class="ttdeci">static ft_uint32_t ft_uint8_t * buffer</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00216">Gpu_Hal.h:216</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a1ad1f17a2a87e4d54e3e0053624c2a95"><div class="ttname"><a href="_gpu___hal_8h.html#a1ad1f17a2a87e4d54e3e0053624c2a95">Gpu_CoCmd_FlashHelper_Read</a></div><div class="ttdeci">Flash_Cmd_Status_t Gpu_CoCmd_FlashHelper_Read(Gpu_Hal_Context_t *phost, uint32_t dest_ram, uint32_t src_flash, uint32_t num, const uint8_t *read_data)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a25b7ec92daf8dc8d30b275bbf40269f1"><div class="ttname"><a href="_gpu___hal_8h.html#a25b7ec92daf8dc8d30b275bbf40269f1">Gpu_CoCmd_FlashHelper_Init</a></div><div class="ttdeci">void Gpu_CoCmd_FlashHelper_Init(Gpu_Hal_Context_t *phost)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a2f4b8d12541a6c892b73a1e4f30d4651"><div class="ttname"><a href="_gpu___hal_8h.html#a2f4b8d12541a6c892b73a1e4f30d4651">Gpu_CoCmd_FlashHelper_Write</a></div><div class="ttdeci">Flash_Cmd_Status_t Gpu_CoCmd_FlashHelper_Write(Gpu_Hal_Context_t *phost, uint32_t dest_flash, uint32_t num, const uint8_t *write_data)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a37cd8b3387e4335ed33dd6c724f5c4d1"><div class="ttname"><a href="_gpu___hal_8h.html#a37cd8b3387e4335ed33dd6c724f5c4d1">Gpu_Hal_TransferString</a></div><div class="ttdeci">static ft_int16_t Gpu_Hal_TransferString(EVE_HalContext *phost, const ft_char8_t *str)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00374">Gpu_Hal.h:374</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a3ded656bbe9849ad9fa2b28530390f0a"><div class="ttname"><a href="_gpu___hal_8h.html#a3ded656bbe9849ad9fa2b28530390f0a">float_t</a></div><div class="ttdeci">float float_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00082">Gpu_Hal.h:82</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a3eb7625040e75586c906bd53e09465c3"><div class="ttname"><a href="_gpu___hal_8h.html#a3eb7625040e75586c906bd53e09465c3">length</a></div><div class="ttdeci">static ft_uint32_t ft_uint8_t ft_uint32_t length</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00216">Gpu_Hal.h:217</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a467b4f567c730ffa031f0a3b43db3bb5"><div class="ttname"><a href="_gpu___hal_8h.html#a467b4f567c730ffa031f0a3b43db3bb5">Gpu_Hal_LoadImageToMemory</a></div><div class="ttdeci">static void Gpu_Hal_LoadImageToMemory(Gpu_Hal_Context_t *phost, const char *fileName, int32_t destination, uint8_t type)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00543">Gpu_Hal.h:543</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a4a8df36ca14bd18ad34e4613453bd27b"><div class="ttname"><a href="_gpu___hal_8h.html#a4a8df36ca14bd18ad34e4613453bd27b">Gpu_CoCmd_FlashHelper_GetState</a></div><div class="ttdeci">uint8_t Gpu_CoCmd_FlashHelper_GetState(Gpu_Hal_Context_t *phost)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a51f3987d8326c12634da29cfac120754"><div class="ttname"><a href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754">Flash_Cmd_Status_t</a></div><div class="ttdeci">Flash_Cmd_Status_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00412">Gpu_Hal.h:413</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a51f3987d8326c12634da29cfac120754a3013ce7c30fd41115042d2021ecabd98"><div class="ttname"><a href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754a3013ce7c30fd41115042d2021ecabd98">FLASH_CMD_SUCCESS</a></div><div class="ttdeci">@ FLASH_CMD_SUCCESS</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00414">Gpu_Hal.h:414</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a51f3987d8326c12634da29cfac120754a6c5c1aafa7c87118ac8c4e30503ac752"><div class="ttname"><a href="_gpu___hal_8h.html#a51f3987d8326c12634da29cfac120754a6c5c1aafa7c87118ac8c4e30503ac752">FLASH_CMD_ALIGNED_ERR</a></div><div class="ttdeci">@ FLASH_CMD_ALIGNED_ERR</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00416">Gpu_Hal.h:415</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a5fdb254577254cdede7433501a486535"><div class="ttname"><a href="_gpu___hal_8h.html#a5fdb254577254cdede7433501a486535">INFLATE</a></div><div class="ttdeci">#define INFLATE</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00168">Gpu_Hal.h:168</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a84268825e133dbe3b1e64b789183bcb8"><div class="ttname"><a href="_gpu___hal_8h.html#a84268825e133dbe3b1e64b789183bcb8">GET_ASTC_FORMAT</a></div><div class="ttdeci">uint32_t GET_ASTC_FORMAT(uint16_t w, uint16_t h)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a8860cabe959de39028236ca1ca12cfdb"><div class="ttname"><a href="_gpu___hal_8h.html#a8860cabe959de39028236ca1ca12cfdb">cmd</a></div><div class="ttdeci">static ft_uint32_t * cmd</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00270">Gpu_Hal.h:270</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a90cce0c99e80524b805886c8ad139e84"><div class="ttname"><a href="_gpu___hal_8h.html#a90cce0c99e80524b805886c8ad139e84">Gpu_Hal_ResetCmdFifo</a></div><div class="ttdeci">static void Gpu_Hal_ResetCmdFifo(Gpu_Hal_Context_t *phost)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00559">Gpu_Hal.h:559</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a9363376f201f22f1769bfb1eccfefe3c"><div class="ttname"><a href="_gpu___hal_8h.html#a9363376f201f22f1769bfb1eccfefe3c">Gpu_CoCmd_FlashHelper_SwitchState</a></div><div class="ttdeci">uint32_t Gpu_CoCmd_FlashHelper_SwitchState(Gpu_Hal_Context_t *phost, uint8_t nextState)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_a93b9d2d5e7c70a50ff9143783154e75f"><div class="ttname"><a href="_gpu___hal_8h.html#a93b9d2d5e7c70a50ff9143783154e75f">Gpu_CoCmd_FlashHelper_SwitchFullMode</a></div><div class="ttdeci">uint32_t Gpu_CoCmd_FlashHelper_SwitchFullMode(Gpu_Hal_Context_t *phost)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_aa64ae616543e6e4d82593998ea9e3bf7"><div class="ttname"><a href="_gpu___hal_8h.html#aa64ae616543e6e4d82593998ea9e3bf7">astc_tile2</a></div><div class="ttdeci">void astc_tile2(uint8_t *iData, uint16_t bw, uint16_t bh, uint32_t size, const uint8_t *oData)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_aa6a6f9b9d90a2fc45cb34a4da3f34f59"><div class="ttname"><a href="_gpu___hal_8h.html#aa6a6f9b9d90a2fc45cb34a4da3f34f59">prog_char8_t</a></div><div class="ttdeci">eve_progmem char prog_char8_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00103">Gpu_Hal.h:103</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_aac265146aeae98de3e25a4acabe86bcb"><div class="ttname"><a href="_gpu___hal_8h.html#aac265146aeae98de3e25a4acabe86bcb">Gpu_CoCmd_FlashHelper_ClearCache</a></div><div class="ttdeci">void Gpu_CoCmd_FlashHelper_ClearCache(Gpu_Hal_Context_t *phost)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ab9e5e065d17c60ab3099f70d251d693e"><div class="ttname"><a href="_gpu___hal_8h.html#ab9e5e065d17c60ab3099f70d251d693e">GPU_DLSwap</a></div><div class="ttdeci">void GPU_DLSwap(Gpu_Hal_Context_t *phost, uint8_t DL_Swap_Type)</div><div class="ttdoc">API to check the status of previous DLSWAP and perform DLSWAP of new DL Check for the status of previ...</div><div class="ttdef"><b>Definition</b> <a href="_flash_helper_8c_source.html#l00497">FlashHelper.c:497</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_abffb91ff6cd2983325337ed58c088897"><div class="ttname"><a href="_gpu___hal_8h.html#abffb91ff6cd2983325337ed58c088897">Gpu_CoCmd_FlashHelper_Erase</a></div><div class="ttdeci">void Gpu_CoCmd_FlashHelper_Erase(Gpu_Hal_Context_t *phost)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ac21112f8695f2348666371c67dae264c"><div class="ttname"><a href="_gpu___hal_8h.html#ac21112f8695f2348666371c67dae264c">prog_uint16_t</a></div><div class="ttdeci">eve_progmem uint16_t prog_uint16_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00101">Gpu_Hal.h:101</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ac340fde9f4743ef7a9398b79d7bea8bd"><div class="ttname"><a href="_gpu___hal_8h.html#ac340fde9f4743ef7a9398b79d7bea8bd">double_t</a></div><div class="ttdeci">double double_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00083">Gpu_Hal.h:83</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_acb6d99a9068a9964dfb3e2bda11ac521"><div class="ttname"><a href="_gpu___hal_8h.html#acb6d99a9068a9964dfb3e2bda11ac521">Gpu_Hal_Dec2Ascii</a></div><div class="ttdeci">static int32_t Gpu_Hal_Dec2Ascii(char8_t *pSrc, int32_t value)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00498">Gpu_Hal.h:498</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ad0223e227867aa9e61c76cfcfe0edb17"><div class="ttname"><a href="_gpu___hal_8h.html#ad0223e227867aa9e61c76cfcfe0edb17">addr</a></div><div class="ttdeci">static ft_uint32_t addr</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00216">Gpu_Hal.h:216</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ad43af98ef27452271dfee0bf6564f5a5"><div class="ttname"><a href="_gpu___hal_8h.html#ad43af98ef27452271dfee0bf6564f5a5">Gpu_Hal_Context_t</a></div><div class="ttdeci">#define Gpu_Hal_Context_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00134">Gpu_Hal.h:134</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ad6ff38eb8b429f5a7c74ffb3da0500fe"><div class="ttname"><a href="_gpu___hal_8h.html#ad6ff38eb8b429f5a7c74ffb3da0500fe">prog_uchar8_t</a></div><div class="ttdeci">eve_progmem char prog_uchar8_t</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00102">Gpu_Hal.h:102</a></div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_ad96322f3a1c6af0593c92f7ed322e02c"><div class="ttname"><a href="_gpu___hal_8h.html#ad96322f3a1c6af0593c92f7ed322e02c">Gpu_CoCmd_FlashHelper_Update</a></div><div class="ttdeci">Flash_Cmd_Status_t Gpu_CoCmd_FlashHelper_Update(Gpu_Hal_Context_t *phost, uint32_t dest_flash, uint32_t src_ram, uint32_t num)</div></div>
+<div class="ttc" id="a_gpu___hal_8h_html_aef7310fc9365b0b6b259bac019b13a5b"><div class="ttname"><a href="_gpu___hal_8h.html#aef7310fc9365b0b6b259bac019b13a5b">Gpu_Hal_TransferString_S</a></div><div class="ttdeci">static ft_int16_t Gpu_Hal_TransferString_S(EVE_HalContext *phost, const ft_char8_t *str, int length)</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00379">Gpu_Hal.h:379</a></div></div>
+<div class="ttc" id="astruct_e_v_e___hal_context_html"><div class="ttname"><a href="struct_e_v_e___hal_context.html">EVE_HalContext</a></div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_defs_8h_source.html#l00232">EVE_HalDefs.h:233</a></div></div>
+<div class="ttc" id="astruct_e_v_e___hal_parameters_html"><div class="ttname"><a href="struct_e_v_e___hal_parameters.html">EVE_HalParameters</a></div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_defs_8h_source.html#l00152">EVE_HalDefs.h:153</a></div></div>
+<div class="ttc" id="astruct_e_v_e___hal_platform_html"><div class="ttname"><a href="struct_e_v_e___hal_platform.html">EVE_HalPlatform</a></div><div class="ttdef"><b>Definition</b> <a href="_e_v_e___hal_defs_8h_source.html#l00379">EVE_HalDefs.h:380</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html"><div class="ttname"><a href="struct_fifo__t.html">Fifo_t</a></div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00152">Gpu_Hal.h:153</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html_a0ae80d52a57c70909349a9eb742fa04d"><div class="ttname"><a href="struct_fifo__t.html#a0ae80d52a57c70909349a9eb742fa04d">Fifo_t::fifo_buff</a></div><div class="ttdeci">uint32_t fifo_buff</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00154">Gpu_Hal.h:154</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html_a242f5297cb585c16ffbde3a7810c7293"><div class="ttname"><a href="struct_fifo__t.html#a242f5297cb585c16ffbde3a7810c7293">Fifo_t::HW_Write_Reg</a></div><div class="ttdeci">uint32_t HW_Write_Reg</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00161">Gpu_Hal.h:161</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html_a60ce9fce338ddae8526673c1fd3b6e63"><div class="ttname"><a href="struct_fifo__t.html#a60ce9fce338ddae8526673c1fd3b6e63">Fifo_t::fifo_len</a></div><div class="ttdeci">int32_t fifo_len</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00155">Gpu_Hal.h:155</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html_a6788da7931c54665980eac738b4871be"><div class="ttname"><a href="struct_fifo__t.html#a6788da7931c54665980eac738b4871be">Fifo_t::fifo_wp</a></div><div class="ttdeci">int32_t fifo_wp</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00156">Gpu_Hal.h:156</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html_a8a1ecd6d454fe6cdee77446cd50a280b"><div class="ttname"><a href="struct_fifo__t.html#a8a1ecd6d454fe6cdee77446cd50a280b">Fifo_t::HW_Read_Reg</a></div><div class="ttdeci">uint32_t HW_Read_Reg</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00160">Gpu_Hal.h:160</a></div></div>
+<div class="ttc" id="astruct_fifo__t_html_a8bf3f27103bb0b8b1bcded148873ae7a"><div class="ttname"><a href="struct_fifo__t.html#a8bf3f27103bb0b8b1bcded148873ae7a">Fifo_t::fifo_rp</a></div><div class="ttdeci">int32_t fifo_rp</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00157">Gpu_Hal.h:157</a></div></div>
+<div class="ttc" id="astruct_gpu___hal_init__t_html"><div class="ttname"><a href="struct_gpu___hal_init__t.html">Gpu_HalInit_t</a></div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00129">Gpu_Hal.h:130</a></div></div>
+<div class="ttc" id="astruct_gpu___hal_init__t_html_a266353897f0e8c82c37f552461e98aed"><div class="ttname"><a href="struct_gpu___hal_init__t.html#a266353897f0e8c82c37f552461e98aed">Gpu_HalInit_t::TotalChannelNum</a></div><div class="ttdeci">ft_uint32_t TotalChannelNum</div><div class="ttdef"><b>Definition</b> <a href="_gpu___hal_8h_source.html#l00131">Gpu_Hal.h:131</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- HTML footer for doxygen 1.9.3-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_7d7f499be83b400157504a134bf2709c.html">eve_hal</a></li><li class="navelem"><a class="el" href="dir_e667645de47d6ac08c91e76638dfc7d4.html">Hdr</a></li><li class="navelem"><a class="el" href="_gpu___hal_8h.html">Gpu_Hal.h</a></li>
+    <div align="right">
+    Copyright © Bridgetek Pte Ltd  
+    </div>  
+  </ul>
+</div>
+</body>
+</html>

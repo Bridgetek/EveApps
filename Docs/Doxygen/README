@@ -1,6 +1,7 @@
 Online documents support by Doxygen
 
 The generated online documents is already in Docs/Doxygen/html, the first page is 'index.html'
+The documents can be viewed at https://Bridgetek.github.io/EveApps/Docs/Doxygen/html/
 By default, the configuration was set to
 - EVE_GRAPHICS_BT815
 - FT9XX_PLATFORM
