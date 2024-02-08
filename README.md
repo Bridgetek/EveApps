@@ -308,6 +308,11 @@ License: BSD (http://elm-chan.org/fsw/ff/doc/appnote.html#license)
 
 FatFs library is locate at folder common/application/fatfs.
 
+## Documentation
+
+EveApps has created an online documentation (https://Bridgetek.github.io/EveApps/Docs/Doxygen/html/) for easy and quick access to the functions it offers.
+
+To customize it according to your setup, kindly refer to Docs/Doxygen folder.
 
 ## Version
 This version is v1.6.0-rc1
