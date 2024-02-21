@@ -1,0 +1,19 @@
+Online documents support by Doxygen
+
+The generated online documents is already in Docs/Doxygen/html, the first page is 'index.html'
+The documents can be viewed at https://Bridgetek.github.io/EveApps/Docs/Doxygen/html/
+By default, the configuration was set to
+- EVE_GRAPHICS_BT815
+- FT9XX_PLATFORM
+
+
+How to rebuild the documents according to required configurations
+1, install Doxygen from https://www.doxygen.nl/download.html
+2, download source code and Doxygen configuration  (current repo) 
+3, open windows cmd, enter ${saved_path}/EveApps/Docs/Doxygen
+4, open configuration file 'Doxyfile', change the configuration 'PREDEFINED'
+	eg. PREDEFINED             = EVE_GRAPHICS_BT817 \
+	                             RP2040_PLATFORM
+5, run the doxygen to generate new documents
+	eg. ${doxygen_path}/doxygen.exe Doxyfile
+6, new documents are generated in html folder

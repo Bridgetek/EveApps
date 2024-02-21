@@ -310,7 +310,7 @@ FatFs library is locate at folder common/application/fatfs.
 
 ## Documentation
 
-EveApps has created an online documentation (https://Bridgetek.github.io/EveApps/Docs/Doxygen/html/) for easy and quick access to the functions it offers.
+EveApps has created an online documentation (https://Bridgetek.github.io/EveApps/Doxygen/html/) for easy and quick access to the functions it offers.
 
 To customize it according to your setup, kindly refer to Docs/Doxygen folder.
 

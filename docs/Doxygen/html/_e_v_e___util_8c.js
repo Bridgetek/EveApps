@@ -1,0 +1,28 @@
+var _e_v_e___util_8c =
+[
+    [ "EVE_HARDCODED_DISPLAY_TIMINGS", "_e_v_e___util_8c.html#a0e28eff46ee54ce55c259c4aa13e3444", null ],
+    [ "EVE_SUBPATCH_PTR", "_e_v_e___util_8c.html#a60b44f8f9aebcfb5f9a5f9fb51b61900", null ],
+    [ "EVE_VIDEOPATCH_ADDR", "_e_v_e___util_8c.html#a2465626187a4a39622d31f29fe5aff27", null ],
+    [ "EXTRACT_CHIPID", "_e_v_e___util_8c.html#aeb470737c8476594cf6701562504e9eb", null ],
+    [ "configDefaultsEx", "_e_v_e___util_8c.html#a5105f737d38e2c5464d84a99e9cb4cc7", null ],
+    [ "debugBackupRamG", "_e_v_e___util_8c.html#a8021bfa55803fda4f89df4f6d90f9e79", null ],
+    [ "debugRestoreRamG", "_e_v_e___util_8c.html#adffb2aaed035b656aa69b42f15fe38d1", null ],
+    [ "EVE_CoDlImpl_resetCoState", "_e_v_e___util_8c.html#aad5be316a0bd67ff44ae2e49bab7be81", null ],
+    [ "EVE_Util_bootup", "_e_v_e___util_8c.html#a7a9c688359606935800486c53ee74981", null ],
+    [ "EVE_Util_bootupConfig", "_e_v_e___util_8c.html#a9e0c42764613e1d8429a9ad24b5d54c0", null ],
+    [ "EVE_Util_bootupConfigInteractive", "_e_v_e___util_8c.html#a54cad7c607950a723409273b6239d92e", null ],
+    [ "EVE_Util_bootupDefaults", "_e_v_e___util_8c.html#a4f8120212fe6a8767d9cd31ff4c04ed1", null ],
+    [ "EVE_Util_clearScreen", "_e_v_e___util_8c.html#a2148a337a4cfe814299249bac4db9f95", null ],
+    [ "EVE_Util_config", "_e_v_e___util_8c.html#a6242320a0ba2a1f30a511a481aa92466", null ],
+    [ "EVE_Util_configDefaults", "_e_v_e___util_8c.html#a0bd6140bbd02c83f7ac9a4b7826bc821", null ],
+    [ "EVE_Util_configDefaultsEx", "_e_v_e___util_8c.html#a4b3bd376740850703a310009151f3ad0", null ],
+    [ "EVE_Util_forceFault", "_e_v_e___util_8c.html#ab38074db0dbe469d23d14910cd023002", null ],
+    [ "EVE_Util_needsSubPatch", "_e_v_e___util_8c.html#a94af19e83e42d42fa6c3e01dcef55eb7", null ],
+    [ "EVE_Util_needsVideoPatch", "_e_v_e___util_8c.html#a25a5c4a484646fc89c3e9ddbb4092850", null ],
+    [ "EVE_Util_openDeviceInteractive", "_e_v_e___util_8c.html#a0769dff7f95dcc98901a36616eef41b9", null ],
+    [ "EVE_Util_resetCoprocessor", "_e_v_e___util_8c.html#a754465c92e3b15dba237661bce4232df", null ],
+    [ "EVE_Util_shutdown", "_e_v_e___util_8c.html#af53c33e904aeb69348c6498c60539b89", null ],
+    [ "uploadTouchFirmware", "_e_v_e___util_8c.html#aaed496b3e2c7a7a63f0c42dccd4cade5", null ],
+    [ "c_DlCodeBootup", "_e_v_e___util_8c.html#ac319c43cb05e032affc9fbd1277337cf", null ],
+    [ "s_DisplayResolutions", "_e_v_e___util_8c.html#a3d8d92ba2cd75db69456461479665586", null ]
+];
