@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,13 +27,15 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_HalImpl.h"
 #include "EVE_Platform.h"
 #if defined(MPSSE_PLATFORM)
 
-#ifdef _WIN32
+// #define EVE_COMPATIBILITY_MPSSESLEEPWORKAROUND
+
+#if defined(_WIN32) && defined(EVE_COMPATIBILITY_MPSSESLEEPWORKAROUND)
 #include <timeapi.h>
 #pragma comment(lib, "Winmm.lib")
 #endif
@@ -76,7 +78,7 @@
 *********/
 
 uint32_t s_NumChannels = 0;
-#ifdef _WIN32
+#if defined(_WIN32) && defined(EVE_COMPATIBILITY_MPSSESLEEPWORKAROUND)
 bool s_SleepMitigated = false;
 #endif
 
@@ -84,7 +86,7 @@ bool s_SleepMitigated = false;
 ///@{
 /**
  * @brief Initialize HAL platform
- * 
+ *
  */
 void EVE_HalImpl_initialize()
 {
@@ -94,12 +96,12 @@ void EVE_HalImpl_initialize()
 
 /**
  * @brief Release HAL platform
- * 
+ *
  */
 void EVE_HalImpl_release()
 {
 	/* Cleanup the MPSSE Lib */
-#ifdef _WIN32
+#if defined(_WIN32) && defined(EVE_COMPATIBILITY_MPSSESLEEPWORKAROUND)
 	if (s_SleepMitigated)
 	{
 		timeEndPeriod(1);
@@ -110,7 +112,7 @@ void EVE_HalImpl_release()
 }
 
 /**
- * @brief List the available devices 
+ * @brief List the available devices
  *
  */
 size_t EVE_Hal_list()
@@ -171,7 +173,7 @@ bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 
 /**
  * @brief Get the default configuration parameters
- * 
+ *
  * @param parameters EVE_Hal framework's parameters
  * @param deviceIdx
  */
@@ -221,7 +223,7 @@ bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 
 /**
  * @brief Opens a new HAL context using the specified parameters
- * 
+ *
  * @param phost Pointer to Hal context
  * @param parameters EVE_Hal framework's parameters
  * @return true True if ok
@@ -303,7 +305,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 	phost->Status = EVE_STATUS_OPENED;
 	++g_HalPlatform.OpenedDevices;
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(EVE_COMPATIBILITY_MPSSESLEEPWORKAROUND)
 	/* Performance degradation workaround. Mitigate SPI_ToggleCS sleep, if it's detected. */
 	/* SPI_ToggleCS may be fixed to remove the sleep call in future versions of libMPSSE. */
 	/* This workaround applies only if the affected libMPSSE library is being used. */
@@ -350,7 +352,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 
 /**
  * @brief Close a HAL context
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_HalImpl_close(EVE_HalContext *phost)
@@ -366,7 +368,7 @@ void EVE_HalImpl_close(EVE_HalContext *phost)
 
 /**
  * @brief Idle. Call regularly to update frequently changing internal state
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_HalImpl_idle(EVE_HalContext *phost)
@@ -388,7 +390,7 @@ static bool flush(EVE_HalContext *phost);
 
 /**
  * @brief Increase RAM_G adress
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address offset
  * @param inc Number of bytes to increase
@@ -408,7 +410,7 @@ static inline uint32_t incrementRamGAddr(EVE_HalContext *phost, uint32_t addr, u
 
 /**
  * @brief Read a block data from Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Buffer to get result
  * @param size Number of bytes to read
@@ -439,7 +441,7 @@ static inline bool rdBuffer(EVE_HalContext *phost, uint8_t *buffer, uint32_t siz
 
 /**
  * @brief Write a block data to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Data buffer to write
  * @param size Size of buffer
@@ -548,7 +550,7 @@ static inline bool wrBuffer(EVE_HalContext *phost, const uint8_t *buffer, uint32
 
 /**
  * @brief Write 8 bits to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint8_t Number of bytes transfered
@@ -569,7 +571,7 @@ static inline uint8_t transfer8(EVE_HalContext *phost, uint8_t value)
 #if defined(EVE_BUFFER_WRITES)
 /**
  * @brief Flush data to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if ok
  * @return false False if error
@@ -603,7 +605,7 @@ static bool flush(EVE_HalContext *phost)
 
 /**
  * @brief Flush data to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_Hal_flush(EVE_HalContext *phost)
@@ -616,7 +618,7 @@ void EVE_Hal_flush(EVE_HalContext *phost)
 
 /**
  * @brief Start data transfer to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param rw Read or Write
  * @param addr Address to read/write
@@ -688,7 +690,7 @@ void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t ad
 
 /**
  * @brief End data transfer
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_Hal_endTransfer(EVE_HalContext *phost)
@@ -746,7 +748,7 @@ void EVE_Hal_endTransfer(EVE_HalContext *phost)
 
 /**
  * @brief Write 8 bits to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint8_t Number of bytes transfered
@@ -766,7 +768,7 @@ uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value)
 
 /**
  * @brief Write 2 bytes to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint16_t Number of bytes transfered
@@ -804,7 +806,7 @@ uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value)
 
 /**
  * @brief Write 4 bytes to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint32_t Number of bytes transfered
@@ -841,7 +843,7 @@ uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value)
 
 /**
  * @brief Transfer (read/write) a block data to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param result Buffer to get data transfered, NULL when write
  * @param buffer Buffer where data is transfered, NULL when read
@@ -878,7 +880,7 @@ void EVE_Hal_transferMem(EVE_HalContext *phost, uint8_t *result, const uint8_t *
 
 /**
  * @brief Transfer a block data from program memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param result Buffer to get data transfered, NULL when write
  * @param buffer Buffer where data is transfered, NULL when read
@@ -915,7 +917,7 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 
 /**
  * @brief Transfer a string to EVE platform
- * 
+ *
  * @param phost Pointer to Hal context
  * @param str String to transfer
  * @param index Start position in the string
@@ -993,7 +995,7 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 
 /**
  * @brief Send a host command to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param cmd Command to send
  */
@@ -1014,7 +1016,7 @@ void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 
 /**
  * @brief This API sends a 3byte command to the phost
- * 
+ *
  * @param phost Pointer to Hal context
  * @param cmd Command to send
  */
@@ -1075,7 +1077,7 @@ static FT_STATUS EVE_HalImpl_passthroughGpio(EVE_HalContext *phost, uint8_t gpio
 
 /**
  * @brief Toggle PD_N pin of FT800 board for a power cycle
- * 
+ *
  * @param phost Pointer to Hal context
  * @param up Up or Down
  * @return true True if ok
@@ -1150,7 +1152,7 @@ bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 
 /**
  * @brief Set number of SPI channel
- * 
+ *
  * @param phost Pointer to Hal context
  * @param numchnls Number of channel
  * @param numdummy Number of dummy bytes
@@ -1181,7 +1183,7 @@ void EVE_Hal_restoreSPI(EVE_HalContext *phost)
 
 /**
  * @brief Display GPIO pins
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if Ok
  * @return false False if error

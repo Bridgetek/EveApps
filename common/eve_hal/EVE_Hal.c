@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_HalDefs.h"
 #include "EVE_Platform.h"
@@ -46,7 +46,7 @@ EVE_HalPlatform g_HalPlatform;
 
 /**
  * @brief Eve_Hal framework initialization
- * 
+ *
  * @return EVE_HalPlatform* Poniter to EVE_HalPlatform struct
  */
 EVE_HAL_EXPORT EVE_HalPlatform *EVE_Hal_initialize()
@@ -59,7 +59,7 @@ EVE_HAL_EXPORT EVE_HalPlatform *EVE_Hal_initialize()
 
 /**
  * @brief Close Eve_Hal framework
- * 
+ *
  */
 EVE_HAL_EXPORT void EVE_Hal_release()
 {
@@ -72,7 +72,7 @@ EVE_HAL_EXPORT void EVE_Hal_release()
 
 /**
  * @brief Setup default parameters for Eve_Hal framework
- * 
+ *
  * @param parameters Pointer to EVE_HalParameters
  */
 EVE_HAL_EXPORT void EVE_Hal_defaults(EVE_HalParameters *parameters)
@@ -94,7 +94,7 @@ EVE_HAL_EXPORT void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t dev
 
 /**
  * @brief Open the Eve_Hal framework
- * 
+ *
  * @param phost Pointer to Hal context
  * @param parameters Pointer to EVE_HalParameters
  * @return true True if ok
@@ -110,7 +110,7 @@ EVE_HAL_EXPORT bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters 
 
 /**
  * @brief Close the Eve_Hal framework
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Hal_close(EVE_HalContext *phost)
@@ -130,7 +130,7 @@ EVE_HAL_EXPORT void EVE_Hal_close(EVE_HalContext *phost)
 
 /**
  * @brief Idle handler for Eve_Hal framework
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost)
@@ -149,7 +149,7 @@ EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost)
 
 /**
  * @brief Read 8 bits from Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be read
  * @return uint8_t Data from Coprocessor
@@ -165,7 +165,7 @@ EVE_HAL_EXPORT uint8_t EVE_Hal_rd8(EVE_HalContext *phost, uint32_t addr)
 
 /**
  * @brief Read 2 bytes from Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be read
  * @return uint16_t Data from Coprocessor
@@ -181,7 +181,7 @@ EVE_HAL_EXPORT uint16_t EVE_Hal_rd16(EVE_HalContext *phost, uint32_t addr)
 
 /**
  * @brief Read 4 bytes from Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be read
  * @return uint16_t Data from Coprocessor
@@ -197,7 +197,7 @@ EVE_HAL_EXPORT uint32_t EVE_Hal_rd32(EVE_HalContext *phost, uint32_t addr)
 
 /**
  * @brief Read a block data from Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param result Buffer where data write to
  * @param addr Address to bbe read
@@ -212,7 +212,7 @@ EVE_HAL_EXPORT void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32
 
 /**
  * @brief Write 8 bits to Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be write
  * @param v Value to write
@@ -226,7 +226,7 @@ EVE_HAL_EXPORT void EVE_Hal_wr8(EVE_HalContext *phost, uint32_t addr, uint8_t v)
 
 /**
  * @brief Write 2 bytes to Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be write
  * @param v Value to write
@@ -240,7 +240,7 @@ EVE_HAL_EXPORT void EVE_Hal_wr16(EVE_HalContext *phost, uint32_t addr, uint16_t 
 
 /**
  * @brief Write 4 bytes to Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be write
  * @param v Value to write
@@ -254,7 +254,7 @@ EVE_HAL_EXPORT void EVE_Hal_wr32(EVE_HalContext *phost, uint32_t addr, uint32_t 
 
 /**
  * @brief Write a buffer to Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be write
  * @param buffer Data to be write
@@ -269,7 +269,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const ui
 
 /**
  * @brief Write a buffer in ProgMem to Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be write
  * @param buffer Data to be write
@@ -284,7 +284,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_
 
 /**
  * @brief Write a string to Coprocessor's memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr Address to be write
  * @param str String to be write
@@ -309,7 +309,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const
 
 /**
  * @brief Trim the internal clock till the measured frequency is within the acceptable range
- * 
+ *
  * @param phost Pointer to Hal context
  * @param lowFreq Low frequency target to trim
  * @return int32_t frequency after trim
@@ -340,7 +340,7 @@ EVE_HAL_EXPORT int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t low
 
 /**
  * @brief Select clock source for Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param pllsource Clock source
  */
@@ -351,7 +351,7 @@ EVE_HAL_EXPORT void EVE_Host_clockSelect(EVE_HalContext *phost, EVE_PLL_SOURCE_T
 
 /**
  * @brief Select system clock for Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param freq Frequency to set
  */
@@ -362,7 +362,7 @@ EVE_HAL_EXPORT void EVE_Host_pllFreqSelect(EVE_HalContext *phost, EVE_PLL_FREQ_T
 
 /**
  * @brief Switch power mode for Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param pwrmode Power mode
  */
@@ -373,7 +373,7 @@ EVE_HAL_EXPORT void EVE_Host_powerModeSwitch(EVE_HalContext *phost, EVE_POWER_MO
 
 /**
  * @brief Send reset signal to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Host_coreReset(EVE_HalContext *phost)
@@ -383,7 +383,7 @@ EVE_HAL_EXPORT void EVE_Host_coreReset(EVE_HalContext *phost)
 
 /**
  * @brief Set system clock for Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param freq Frequency to set
  */
@@ -407,7 +407,7 @@ EVE_HAL_EXPORT void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FRE
 			EVE_Hal_hostCommandExt3(phost, (uint32_t)0x61 | (0x03 << 8));
 		else if (EVE_SYSCLK_24M == freq)
 			EVE_Hal_hostCommandExt3(phost, (uint32_t)0x61 | (0x02 << 8));
-		else if (EVE_SYSCLK_DEFAULT == freq) //default clock
+		else if (EVE_SYSCLK_DEFAULT == freq) // default clock
 			EVE_Hal_hostCommandExt3(phost, 0x61);
 	}
 	else
@@ -434,7 +434,7 @@ EVE_HAL_EXPORT void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FRE
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 /**
  * @brief Power off a component
- * 
+ *
  * @param phost Pointer to Hal context
  * @param val Component number
  */
@@ -445,7 +445,7 @@ EVE_HAL_EXPORT void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t v
 
 /**
  * @brief Set the drive strength for various pins
- * 
+ *
  * @param phost Pointer to Hal context
  * @param strength Drive strength
  * @param group Pin group to set
@@ -457,7 +457,7 @@ EVE_HAL_EXPORT void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPI
 
 /**
  * @brief Hold the device in reset state
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Host_resetActive(EVE_HalContext *phost)
@@ -467,7 +467,7 @@ EVE_HAL_EXPORT void EVE_Host_resetActive(EVE_HalContext *phost)
 
 /**
  * @brief Exit reset state, Eve will power on and enter into its default state
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost)
@@ -478,7 +478,7 @@ EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost)
 
 /**
  * @brief Display a fullscreen debug message using TEXT8X8. Uses the back of RAM_G.
- * 
+ *
  * @param phost Pointer to Hal context
  * @param str Error message to show
  * @param size Size of the message

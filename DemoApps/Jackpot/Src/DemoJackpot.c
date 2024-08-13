@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
 	Calibration_Save(s_pHalContext);
 #endif
 
-	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
 	EVE_Util_clearScreen(s_pHalContext);
 
 	char* info[] =
@@ -120,7 +119,7 @@ int main(int argc, char* argv[])
 #elif defined(DISPLAY_RESOLUTION_WQVGA)
 #define SPIN_COLUMNS 5
 #define STATUS_BAR_HEIGHT 50 
-#elif defined(DISPLAY_RESOLUTION_QVGA)
+#else // if defined(DISPLAY_RESOLUTION_QVGA)
 #define SPIN_COLUMNS 3
 #define STATUS_BAR_HEIGHT 50 
 #endif
@@ -276,7 +275,7 @@ bet_lines betLines[] = {
 	{ 424,157,404,170,299,122,63,122,0xc2,0x00,0x78 },//11
 	{ 424,186,400,180,235,75,83,170,0xff,0xff,0x14 }, //12
 };
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 bet_lines betLines[] = {
 	{ 100,75,125,100,400,100,650,100,0x7e,0x1e,0x9c },     //1
 	{ 100,125,125,108,400,108,650,300,0x15,0xb0,0x1a },    //2
@@ -293,7 +292,7 @@ bet_lines betLines[] = {
 };
 #endif
 
-#if defined(DISPLAY_RESOLUTION_WQVGA) | defined(DISPLAY_RESOLUTION_WVGA)
+#if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_WVGA)
 spinning_column columns[] = {
 	{ 6,{ 2,6,1,5,11,7,10,0,4,8,12,3,9,13 },70,6,30,30 },
 	{ 5,{ 11,8,12,1,7,4,0,2,5,3,13,6,10,9 },42,8,30,30 },
@@ -302,9 +301,7 @@ spinning_column columns[] = {
 	{ 10,{ 5,2,11,4,8,9,7,12,10,13,1,0,3,6 },84,1,30,30 },
 };
 
-#endif
-
-#ifdef DISPLAY_RESOLUTION_QVGA
+#else // if defined(DISPLAY_RESOLUTION_QVGA)
 spinning_column columns[] = {
 	{ 6,{ 2,6,1,5,11,7,10,0,4,8,12,3,9,13 },70,6,30,30 },
 	{ 5,{ 11,8,12,1,7,4,0,2,5,3,13,6,10,9 },42,8,30,30 },
@@ -329,7 +326,7 @@ bitmap_header bitmapInfo[] =
 	{ 119,310,119 * 2,0 } //outer overlay
 };
 
-#elif defined(DISPLAY_RESOLUTION_QVGA) | defined(DISPLAY_RESOLUTION_WQVGA)
+#else // if defined(DISPLAY_RESOLUTION_QVGA) | defined(DISPLAY_RESOLUTION_WQVGA)
 bitmap_header bitmapInfo[] =
 {
 	/*width,height,stride,memory offset */
@@ -478,7 +475,7 @@ void drawbetlines() {
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(betLines[currentLine].x1, betLines[currentLine].y1, 0, 0));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(betLines[currentLine].x2, betLines[currentLine].y2, 0, 0));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(betLines[currentLine].x3, betLines[currentLine].y3, 0, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(betLines[currentLine].x0 * 16, betLines[currentLine].y0 * 16));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(betLines[currentLine].x1 * 16, betLines[currentLine].y1 * 16));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(betLines[currentLine].x2 * 16, betLines[currentLine].y2 * 16));
@@ -496,7 +493,7 @@ void drawbetlines() {
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(betLines[i].x1, betLines[i].y1, 0, 0));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(betLines[i].x2, betLines[i].y2, 0, 0));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2II(betLines[i].x3, betLines[i].y3, 0, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(betLines[i].x0 * 16, betLines[i].y0 * 16));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(betLines[i].x1 * 16, betLines[i].y1 * 16));
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(betLines[i].x2 * 16, betLines[i].y2 * 16));
@@ -522,7 +519,7 @@ void jackpotSetup() {
 #elif defined(DISPLAY_RESOLUTION_QVGA)
 	char8_t bitmapExtention[] = "J.jpg";
 	UI.spinButtonWidth = 50;
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 	char8_t bitmapExtention[] = "JH.jpg";
 	UI.spinButtonWidth = 100;
 
@@ -777,7 +774,7 @@ uint16_t unsignedNumberPixelWidth(int16_t digits, uint8_t font) {
 void drawPayoutTable() {
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_QVGA)
 	uint8_t  numFont = 23, rateOfChange = 2, payoutNumOffset = fontPixelHeight(numFont) >> 1, anyFruitTextFont = 25, topIndex, i, currentMultiplier;
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 	uint8_t  numFont = 30, rateOfChange = 3, /*payoutNumOffset=fontPixelHeight(numFont)>>1*/payoutNumOffset = ICON_HEIGHT / 2, anyFruitTextFont = 25, topIndex, i, currentMultiplier;
 #endif
 	static uint8_t anyFruitTextLength, payoutNumWidth, anyFruitTextHeight, firstTime = 1, multiplier = 5;
@@ -912,7 +909,7 @@ void redrawColumnIcons() {
 				EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
 #if defined(DISPLAY_RESOLUTION_WQVGA) | defined(DISPLAY_RESOLUTION_QVGA)
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2II(startingX, (startingY), columns[i].iconArray[topIndex], 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 				EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(columns[i].iconArray[topIndex]));
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2F(startingX * 16, startingY * 16));
 #endif
@@ -926,7 +923,7 @@ void redrawColumnIcons() {
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2II(startingX + ICON_WIDTH + 1, startingY + ICON_HEIGHT + 1, 0, 0));
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2II(startingX - 1, startingY + ICON_HEIGHT + 1, 0, 0));
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2II(startingX - 1, startingY - 1, 0, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else // if defined(DISPLAY_RESOLUTION_WVGA)
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2F((startingX - 1) * 16, (startingY - 1) * 16));
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2F((startingX + ICON_WIDTH + 1) * 16, (startingY - 1) * 16));
 				EVE_Cmd_wr32(s_pHalContext, VERTEX2F((startingX + ICON_WIDTH + 1) * 16, (startingY + ICON_HEIGHT + 1) * 16));
@@ -1556,7 +1553,7 @@ void lineBetButtons() {
 	uint8_t i, buttonWidth = 35, buttonHeight = 15, font = 22, tempIndex = 0;
 	int16_t lineButtonStartingX = 0;
 	int16_t lineButtonStartingY = UI.spinColumnYOffset + 7;
-#elif defined(DISPLAY_RESOLUTION_WVGA)  //needs to change for the larger screen size
+#else // if defined(DISPLAY_RESOLUTION_WVGA)  //needs to change for the larger screen size
 	uint8_t i, buttonWidth = 65, buttonHeight = 36, font = 28, tempIndex = 0;
 	int16_t lineButtonStartingX = UI.spinColumnXOffset - 80;
 	int16_t lineButtonStartingY = UI.spinColumnYOffset;

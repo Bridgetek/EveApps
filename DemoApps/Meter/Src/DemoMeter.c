@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
 	Calibration_Save(s_pHalContext);
 #endif
 
-	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
 	EVE_Util_clearScreen(s_pHalContext);
 
 	char* info[] =
@@ -95,7 +94,7 @@ int32_t BaseTrackVal = 0, BaseTrackValInit = 0, BaseTrackValSign = 0, MemLoc = 0
 int16_t MoveDeg = 0;
 float_t angle;
 /* Global used for Hal Context */
-#include "assets.h"
+// FIXME: #include "assets.h"
 
 #ifdef Relative_Dial
 static struct {
@@ -155,9 +154,9 @@ void Load_RawDataFromfile(char ImageArrayname[],/* Image Array*/
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(0));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L4, 146 / 2, 146));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(BILINEAR, BORDER, BORDER, 146, 146));
-		EVE_Cmd_wr32(s_pHalContext, CMD_INFLATE);
-		EVE_Cmd_wr32(s_pHalContext, 0/*RamAddr*/);
-		EVE_Cmd_wrMem(s_pHalContext, SAMAPP_Abs_Base_Dial_L1, SAMAPP_Abs_BaseDial_Size146x146_L1);
+		// FIXME: EVE_Cmd_wr32(s_pHalContext, CMD_INFLATE);
+		// FIXME: EVE_Cmd_wr32(s_pHalContext, 0/*RamAddr*/);
+		// FIXME: EVE_Cmd_wrMem(s_pHalContext, SAMAPP_Abs_Base_Dial_L1, SAMAPP_Abs_BaseDial_Size146x146_L1);
 		EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 0, 0));
 	}
@@ -636,9 +635,9 @@ void Relative_Meter_Dial()
 	/* Download the raw data into intended locations */
 	{
 		EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-		Load_RawDataFromfile(SAMAPP_Relative_Meter_Dial_rgb, SAMAPP_Relative_MeterDial_Size146x146_rgb, 1, RGB565, 146 * 2, 146, 146);
+		// FIXME: Load_RawDataFromfile(SAMAPP_Relative_Meter_Dial_rgb, SAMAPP_Relative_MeterDial_Size146x146_rgb, 1, RGB565, 146 * 2, 146, 146);
 
-		Load_RawDataFromfile(SAMAPP_Abs_Base_Dial_L1, SAMAPP_Abs_BaseDial_Size146x146_L1, 0, L4, 146, 146, 146);
+		// FIXME: Load_RawDataFromfile(SAMAPP_Abs_Base_Dial_L1, SAMAPP_Abs_BaseDial_Size146x146_L1, 0, L4, 146, 146, 146);
 	}
 
 	EVE_Cmd_wr32(s_pHalContext, DISPLAY());

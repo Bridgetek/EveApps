@@ -153,8 +153,8 @@ void changeAudio(AUDIO* ad) {
 void process_event() {
     Gesture_Renew(s_pHalContext);
     Gesture_Touch_t* touch = Gesture_Get(s_pHalContext);
-    uint32_t tracker = touch->tagTrackTouched & 0xff;
-    uint32_t val = touch->tagTrackTouched >> 16;
+	uint32_t tracker = touch->tagTrackTouched & 0xff;
+	uint32_t val = (EVE_Hal_rd32(s_pHalContext, REG_TRACKER)) >> 16;
 
     if (touch->tagReleased > 0 && touch->tagReleased <= BTN_NUM) {
         if (btn[touch->tagReleased - 1].state == BTN_STATE_PAUSE) {
@@ -263,7 +263,6 @@ void DemoAudioPlayback() {
     // To avoid a pop sound on reset or power state change
     EVE_Hal_wr16(s_pHalContext, REG_SOUND,0x0);//configure “mute” sound to be played 
     EVE_Hal_wr8(s_pHalContext, REG_PLAY,1);//play sound 
-    while (1 == EVE_Hal_rd8(s_pHalContext, REG_PLAY));//Wait for the completion of sound play 
 
     /// Button positioning
     int padding = (s_pHalContext->Width - ((BTN_NUM-1) * BUTTON_MARGIN) - ((BTN_NUM-2) * 80)) / 2 ;

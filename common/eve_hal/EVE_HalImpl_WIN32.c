@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -47,7 +47,7 @@
 
 /**
  * @brief Get current system clock of Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return uint32_t Frequency of Coprocessor
  */
@@ -74,7 +74,7 @@ uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost)
 
 /**
  * @brief Init host MCU
- * 
+ *
  */
 void EVE_Mcu_initialize()
 {
@@ -83,7 +83,7 @@ void EVE_Mcu_initialize()
 
 /**
  * @brief Release host MCU
- * 
+ *
  */
 void EVE_Mcu_release()
 {
@@ -102,7 +102,7 @@ static ULONGLONG s_Millis64_Start;
 
 /**
  * @brief Init timer
- * 
+ *
  */
 void EVE_Millis_initialize()
 {
@@ -112,7 +112,7 @@ void EVE_Millis_initialize()
 
 /**
  * @brief Release timer
- * 
+ *
  */
 void EVE_Millis_release()
 {
@@ -121,9 +121,9 @@ void EVE_Millis_release()
 
 /**
  * @brief Get clock in miliseond
- * 
+ *
  * global counter to loopback after ~49.71 days
- * 
+ *
  * @return uint32_t Clock number
  */
 uint32_t EVE_millis()
@@ -132,10 +132,10 @@ uint32_t EVE_millis()
 }
 
 /**
-* @brief Get clock in miliseond
-* 
-* @return uint64_t Clock number
-*/
+ * @brief Get clock in miliseond
+ *
+ * @return uint64_t Clock number
+ */
 uint64_t EVE_millis64()
 {
 	return GetTickCount64() - s_Millis64_Start;
@@ -147,7 +147,7 @@ int Ft_Sleep__ESD(int ms);
 
 /**
  * @brief Sleep in milisecond
- * 
+ *
  * @param ms Milisecond
  */
 void EVE_sleep(uint32_t ms)

@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifndef EVE_UTIL__H
 #define EVE_UTIL__H
@@ -155,7 +155,7 @@ EVE_HAL_EXPORT void EVE_Util_shutdown(EVE_HalContext *phost);
 EVE_HAL_EXPORT void EVE_Util_clearScreen(EVE_HalContext *phost);
 
 /** Resets the coprocessor.
-To be used after a coprocessor fault, or to exit CMD_LOGO. 
+To be used after a coprocessor fault, or to exit CMD_LOGO.
 After a reset, flash will be in attached state (not in full speed).
 Coprocessor will be set to the latest API level. */
 EVE_HAL_EXPORT bool EVE_Util_resetCoprocessor(EVE_HalContext *phost);
@@ -172,7 +172,8 @@ EVE_HAL_EXPORT bool EVE_Util_bootupConfig(EVE_HalContext *phost);
 ///@{
 
 /** Command line device selection utility */
-#if defined(_WIN32)
+/* Command line device selection utility */
+#if (defined(_WIN32) || defined(__linux__))
 EVE_HAL_EXPORT void EVE_Util_selectDeviceInteractive(EVE_CHIPID_T *chipId, size_t *deviceIdx);
 #else
 static inline void EVE_Util_selectDeviceInteractive(EVE_CHIPID_T *chipId, size_t *deviceIdx)
@@ -182,8 +183,8 @@ static inline void EVE_Util_selectDeviceInteractive(EVE_CHIPID_T *chipId, size_t
 }
 #endif
 
-/** Command line display selection utility */
-#if defined(_WIN32) && defined(EVE_MULTI_GRAPHICS_TARGET)
+/* Command line display selection utility */
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_MULTI_GRAPHICS_TARGET)
 EVE_HAL_EXPORT void EVE_Util_selectDisplayInteractive(EVE_DISPLAY_T *display);
 #else
 static inline void EVE_Util_selectDisplayInteractive(EVE_DISPLAY_T *display)
@@ -192,7 +193,7 @@ static inline void EVE_Util_selectDisplayInteractive(EVE_DISPLAY_T *display)
 }
 #endif
 
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 EVE_HAL_EXPORT void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, size_t flashPathSize, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile);
 #else
 static inline void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, size_t flashPathSize, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile)
@@ -203,7 +204,7 @@ static inline void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, s
 }
 #endif
 
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 EVE_HAL_EXPORT void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, const eve_tchar_t *flashPath, bool updateFlashFirmware);
 #else
 static inline void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, const eve_tchar_t *flashPath, bool updateFlashFirmware)
@@ -223,7 +224,7 @@ EVE_HAL_EXPORT void EVE_Util_emulatorFlashDefaults(EVE_HalParameters *params, co
 Provides selection of flash file, and option to write the flash file to the device.
 Parameter `flashFile` is only relevant for Windows build.
 Falls back to no interactivity on FT9XX platform */
-EVE_HAL_EXPORT bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashFile);
+EVE_HAL_EXPORT bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const eve_tchar_t *flashFile);
 
 /** Calls EVE_Util_bootup and EVE_Util_config using the default parameters.
 Falls back to no interactivity on FT9XX platform */

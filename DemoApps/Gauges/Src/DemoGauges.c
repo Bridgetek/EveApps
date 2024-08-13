@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
 	Calibration_Save(s_pHalContext);
 #endif
 
-	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
 	EVE_Util_clearScreen(s_pHalContext);
 
 	char* info[] =
@@ -76,7 +75,7 @@ int main(int argc, char* argv[])
 }
 
 // ************************************ application ************************************
-#include "assets.h"
+// FIXME: #include "assets.h"
 static uint8_t NUM_DISPLAY_SCREEN;
 static int32_t ox;
 static int32_t px;
@@ -130,12 +129,12 @@ void DemoGauges() {
 	EVE_CoCmd_memSet(s_pHalContext, 0, 0, 10 * 1024);
 	EVE_Cmd_waitFlush(s_pHalContext);
 
-	EVE_Cmd_wr32(s_pHalContext, CMD_INFLATE);
-	EVE_Cmd_wr32(s_pHalContext, 0);
+	// FIXME: EVE_Cmd_wr32(s_pHalContext, CMD_INFLATE);
+	// FIXME: EVE_Cmd_wr32(s_pHalContext, 0);
 #if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
-	EVE_Cmd_wrMem(s_pHalContext, digits, sizeof(digits));
+	// FIXME: EVE_Cmd_wrMem(s_pHalContext, digits, sizeof(digits));
 #else
-	EVE_Cmd_wrProgMem(s_pHalContext, digits, sizeof(digits));
+	// FIXME: EVE_Cmd_wrProgMem(s_pHalContext, digits, sizeof(digits));
 #endif
 
 	EVE_CoCmd_dlStart(s_pHalContext);

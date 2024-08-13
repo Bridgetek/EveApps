@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_MediaFifo.h"
 #include "EVE_Platform.h"
@@ -35,12 +35,12 @@
 #ifdef EVE_SUPPORT_MEDIAFIFO
 
 /**
- * @brief Set the media FIFO. 
- * 
+ * @brief Set the media FIFO.
+ *
  * @param phost Pointer to Hal context
  * @param address
  * @param size
- * @returns false in case a coprocessor fault occurred 
+ * @returns false in case a coprocessor fault occurred
  */
 bool EVE_MediaFifo_set(EVE_HalContext *phost, uint32_t address, uint32_t size)
 {
@@ -92,7 +92,7 @@ void EVE_MediaFifo_close(EVE_HalContext *phost)
 
 /**
  * @brief Get the current read pointer.
- * 
+ *
  * @param phost Pointer to Hal context
  * @return uint32_t read pointer
  */
@@ -102,8 +102,8 @@ uint32_t EVE_MediaFifo_rp(EVE_HalContext *phost)
 }
 
 /**
- * @brief Get the current write pointer. 
- * 
+ * @brief Get the current write pointer.
+ *
  * @param phost Pointer to Hal context
  * @return uint32_t write pointer
  */
@@ -113,8 +113,8 @@ uint32_t EVE_MediaFifo_wp(EVE_HalContext *phost)
 }
 
 /**
- * @brief Get the currently available space. 
- * 
+ * @brief Get the currently available space.
+ *
  * @param phost Pointer to Hal context
  * @return uint32_t available space
  */
@@ -139,14 +139,14 @@ uint32_t EVE_MediaFifo_space(EVE_HalContext *phost)
 }
 
 /**
- * @brief Write a buffer to the media FIFO. 
+ * @brief Write a buffer to the media FIFO.
  * Waits if there is not enough space in the media FIFO.
  *
  * @param phost Pointer to Hal context
  * @param buffer
  * @param size
  * @param transfered
- * @returns false in case a coprocessor fault occurred 
+ * @returns false in case a coprocessor fault occurred
  */
 bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t size, uint32_t *transfered)
 {
@@ -163,7 +163,7 @@ bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t 
 	}
 
 #if 1
-	/* Two strategies. 
+	/* Two strategies.
 	- Wait for entire space and write the entire buffer.
 	- Wait for half the fifo to be available, and write in parts. */
 
@@ -357,10 +357,10 @@ static bool handleWait(EVE_HalContext *phost, uint16_t rpOrSpace)
 
 /**
  * @brief Wait for the media FIFO to fully empty.
- * 
+ *
  * @param phost Pointer to Hal context
  * @param orCmdFlush
- * @returns false in case a coprocessor fault occurred 
+ * @returns false in case a coprocessor fault occurred
  */
 bool EVE_MediaFifo_waitFlush(EVE_HalContext *phost, bool orCmdFlush)
 {
@@ -369,11 +369,11 @@ bool EVE_MediaFifo_waitFlush(EVE_HalContext *phost, bool orCmdFlush)
 
 /**
  * @brief Wait for the media FIFO to have at least the requested amount of free space.
- * 
+ *
  * @param phost Pointer to Hal context
  * @param size
  * @param orCmdFlush
- * @returns 0 in case a coprocessor fault occurred 
+ * @returns 0 in case a coprocessor fault occurred
  */
 uint32_t EVE_MediaFifo_waitSpace(EVE_HalContext *phost, uint32_t size, bool orCmdFlush)
 {

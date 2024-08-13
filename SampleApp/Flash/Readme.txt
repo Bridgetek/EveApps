@@ -54,8 +54,12 @@
             
         3.1.4 Microsoft Visual C++ platform with Emulator
             - This setup uses window PC only
+
+    3.2 PREPARE FLASH IMAGE
+        The Flash image is located in the Test folder, and this pre-packaged image is specifically designed for BT815/6. Therefore, if you are using BT817/8, kindly substitute the initial 4K with the BT817/8 blob.
+        BT817/8's flash blob can be found in common/eve_flash/.
         
-    3.2 BUILD AND RUN
+    3.3 BUILD AND RUN
         3.2.1 FT9XX platform
             - Copy Test folder to SDcard, the path is: /EveApps/SampleApp/Flash/Test
             - Copy folder common/eve_flash to SDcard, the path is: /EveApps/common/eve_flash

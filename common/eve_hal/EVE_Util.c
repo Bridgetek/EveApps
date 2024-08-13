@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_Util.h"
 #include "EVE_Platform.h"
@@ -35,9 +35,59 @@
 
 EVE_HAL_EXPORT void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost);
 
-static eve_progmem_const uint8_t c_DlCodeBootup[12] = {
+static eve_progmem_const uint8_t c_DlCodeBootup[3 * 4 + 16 * 3 * 4] = {
 	0, 0, 0, 2, // GPU instruction CLEAR_COLOR_RGB
-	7, 0, 0, 38, // GPU instruction CLEAR
+	7, 0, 0, 0x26, // GPU instruction CLEAR
+
+	0, 0, 0, 5, // Bitmap_handle(0)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	1, 0, 0, 5, // Bitmap_handle(1)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	2, 0, 0, 5, // Bitmap_handle(2)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	3, 0, 0, 5, // Bitmap_handle(3)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	4, 0, 0, 5, // Bitmap_handle(4)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	5, 0, 0, 5, // Bitmap_handle(5)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	6, 0, 0, 5, // Bitmap_handle(6)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	7, 0, 0, 5, // Bitmap_handle(7)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	8, 0, 0, 5, // Bitmap_handle(8)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	9, 0, 0, 5, // Bitmap_handle(9)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	10, 0, 0, 5, // Bitmap_handle(10)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	11, 0, 0, 5, // Bitmap_handle(11)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	12, 0, 0, 5, // Bitmap_handle(12)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	13, 0, 0, 5, // Bitmap_handle(13)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	14, 0, 0, 5, // Bitmap_handle(14)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+	15, 0, 0, 5, // Bitmap_handle(15)
+	0, 0, 0, 0x28, // Bitmap_layout_H(0,0)
+	0, 0, 0, 0x29, // Bitmap_Size_H(0,0)
+
 	0, 0, 0, 0, // GPU instruction DISPLAY
 };
 
@@ -58,7 +108,7 @@ static const uint16_t s_DisplayResolutions[EVE_DISPLAY_NB][4] = {
 	/* Portrait */
 	{ 320, 480, 60, 0 }, /* EVE_DISPLAY_HVGA_320x480_60Hz */
 
-	/* IDM2040-7A, AT-T070SWH-51CP, HX8264-E, 60 to 90Hz capable */
+	/* IDM2040-7A, AT‐T070SWH‐51CP, HX8264-E, 60 to 90Hz capable */
 	{ 860, 480, 60, 800 }, /* EVE_DISPLAY_WVGA_800x480_W860_60Hz */
 
 	/* Riverdi */
@@ -70,7 +120,7 @@ static const uint16_t s_DisplayResolutions[EVE_DISPLAY_NB][4] = {
 
 };
 
-#if defined(_WIN32) && defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_MULTI_GRAPHICS_TARGET)
 
 /** Interactive display selection */
 static const char *s_DisplayNames[EVE_DISPLAY_NB] = {
@@ -97,7 +147,7 @@ static const char *s_DisplayNames[EVE_DISPLAY_NB] = {
 
 #endif
 
-#if defined(_WIN32)
+#if (defined(_WIN32) || defined(__linux__))
 
 /** Interactive platform selection */
 static const char *s_HostDisplayNames[EVE_HOST_NB] = {
@@ -246,7 +296,7 @@ static eve_progmem_const uint8_t c_TouchDataU8[TOUCH_DATA_LEN] = {
 
 /**
  * @brief Download new touch firmware for FT811 and FT813 chip
- * 
+ *
  * @param phost  Pointer to Hal context
  */
 static inline void uploadTouchFirmware(EVE_HalContext *phost)
@@ -264,7 +314,7 @@ static inline void uploadTouchFirmware(EVE_HalContext *phost)
 
 /**
  * @brief Clear the screen
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Util_clearScreen(EVE_HalContext *phost)
@@ -324,7 +374,7 @@ EVE_HAL_EXPORT void EVE_Util_bootupDefaults(EVE_HalContext *phost, EVE_BootupPar
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #if defined(EVE_MULTI_PLATFORM_TARGET)
-	if (EVE_HOST == EVE_HOST_FT4222)
+	if (EVE_HOST == EVE_HOST_FT4222 && chipId >= EVE_FT810)
 	{
 		bootup->SpiChannels = EVE_SPI_QUAD_CHANNEL;
 		bootup->SpiDummyBytes = 2;
@@ -780,11 +830,9 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 #elif defined(DISPLAY_RESOLUTION_WQVGA)
 		display = EVE_DISPLAY_WQVGA_480x272_60Hz;
 #elif defined(DISPLAY_RESOLUTION_WVGA)
-#if defined(EVE_GRAPHICS_IDM2040)
-		display = EVE_DISPLAY_WVGA_800x480_W860_60Hz;
-#else
 		display = EVE_DISPLAY_WVGA_800x480_74Hz;
-#endif
+#elif defined(DISPLAY_RESOLUTION_WVGA_NS)
+		display = EVE_DISPLAY_WVGA_800x480_W860_60Hz;
 #elif defined(DISPLAY_RESOLUTION_WSVGA)
 		display = EVE_DISPLAY_WSVGA_1024x600_59Hz;
 #elif defined(DISPLAY_RESOLUTION_HDTV)
@@ -1126,6 +1174,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	uint8_t engineStatus;
 	uint32_t chipId;
 	uint8_t id;
+	uint32_t freq;
 
 	do
 	{
@@ -1154,11 +1203,11 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 			EVE_Host_selectSysClk(phost, bootup->SystemClock);
 		}
 
+		EVE_Host_coreReset(phost);
 		/* Access address 0 to wake up the FT800 */
 		EVE_Hal_hostCommand(phost, EVE_ACTIVE_M);
 		EVE_sleep(300);
 
-		EVE_Host_coreReset(phost);
 		/* Wait for valid chip ID */
 		chipId = EVE_Hal_rd32(phost, ROM_CHIPID);
 		while (EXTRACT_CHIPID(chipId) < EVE_FT800
@@ -1182,7 +1231,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 				eve_printf_debug("Reattempting bootup with ExternalOsc changed from %s to %s\n", bootup->ExternalOsc ? "OFF" : "ON", bootup->ExternalOsc ? "ON" : "OFF");
 
 				EVE_Host_powerModeSwitch(phost, EVE_SLEEP_M); /* Put EVE into Sleep mode, prepare for clock selection */
-				chipId = 0; //In case chipId is not zero
+				chipId = 0; // In case chipId is not zero
 				break;
 			}
 #endif
@@ -1237,6 +1286,12 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 			/* Assume the default */
 			bootup->SystemClock = EVE_SYSCLK_60M;
 		}
+		if (EVE_HOST == EVE_HOST_FT4222 && phost->ChipId >= EVE_FT810)
+		{
+			eve_printf_debug("Prefer Quad for FT4222\n");
+			bootup->SpiChannels = EVE_SPI_QUAD_CHANNEL;
+			bootup->SpiDummyBytes = 2;
+		}
 	}
 #endif
 
@@ -1253,9 +1308,9 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	eve_assert(chipId == EVE_Hal_rd32(phost, ROM_CHIPID));
 
 	/* Read REG_CPURESET to check if engines are ready.
-		Bit 0 for coprocessor engine,
-		Bit 1 for touch engine,
-		Bit 2 for audio engine.
+	    Bit 0 for coprocessor engine,
+	    Bit 1 for touch engine,
+	    Bit 2 for audio engine.
 	*/
 	while ((engineStatus = EVE_Hal_rd8(phost, REG_CPURESET)) != 0x00)
 	{
@@ -1286,13 +1341,15 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	if (bootup->SystemClock != EVE_SYSCLK_DEFAULT)
 	{
 		uint32_t clockMHz = bootup->SystemClock * 12;
-		EVE_Hal_wr32(phost, REG_FREQUENCY, clockMHz * 1000 * 1000);
+		freq = clockMHz * 1000 * 1000;
+		EVE_Hal_wr32(phost, REG_FREQUENCY, freq);
 		EVE_Hal_flush(phost);
 		eve_printf_debug("EVE clock frequency set to %d MHz\n", (unsigned int)clockMHz);
 	}
 	else
 	{
-		eve_printf_debug("EVE default clock is %d MHz\n", (unsigned int)(EVE_Hal_rd32(phost, REG_FREQUENCY) / 1000000));
+		freq = EVE_Hal_rd32(phost, REG_FREQUENCY);
+		eve_printf_debug("EVE default clock is %d MHz\n", (unsigned int)(freq / 1000000));
 	}
 
 	/* Switch to configured default SPI channel mode */
@@ -1315,9 +1372,23 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	}
 #endif
 
-	/* In some cases, for example, QSPI on MM817EV board with MM930LITE, 
-	   the drive strength is required to adjust for better signal integrity. 
-	   Setting to max current 20mA here is to play safe.  Users may adjust the 
+	/* Sanity check after SPI change */
+	if (EVE_Hal_rd32(phost, REG_FREQUENCY) != freq)
+	{
+		eve_printf_debug("SPI channel configuration change failed\n");
+		if (bootup->SpiChannels > EVE_SPI_SINGLE_CHANNEL)
+		{
+			/* Try again with dual channel */
+			--bootup->SpiChannels;
+			eve_printf_debug("Retry with %s channel SPI\n", bootup->SpiChannels ? "Dual" : "Single");
+			return EVE_Util_bootup(phost, bootup);
+		}
+		return false;
+	}
+
+	/* In some cases, for example, QSPI on MM817EV board with MM930LITE,
+	   the drive strength is required to adjust for better signal integrity.
+	   Setting to max current 20mA here is to play safe.  Users may adjust the
 	   corresponding bits of REG_GPIOX according to their own situation. */
 	if (EVE_CHIPID >= EVE_FT810)
 	{
@@ -1364,8 +1435,8 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 #endif
 	{
 #if defined(DISPLAY_RESOLUTION_WXGA)
-		//Assume WXGA is using Goodix touch IC
-		//To be fixed: use macro for touch configuration
+		// Assume WXGA is using Goodix touch IC
+		// To be fixed: use macro for touch configuration
 		eve_printf_debug("Setup touch for Goodix\n");
 		EVE_Hal_wr8(phost, REG_CPURESET, 2);
 		EVE_Hal_wr16(phost, REG_TOUCH_CONFIG, 0x05d0);
@@ -1697,7 +1768,7 @@ static inline bool EVE_Util_needsSubPatch(EVE_HalContext *phost)
 	return (EVE_CHIPID >= EVE_FT810) && (EVE_CHIPID <= EVE_FT813);
 }
 
-/** 
+/**
 Patch: Video patch from OTP needs to be reapplied after coprocessor reset
 Applicable to: BT81X-series
 */
@@ -1744,7 +1815,7 @@ static void debugRestoreRamG(EVE_HalContext *phost)
 
 /**
  * @brief Reset Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if successful
  * @return false False if error
@@ -1890,7 +1961,7 @@ EVE_HAL_EXPORT bool EVE_Util_resetCoprocessor(EVE_HalContext *phost)
 
 /**
  * @brief Bootup Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if successful
  * @return false False if error
@@ -1922,13 +1993,8 @@ EVE_HAL_EXPORT bool EVE_Util_bootupConfig(EVE_HalContext *phost)
 /** @name INTERACTIVE SETUP */
 ///@{
 
-#if defined(_WIN32)
-/**
- * @brief
- *
- * @param chipId
- * @param deviceIdx
- */
+#if (defined(_WIN32) || defined(__linux__))
+
 void EVE_Util_selectDeviceInteractive(EVE_CHIPID_T *chipId, size_t *deviceIdx)
 {
 	char buf[1024];
@@ -1960,7 +2026,11 @@ SELECTDEVICE:
 				printf("- [%d] %s (%s, %s)\n", (unsigned int)i, info.DisplayName, s_HostDisplayNames[info.Host], info.SerialNumber);
 		}
 		fgets(buf, sizeof(buf), stdin);
+#ifdef _WIN32
 		if (sscanf_s(buf, "%i", &selectedDeviceIdx) != 1)
+#else
+		if (sscanf(buf, "%i", &selectedDeviceIdx) != 1)
+#endif
 			goto SELECTDEVICE;
 		*deviceIdx = selectedDeviceIdx;
 		EVE_Hal_info(&info, *deviceIdx);
@@ -1993,7 +2063,11 @@ SelectChipId:
 				printf("- [%d] %s\n", (unsigned int)i, s_SelectChipName[i]);
 		}
 		fgets(buf, sizeof(buf), stdin);
+#ifdef _WIN32
 		if (sscanf_s(buf, "%i", &selectedChipId) != 1)
+#else
+		if (sscanf(buf, "%i", &selectedChipId) != 1)
+#endif
 			goto SelectChipId;
 		if (selectedChipId >= 0 && selectedChipId < EVE_SELECT_CHIP_NB)
 			*chipId = s_SelectChipId[selectedChipId];
@@ -2039,7 +2113,11 @@ SelectDisplay:
 	}
 	else
 	{
+#ifdef _WIN32
 		if (sscanf_s(buf, "%i", &selectedDisplay) != 1)
+#else
+		if (sscanf(buf, "%i", &selectedDisplay) != 1)
+#endif
 			goto SelectDisplay;
 		if (selectedDisplay > 0 && selectedDisplay < EVE_DISPLAY_NB)
 			*display = selectedDisplay;
@@ -2052,21 +2130,13 @@ SelectDisplay:
 
 #endif
 
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
-/**
- * @brief
- *
- * @param flashPath
- * @param flashPathSize
- * @param updateFlash
- * @param updateFlashFirmware
- * @param params
- * @param flashFile
- */
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, size_t flashPathSize, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile)
 {
 	size_t flashPathSz;
+#ifdef _WIN32
 	errno_t ferr;
+#endif
 	FILE *f = NULL;
 
 SELECTFLASH:
@@ -2084,7 +2154,7 @@ SELECTFLASH:
 			printf("Upload flash image (y/n, or press ENTER to skip):\n");
 			buffer[0] = '\0';
 			fgets((char *)buffer, sizeof(buffer), stdin);
-			/* Fast string to bool, reliably defined for strings starting 
+			/* Fast string to bool, reliably defined for strings starting
 			with 0, 1, t, T, f, F, y, Y, n, N, anything else is undefined. */
 			*updateFlash = (buffer[0] == '1' || (buffer[0] & 0xD2) == 0x50);
 			printf("\n");
@@ -2104,30 +2174,46 @@ SELECTFLASH:
 #if defined(EVE_MULTI_PLATFORM_TARGET) || defined(BT8XXEMU_PLATFORM)
 		    || (
 #if defined(EVE_MULTI_PLATFORM_TARGET)
-		           params->Host == EVE_HOST_BT8XXEMU
+		        params->Host == EVE_HOST_BT8XXEMU
 #elif defined(BT8XXEMU_PLATFORM)
-		           true
+		        true
 #endif
 #ifdef _WIN32
-		           && !wcscmp(flashFile, L"__Flash.bin")
+		        && !wcscmp(flashFile, L"__Flash.bin")
 #else
-		           && !strcmp(flashFile, "__Flash.bin")
+		        && !strcmp(flashFile, "__Flash.bin")
 #endif
-		               )
+		            )
 #endif
 		)
 		{
 			/* Query user for any changes to the flash file name */
+#ifdef _WIN32
 			printf("Select flash file %s(or press ENTER to use %s%ls%s):\n",
 			    *updateFlashFirmware ? "with firmware " : "",
-			    flashFile[0] ? "\"" : "", /* Quote*/
+			    flashFile[0] ? "\"" : "", /* Quote */
 			    flashFile[0] ? flashFile : L"no flash",
-			    flashFile[0] ? "\"" : ""); /* Quote*/
+			    flashFile[0] ? "\"" : ""); /* Quote */
+#else
+			printf("Select flash file %s(or press ENTER to use %s%s%s):\n",
+			    *updateFlashFirmware ? "with firmware " : "",
+			    flashFile[0] ? "\"" : "", /* Quote */
+			    flashFile[0] ? flashFile : "no flash",
+			    flashFile[0] ? "\"" : ""); /* Quote */
+#endif
 
+#ifdef _WIN32
 			fgetws(flashPath, MAX_PATH, stdin);
+#else
+			fgets(flashPath, MAX_PATH, stdin);
+#endif
 			if (flashPath[0] == '\r' || flashPath[0] == '\n')
 				flashPath[0] = '\0';
+#ifdef _WIN32
 			flashPathSz = wcslen(flashPath);
+#else
+			flashPathSz = strlen(flashPath);
+#endif
 			while (flashPathSz && (flashPath[flashPathSz - 1] == '\r' || flashPath[flashPathSz - 1] == '\n'))
 			{
 				/* Trim flash path */
@@ -2143,8 +2229,16 @@ SELECTFLASH:
 			}
 
 			/* Check if this file can be opened */
+#ifdef _WIN32
 			ferr = _wfopen_s(&f, flashPath[0] ? flashPath : flashFile, L"rb");
-			if (ferr || !f)
+#else
+			f = fopen(flashPath[0] ? flashPath : flashFile, "rb");
+#endif
+			if (
+#ifdef _WIN32
+			    ferr ||
+#endif
+			    !f)
 			{
 				printf("File \"%ls\" cannot be opened\n", flashPath[0] ? flashPath : flashFile);
 				goto SELECTFLASH;
@@ -2163,7 +2257,14 @@ SELECTFLASH:
 		)
 		{
 			if (!flashPath[0])
+			{
+#ifdef _WIN32
 				wcscpy_s(flashPath, flashPathSize, flashFile);
+#else
+				strncpy(flashPath, flashFile, flashPathSize - 1);
+				flashPath[flashPathSize - 1] = '\0';
+#endif
+			}
 		}
 	}
 }
@@ -2220,7 +2321,12 @@ void EVE_Util_emulatorFlashDefaults(EVE_HalParameters *params, const void *emula
 		return;
 
 	BT8XXEMU_Flash_defaults(BT8XXEMU_VERSION_API, pFlashParams);
+#ifdef _WIN32
 	wcscpy_s(pFlashParams->DataFilePath, _countof(pFlashParams->DataFilePath), flashPath);
+#else
+	strncpy(pFlashParams->DataFilePath, flashPath, sizeof(pFlashParams->DataFilePath));
+	pFlashParams->DataFilePath[sizeof(pFlashParams->DataFilePath) - 1] = '\0';
+#endif
 #if defined(_DEBUG)
 	pFlashParams->StdOut = 1;
 #endif
@@ -2258,7 +2364,7 @@ void EVE_Util_emulatorFlashDefaults(EVE_HalParameters *params, const void *emula
 
 #endif
 
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 #pragma warning(push)
 #pragma warning(disable : 6262) // Large stack due to buffer
 /**
@@ -2274,7 +2380,9 @@ EVE_HAL_EXPORT void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, c
 	FILE *f = NULL;
 	uint8_t buffer[64 * 4096];
 	uint8_t rbuffer[64 * 4096];
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 
 	/* Upload flash */
 
@@ -2285,10 +2393,14 @@ EVE_HAL_EXPORT void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, c
 #ifdef _WIN32
 	err = _wfopen_s(&f, flashPath, L"rb");
 #else
-	err = fopen_s(&f, flashPath, "rb");
+	f = fopen(flashPath, "rb");
 #endif
 
-	if (err || !f)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    !f)
 	{
 		printf("Flash file cannot be opened\n");
 	}
@@ -2518,7 +2630,7 @@ EVE_HAL_EXPORT void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, c
  * @return true True if successful
  * @return false False if error
  */
-bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashFile)
+bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const eve_tchar_t *flashFile)
 {
 	EVE_CHIPID_T chipId;
 	size_t deviceIdx;
@@ -2531,10 +2643,10 @@ bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashF
 #endif
 #endif
 	EVE_HalParameters params = { 0 };
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 	bool updateFlash = false;
 	bool updateFlashFirmware = false;
-	wchar_t flashPath[MAX_PATH];
+	eve_tchar_t flashPath[MAX_PATH];
 	flashPath[0] = '\0';
 #endif
 
@@ -2545,7 +2657,7 @@ bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashF
 	Pass the device index, or -1 to select the first device */
 	EVE_Hal_defaultsEx(&params, deviceIdx);
 
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 	if (chipId >= EVE_BT815 || (chipId <= 0 && flashFile && flashFile[0]))
 		EVE_Util_selectFlashFileInteractive(flashPath, sizeof(flashPath) / sizeof(flashPath[0]), &updateFlash, &updateFlashFirmware, &params, flashFile);
 #endif
@@ -2562,7 +2674,7 @@ bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashF
 	if (!opened)
 		return false;
 
-#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
+#if (defined(_WIN32) || defined(__linux__)) && defined(EVE_FLASH_AVAILABLE)
 	if (updateFlash && flashPath[0])
 		EVE_Util_uploadFlashFileInteractive(phost, flashPath, updateFlashFirmware);
 #endif

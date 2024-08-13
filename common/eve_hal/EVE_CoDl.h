@@ -1,17 +1,17 @@
 /**
  * @file EVE_CoDl.h
  * @brief EVE's co-processor command
- * 
+ *
  * The purpose of this header is to provide a simplified interface to display list instructions.
- * The functions do not match 1:1 with the display list instructions. Some instructions are combined 
+ * The functions do not match 1:1 with the display list instructions. Some instructions are combined
  * to simplify compatibility between platforms. (For example, BITMAP_SIZE and BITMAP_SIZE_H.)
  * All functions write to the display list through EVE_CoCmd_dl.
- * 
+ *
  * If EVE_DL_OPTIMIZE is set to 1 in EVE_Config, these functions will ignore duplicate calls.
  * To bypass optmization, call `EVE_CoCmd_dl` directly (within a subroutine or saved context.)
- * 
+ *
  * If ESD_DL_END_PRIMITIVE is set to 0 in EVE_Config, the END() instruction will be avoided.
- * 
+ *
  * Compatibility:
  * - EVE_CoDl_vertexFormat and EVE_CoDl_vertex2f implement fallback functionality for
  *   VERTEX_FORMAT, VERTEX_TRANSLATE_X, and VERTEX_TRANSLATE_Y on FT80X series.
@@ -21,21 +21,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,7 +43,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifndef EVE_CO_DL__H
 #define EVE_CO_DL__H
@@ -76,9 +76,9 @@ ESD_FUNCTION(EVE_CoDl_vertex2f, Type = void, Category = EveRenderFunctions, Inli
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(x, Type = int16_t)
 ESD_PARAMETER(y, Type = int16_t)
-/** 
+/**
  * @brief Fixed point vertex with subprecision depending on current vertex format
- * 
+ *
  * @param phost Pointer to Hal context
  * @param x
  * @param y
@@ -105,7 +105,7 @@ static inline void EVE_CoDl_vertex2f(EVE_HalContext *phost, int16_t x, int16_t y
  * @param y
  * @param handle
  * @param cell
- * @note Compatibility for FT80X series 
+ * @note Compatibility for FT80X series
  */
 EVE_HAL_EXPORT void EVE_CoDlImpl_vertex2ii_translate(EVE_HalContext *phost, uint16_t x, uint16_t y, uint8_t handle, uint8_t cell);
 #endif
@@ -163,7 +163,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 ESD_PARAMETER(c, Type = rgb32_t, DisplayName = "Color")
 /**
  * @brief Specify clear color RGB
- * 
+ *
  * @param phost Pointer to Hal context
  * @param c clear color
  */
@@ -172,9 +172,9 @@ inline static void EVE_CoDl_clearColorRgb_ex(EVE_HalContext *phost, uint32_t c)
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(0, 0, 0) | (c & 0xFFFFFF));
 }
 
-/** 
+/**
  * @brief Specify clear color RGB
- * 
+ *
  * @param phost Pointer to Hal context
  * @param r
  * @param g
@@ -189,9 +189,9 @@ inline static void EVE_CoDl_clearColorRgb(EVE_HalContext *phost, uint8_t r, uint
 ESD_FUNCTION(EVE_CoDl_clearColorA, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(alpha, Type = uint8_t, DisplayName = "Alpha", Default = 255, Min = 0, Max = 255)
-/** 
+/**
  * @brief Specify clear alpha channel
- * 
+ *
  * @param phost Pointer to Hal context
  * @param alpha
  */
@@ -204,9 +204,9 @@ inline static void EVE_CoDl_clearColorA(EVE_HalContext *phost, uint8_t alpha)
 ESD_FUNCTION(EVE_CoDl_clearColorArgb_ex, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(c, Type = argb32_t, DisplayName = "Color")
-/** 
+/**
  * @brief Specify clear color: Alpha (bits 31:24) + RGB (bits 23:0)
- * 
+ *
  * @param phost Pointer to Hal context
  * @param c clear color
  */
@@ -220,9 +220,9 @@ inline static void EVE_CoDl_clearColorArgb_ex(EVE_HalContext *phost, uint32_t c)
 ESD_FUNCTION(EVE_CoDl_tag, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(s, Type = uint8_t, DisplayName = "Tag", Default = 255, Min = 0, Max = 255)
-/** 
+/**
  * @brief Set current tag.
- * 
+ *
  * @warning: Must be returned to 255 after usage, to ensure next widgets don't draw with invalid tag
  * @param phost Pointer to Hal context
  * @param s
@@ -237,8 +237,8 @@ ESD_FUNCTION(EVE_CoDl_colorRgb_ex, Type = void, Category = EveRenderFunctions, I
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(c, Type = rgb32_t, DisplayName = "Color")
 /**
- * @brief Specify color RGB 
- * 
+ * @brief Specify color RGB
+ *
  * @param phost Pointer to Hal context
  * @param c
  */
@@ -256,9 +256,9 @@ inline static void EVE_CoDl_colorRgb_ex(EVE_HalContext *phost, uint32_t c)
 #endif
 }
 
-/** 
+/**
  * @brief Specify color RGB
- * 
+ *
  * @param phost Pointer to Hal context
  * @param r
  * @param g
@@ -275,8 +275,8 @@ ESD_FUNCTION(EVE_CoDl_colorA, Type = void, Category = EveRenderFunctions, Inline
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(alpha, Type = uint8_t, DisplayName = "Alpha", Default = 255, Min = 0, Max = 255)
 /**
- * @brief Specify alpha channel 
- * 
+ * @brief Specify alpha channel
+ *
  * @param phost Pointer to Hal context
  * @param alpha
  */
@@ -297,9 +297,9 @@ inline static void EVE_CoDl_colorA(EVE_HalContext *phost, uint8_t alpha)
 ESD_FUNCTION(EVE_CoDl_colorArgb_ex, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(c, Type = argb32_t, DisplayName = "Color")
-/** 
+/**
  * @brief Specify color: Alpha (bits 31:24) + RGB (bits 23:0)
- * 
+ *
  * @param phost Pointer to Hal context
  * @param c
  */
@@ -315,7 +315,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 ESD_PARAMETER(handle, Type = uint8_t, Min = 0, Max = 31)
 /**
  * @brief Specify bitmap handle, see BITMAP_HANDLE
- * 
+ *
  * @param phost Pointer to Hal context
  * @param handle
  */
@@ -338,7 +338,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 ESD_PARAMETER(cell, Type = uint8_t, Min = 0, Max = 255)
 /**
  * @brief Specify cell number for bitmap, see CELL
- * 
+ *
  * @param phost Pointer to Hal context
  * @param cell
  */
@@ -810,9 +810,9 @@ inline static void EVE_CoDl_end(EVE_HalContext *phost)
 /* Save EVE context, see SAVE_CONTEXT */
 ESD_FUNCTION(EVE_CoDl_saveContext, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-/** 
+/**
  * @brief Save EVE context, see SAVE_CONTEXT
- * 
+ *
  * @param phost Pointer to Hal context
  */
 inline static void EVE_CoDl_saveContext(EVE_HalContext *phost)
@@ -833,7 +833,7 @@ ESD_FUNCTION(EVE_CoDl_restoreContext, Type = void, Category = EveRenderFunctions
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 /**
  * @brief Restore EVE context, see RESTORE_CONTEXT
- * 
+ *
  * @param phost Pointer to Hal context
  */
 inline static void EVE_CoDl_restoreContext(EVE_HalContext *phost)
@@ -912,7 +912,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 ESD_PARAMETER(addr, Type = uint32_t, Min = 0)
 /**
  * @brief Set palette source, see PALETTE_SOURCE command
- * 
+ *
  * @param phost Pointer to Hal context
  * @param addr
  */
@@ -1027,7 +1027,7 @@ ESD_PARAMETER(x, Type = esd_int16_f4_t)
 ESD_PARAMETER(y, Type = esd_int16_f4_t)
 /**
  * @brief Fixed point vertex using 4 bits subprecision
- * 
+ *
  * @param phost Pointer to Hal context
  * @param x
  * @param y
@@ -1053,7 +1053,7 @@ ESD_PARAMETER(x, Type = esd_int16_f2_t)
 ESD_PARAMETER(y, Type = esd_int16_f2_t)
 /**
  * @brief Fixed point vertex using 2 bits subprecision
- * 
+ *
  * @param phost Pointer to Hal context
  * @param x
  * @param y
@@ -1071,7 +1071,7 @@ ESD_PARAMETER(x, Type = int16_t)
 ESD_PARAMETER(y, Type = int16_t)
 /**
  * @brief Fixed point vertex using 0 bits subprecision, or integer point vertex
- * 
+ *
  * @param phost Pointer to Hal context
  * @param x
  * @param y

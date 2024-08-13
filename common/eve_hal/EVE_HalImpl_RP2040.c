@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_HalImpl.h"
 #include "EVE_Platform.h"
@@ -45,7 +45,7 @@ bool EVE_Hal_NoInit = false;
 ///@{
 
 /**
- * @brief Initialize global HAL platform 
+ * @brief Initialize global HAL platform
  *
  */
 void EVE_HalImpl_initialize()
@@ -55,7 +55,7 @@ void EVE_HalImpl_initialize()
 
 /**
  * @brief Release global HAL platform
- * 
+ *
  */
 void EVE_HalImpl_release()
 {
@@ -64,7 +64,7 @@ void EVE_HalImpl_release()
 }
 
 /**
- * @brief List the available devices 
+ * @brief List the available devices
  *
  */
 EVE_HAL_EXPORT size_t EVE_Hal_list()
@@ -75,7 +75,7 @@ EVE_HAL_EXPORT size_t EVE_Hal_list()
 
 /**
  * @brief Get info of the specified device. Devices of type EVE_HOST_UNKNOWN should be ignored
- * 
+ *
  * @param deviceInfo
  * @param deviceIdx
  */
@@ -90,7 +90,7 @@ EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 
 /**
  * @brief Check whether the context is the specified device
- * 
+ *
  * @param phost Pointer to Hal context
  * @param deviceIdx
  * @return true True if ok
@@ -103,7 +103,7 @@ EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 
 /**
  * @brief Get the default configuration parameters
- * 
+ *
  * @param parameters EVE_Hal framework's parameters
  * @param deviceIdx
  * @return true True if ok
@@ -114,10 +114,12 @@ bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 	if (deviceIdx != 0 && deviceIdx != 1)
 	{
 		/* Alternate between SPI0 and SPI1 when opening */
-#if EVE_DEFAULT_SPI0_ONLY
-		deviceIdx = 0;
-#else
+#if EVE_DEFAULT_SPI0_ONLY == EVE_DEFAULT_SPI1_ONLY
 		deviceIdx = (s_SpiOpened[1] < s_SpiOpened[0]) ? 1 : 0;
+#elif EVE_DEFAULT_SPI0_ONLY
+		deviceIdx = 0;
+#elif EVE_DEFAULT_SPI1_ONLY
+		deviceIdx = 1;
 #endif
 	}
 	parameters->DeviceIdx = deviceIdx;
@@ -134,16 +136,16 @@ bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 
 /**
  * @brief Set number of SPI channel
- * 
+ *
  * @param phost Pointer to Hal context
  * @param numchnls Number of channel
  * @param numdummy Number of dummy bytes
  */
 void setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T numchnls, uint8_t numdummy)
 {
-	/* SPI initialisation. This will use SPI at 1MHz */
+	/* SPI initialisation. This will use SPI at 25MHz */
 	size_t deviceIdx = phost->SpiPort == spi1 ? 1 : 0;
-	spi_init(phost->SpiPort, 1000 * 1000);
+	spi_init(phost->SpiPort, 25 * 1000 * 1000);
 	gpio_set_function(phost->SpiMisoPin, GPIO_FUNC_SPI);
 	gpio_set_function(phost->SpiMosiPin, GPIO_FUNC_SPI);
 	gpio_set_function(phost->SpiSckPin, GPIO_FUNC_SPI);
@@ -160,7 +162,7 @@ void setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T numchnls, uint8_t numdummy
 
 /**
  * @brief Opens a new HAL context using the specified parameters
- * 
+ *
  * @param phost Pointer to Hal context
  * @param parameters EVE_Hal framework's parameters
  * @return true True if ok
@@ -203,7 +205,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 
 /**
  * @brief Close a HAL context
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_HalImpl_close(EVE_HalContext *phost)
@@ -220,7 +222,7 @@ void EVE_HalImpl_close(EVE_HalContext *phost)
 
 /**
  * @brief Idle. Call regularly to update frequently changing internal state
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_HalImpl_idle(EVE_HalContext *phost)
@@ -254,7 +256,7 @@ static inline void csDeselect(EVE_HalContext *phost)
 
 /**
  * @brief Start data transfer to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @param rw Read or Write
  * @param addr Address to read/write
@@ -290,7 +292,7 @@ void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t ad
 
 /**
  * @brief End data transfer
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_Hal_endTransfer(EVE_HalContext *phost)
@@ -303,7 +305,7 @@ void EVE_Hal_endTransfer(EVE_HalContext *phost)
 
 /**
  * @brief Flush data
- * 
+ *
  * @param phost Pointer to Hal context
  */
 void EVE_Hal_flush(EVE_HalContext *phost)
@@ -314,7 +316,7 @@ void EVE_Hal_flush(EVE_HalContext *phost)
 
 /**
  * @brief Read a block data
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Buffer to get result
  * @param size Number of bytes to read
@@ -326,7 +328,7 @@ static inline void rdBuffer(EVE_HalContext *phost, uint8_t *buffer, uint32_t siz
 
 /**
  * @brief Write a block data
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Data buffer to write
  * @param size Size of buffer
@@ -338,7 +340,7 @@ static inline void wrBuffer(EVE_HalContext *phost, const uint8_t *buffer, uint32
 
 /**
  * @brief Write 8 bit
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint8_t Number of bytes transfered
@@ -359,7 +361,7 @@ static inline uint8_t transfer8(EVE_HalContext *phost, uint8_t value)
 
 /**
  * @brief Write 8 bits
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint8_t Number of bytes transfered
@@ -371,7 +373,7 @@ uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value)
 
 /**
  * @brief Write 2 bytes
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint16_t Number of bytes transfered
@@ -396,7 +398,7 @@ uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value)
 
 /**
  * @brief Write 4 bytes
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Value to write
  * @return uint32_t Number of bytes transfered
@@ -425,7 +427,7 @@ uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value)
 
 /**
  * @brief Transfer (read/write) a block data
- * 
+ *
  * @param phost Pointer to Hal context
  * @param result Buffer to get data transfered, NULL when write
  * @param buffer Buffer where data is transfered, NULL when read
@@ -453,7 +455,7 @@ void EVE_Hal_transferMem(EVE_HalContext *phost, uint8_t *result, const uint8_t *
 
 /**
  * @brief Transfer a block data from program memory
- * 
+ *
  * @param phost Pointer to Hal context
  * @param result Buffer to get data transfered, NULL when write
  * @param buffer Buffer where data is transfered, NULL when read
@@ -482,7 +484,7 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 
 /**
  * @brief Transfer a string to EVE platform
- * 
+ *
  * @param phost Pointer to Hal context
  * @param str String to transfer
  * @param index Start position in the string
@@ -534,7 +536,7 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 
 /**
  * @brief Send a host command
- * 
+ *
  * @param phost Pointer to Hal context
  * @param cmd Command to send
  */
@@ -555,7 +557,7 @@ void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 
 /**
  * @brief This API sends a 3byte command to the phost
- * 
+ *
  * @param phost Pointer to Hal context
  * @param cmd Command to send
  */
@@ -576,7 +578,7 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
 
 /**
  * @brief Toggle PD_N pin of FT800 board for a power cycle
- * 
+ *
  * @param phost Pointer to Hal context
  * @param up Up or Down
  * @return true True if ok
@@ -614,7 +616,7 @@ bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 
 /**
  * @brief Set number of SPI channel
- * 
+ *
  * @param phost Pointer to Hal context
  * @param numchnls Number of channel
  * @param numdummy Number of dummy bytes
@@ -650,7 +652,7 @@ void EVE_Hal_restoreSPI(EVE_HalContext *phost)
 
 /**
  * @brief Get current system clock of Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return uint32_t Frequency of Coprocessor
  */
@@ -669,7 +671,7 @@ uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost)
 
 /**
  * @brief Init host MCU
- * 
+ *
  */
 void EVE_Mcu_initialize()
 {
@@ -685,7 +687,7 @@ void EVE_Mcu_initialize()
 
 /**
  * @brief Release host MCU
- * 
+ *
  */
 void EVE_Mcu_release()
 {
@@ -706,7 +708,7 @@ static int32_t s_RemainderMicros;
 ///@{
 /**
  * @brief Init timer
- * 
+ *
  */
 void EVE_Millis_initialize()
 {
@@ -717,7 +719,7 @@ void EVE_Millis_initialize()
 
 /**
  * @brief Release timer
- * 
+ *
  */
 void EVE_Millis_release()
 {
@@ -747,7 +749,7 @@ static inline void updateMillis()
 
 /**
  * @brief Get clock in miliseond
- * 
+ *
  * @return uint32_t Clock number
  */
 uint32_t EVE_millis()
@@ -757,10 +759,10 @@ uint32_t EVE_millis()
 }
 
 /**
-* @brief Get clock in miliseond
-* 
-* @return uint64_t Clock number
-*/
+ * @brief Get clock in miliseond
+ *
+ * @return uint64_t Clock number
+ */
 uint64_t EVE_millis64()
 {
 	updateMillis();
@@ -769,7 +771,7 @@ uint64_t EVE_millis64()
 
 /**
  * @brief Sleep in milisecond
- * 
+ *
  * @param ms Milisecond
  */
 void EVE_sleep(uint32_t ms)
@@ -783,7 +785,7 @@ void EVE_sleep(uint32_t ms)
 
 /**
  * @brief Display GPIO pins
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if Ok
  * @return false False if error

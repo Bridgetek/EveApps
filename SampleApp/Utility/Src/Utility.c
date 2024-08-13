@@ -69,7 +69,6 @@ int main(int argc, char* argv[])
 	Calibration_Save(s_pHalContext);
 #endif
 
-    Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
     EVE_Util_clearScreen(s_pHalContext);
 
     char *info[] =
@@ -756,7 +755,7 @@ void SAMAPP_Utility_callListWithAlignment()
 */
 void SAMAPP_Utility_underRunDetection()
 {
-#if EVE_SUPPORT_GEN == EVE4
+#if (EVE_SUPPORT_GEN == EVE4) && !defined(BT8XXEMU_PLATFORM)
 
     uint16_t w = 800;
     uint16_t h = 600;
@@ -869,17 +868,15 @@ void SAMAPP_Utility_cmdInflateFromFlash()
 
     /* Display inflated image */
     SAMAPP_INFO_START;
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE2(0, 0));
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_LAYOUT(INFLATED_BITMAP_FORMAT, INFLATED_BITMAP_STRIDE, INFLATED_BITMAP_HEIGHT));
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_SIZE(BILINEAR, BORDER, BORDER, INFLATED_BITMAP_WIDTH, INFLATED_BITMAP_HEIGHT));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(100 * 16, 100 * 16));
-    EVE_Cmd_wr32(s_pHalContext, END());
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+    EVE_CoDl_bitmapSource_ex(s_pHalContext, 0, 0);
+    EVE_CoDl_bitmapLayout(s_pHalContext, INFLATED_BITMAP_FORMAT, INFLATED_BITMAP_STRIDE, INFLATED_BITMAP_HEIGHT);
+    EVE_CoDl_bitmapSize(s_pHalContext, BILINEAR, BORDER, BORDER, INFLATED_BITMAP_WIDTH, INFLATED_BITMAP_HEIGHT);
+    EVE_CoDl_vertex2f(s_pHalContext, 100 * 16, 100 * 16);
+    EVE_CoDl_end(s_pHalContext);
 
     /*  Display the text information */
-    EVE_Cmd_wr32(s_pHalContext, COLOR_A(255));
+    EVE_CoDl_colorA(s_pHalContext, 255);
     EVE_CoCmd_text(s_pHalContext, 20, 50, 24, 0, "Display bitmap by inflate (OPT_FLASH)");
     SAMAPP_INFO_END;
 
@@ -1117,7 +1114,7 @@ void SAMAPP_Utility_printType() //must call after SAMAPP_ExtendedFormat_Font
     EVE_CoCmd_text(s_pHalContext, 10, 20 + 50 * 7, 31, OPT_FORMAT, "Temp. %d.%.1d degrees", t / 10,
         t % 10); /*result:  Temp. 68.0 degrees */
 
-    EVE_Hal_wrMem(s_pHalContext, RAM_G + 4, "Hello ", 6);
+    EVE_Hal_wrMem(s_pHalContext, RAM_G + 4, "Hello\0", 6);
     EVE_CoCmd_text(s_pHalContext, 10, 20 + 50 * 8, 31, OPT_FORMAT, "%s %d times", RAM_G + 4, 5); /*result:  Temp. 68.0 degrees */
 
     SAMAPP_INFO_END;
@@ -1150,12 +1147,12 @@ void SAMAPP_Utility_screenRotate()
         case 4:
         case 5:
             snprintf(text, 100, "Landscape Mode, rotate value= %d", rotateMode);
-            EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 50, 31, OPT_CENTER,
+            EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 50, 29, OPT_CENTER,
                 text);
             break;
         default:
             snprintf(text, 100, "Portrait Mode\nRotate value= %d", rotateMode);
-            EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Height / 2), 50, 31, OPT_CENTER,
+            EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Height / 2), 50, 29, OPT_CENTER,
                 text);
             break;
         }
@@ -1568,8 +1565,10 @@ void SAMAPP_Utility_bulkTransfer()
         helperCMDBWrite(BITMAP_HANDLE(2));
         helperCMDBWrite(BEGIN(BITMAPS));
         helperCMDBWrite(BITMAP_SOURCE(0));
-        helperCMDBWrite(BITMAP_LAYOUT(RGB565, ImgW * 2, ImgH * 2));
+        helperCMDBWrite(BITMAP_LAYOUT(RGB565, ImgW * 2, ImgH));
+		helperCMDBWrite(BITMAP_LAYOUT_H((ImgW * 2) >> 10, ImgH >> 9));
         helperCMDBWrite(BITMAP_SIZE(BILINEAR, BORDER, BORDER, ImgW, ImgH));
+		helperCMDBWrite(BITMAP_SIZE_H(ImgW >> 9, ImgH >> 9));
         helperCMDBWrite(VERTEX2F(xoffset * precision, yoffset * precision));
         helperCMDBWrite(END());
 
@@ -1606,6 +1605,7 @@ void SAMAPP_Utility() {
     SAMAPP_Utility_callListWithAlignment();
     SAMAPP_Utility_underRunDetection();
     SAMAPP_Utility_coprocessorFaultRecover();
+	SAMAPP_Utility_bulkTransfer();
     SAMAPP_Utility_cmdInflateFromFlash();
     SAMAPP_Utility_CmdInflateFromFifo();
     SAMAPP_Utility_CmdInflateFromCommand();
@@ -1615,7 +1615,6 @@ void SAMAPP_Utility() {
     SAMAPP_Utility_numberBases();
     SAMAPP_Utility_crcCheck();
 	SAMAPP_Utility_snapshot();
-    SAMAPP_Utility_bulkTransfer();
 }
 
 

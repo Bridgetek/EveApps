@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_LoadFile.h"
 #include "EVE_Platform.h"
@@ -37,7 +37,7 @@
 
 /**
  * @brief Mount the SDcard
- * 
+ *
  * @param phost  Pointer to Hal context
  * @return true True if ok
  * @return false False if error
@@ -56,7 +56,7 @@ EVE_HAL_EXPORT bool EVE_Util_sdCardReady(EVE_HalContext *phost)
 
 /**
  * @brief Load a raw file into RAM_G
- * 
+ *
  * @param phost  Pointer to Hal context
  * @param address Address in RAM_G
  * @param filename File to load
@@ -74,14 +74,20 @@ EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
 	uint32_t addr = address;
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 
 #ifdef _WIN32
 	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
+	afile = fopen(filename, "rb"); // read Binary (rb)
 #endif
-	if (err || afile == NULL)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    afile == NULL)
 	{
 #ifdef _WIN32
 		if (!filename)
@@ -123,7 +129,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadRawFileW(EVE_HalContext *phost, uint32_t addres
 
 /**
  * @brief Load file into RAM_G by CMD_INFLATE
- * 
+ *
  * @param phost  Pointer to Hal context
  * @param address Address to write
  * @param filename File to load
@@ -140,7 +146,9 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t add
 	uint32_t ftsize = 0;
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 
 	if (!EVE_Cmd_waitSpace(phost, 8))
 		return false; // Space for CMD_INFLATE
@@ -149,9 +157,13 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t add
 	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
 	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
+	afile = fopen(filename, "rb"); // read Binary (rb)
 #endif
-	if (err || afile == NULL)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    afile == NULL)
 	{
 #ifdef _WIN32
 		if (!filename)
@@ -199,7 +211,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFileW(EVE_HalContext *phost, uint32_t ad
 
 /**
  * @brief Load image into RAM_G
- * 
+ *
  * @param phost  Pointer to Hal context
  * @param address Address in RAM_G
  * @param filename File to load
@@ -217,7 +229,9 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 	uint32_t ftsize = 0;
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 
 	if (phost->CmdFault)
 		return false;
@@ -226,9 +240,13 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
 	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
+	afile = fopen(filename, "rb"); // read Binary (rb)
 #endif
-	if (err || afile == NULL)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    afile == NULL)
 	{
 #ifdef _WIN32
 		if (!filename)
@@ -295,15 +313,21 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *file
 	uint32_t ftsize = 0;
 	uint8_t pbuff[8192];
 	uint16_t blocklen;
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 
 #ifdef _WIN32
 	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
 	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
+	afile = fopen(filename, "rb"); // read Binary (rb)
 #endif
-	if (err || afile == NULL)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    afile == NULL)
 	{
 #ifdef _WIN32
 		if (!filename)
@@ -357,15 +381,21 @@ EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, 
 	// Read up to `size` number of bytes from the file into `buffer`, then return the number of read bytes
 	FILE *afile;
 	size_t read;
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 
 #ifdef _WIN32
 	// afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
 	err = filename ? fopen_s(&afile, filename, "rb") : _wfopen_s(&afile, filenameW, L"rb");
 #else
-	err = fopen_s(&afile, filename, "rb"); // read Binary (rb)
+	afile = fopen(filename, "rb"); // read Binary (rb)
 #endif
-	if (err || afile == NULL)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    afile == NULL)
 	{
 #ifdef _WIN32
 		if (!filename)
@@ -404,12 +434,18 @@ EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *fi
 	FILE *afile;
 	uint32_t remaining = 0;
 	uint32_t blockSize = ((phost->MediaFifoSize >> 3) << 2) - 4;
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 6255)
 	uint8_t *pbuff = (uint8_t *)_alloca(blockSize);
 #pragma warning(pop)
+#else
+	uint8_t *pbuff = (uint8_t *)alloca(blockSize);
+#endif
 	uint16_t blocklen;
+#ifdef _WIN32
 	errno_t err = 0;
+#endif
 	if (!transfered)
 		EVE_Util_closeFile(phost);
 	if (phost->CmdFault)
@@ -426,9 +462,13 @@ EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *fi
 #endif
 	else
 	{
-		err = fopen_s(&afile, filename, "rb");
+		afile = fopen(filename, "rb");
 	}
-	if (err || afile == NULL)
+	if (
+#ifdef _WIN32
+	    err ||
+#endif
+	    afile == NULL)
 	{
 #ifdef _WIN32
 		if (!filename)

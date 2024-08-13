@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifndef EVE_CONFIG__H
 #define EVE_CONFIG__H
@@ -36,7 +36,7 @@
 
 /*
 
-This file processes the input definitions, 
+This file processes the input definitions,
 the available list of which is specified further below for ESD using these macros.
 - ESD_TARGET_GRAPHICS(definition, ...)
 - ESD_TARGET_DISPLAY(definition, ...)
@@ -124,7 +124,8 @@ ESD_TARGET_GRAPHICS(EVE_GRAPHICS_VM816C, DisplayName = "VM816C", IntegratedFlash
 ESD_TARGET_GRAPHICS(EVE_GRAPHICS_ME817EV, DisplayName = "ME817EV", IntegratedFlash = "W25Q128", SupportedTouch = "\b\w+FOCAL\w*\b|\b\w+GOODIX\w*\b", LibraryTargets = "\b(BT81X|BT818)\b", FirmwareFolder = "BT817")
 
 ESD_TARGET_GRAPHICS(EVE_GRAPHICS_GD3X_DAZZLER, DisplayName = "GD3X Dazzler", IntegratedDisplay = "HDMI 720p (1280x720)", IntegratedFlash = "W25Q64", SupportedTouch = "\b\w+DISABLED\w*\b", LibraryTargets = "\b(BT81X|BT815)\b", FirmwareFolder = "BT815")
-ESD_TARGET_GRAPHICS(EVE_GRAPHICS_IDM2040, DisplayName = "IDM2040", IntegratedFlash = "W25Q128", SupportedTouch = "\b\w+FOCAL\w*\b|\b\w+GOODIX\w*\b", IntegratedPlatform = "IDM2040EV", LibraryTargets = "\b(BT81X|BT818)\b", FirmwareFolder = "BT817")
+ESD_TARGET_GRAPHICS(EVE_GRAPHICS_IDM2040, DisplayName = "IDM2040-7A (BT817)", IntegratedFlash = "W25Q128", SupportedTouch = "\b\w+FOCAL\w*\b|\b\w+GOODIX\w*\b", IntegratedPlatform = "RP2040", LibraryTargets = "\b(BT81X|BT818)\b", FirmwareFolder = "BT817")
+ESD_TARGET_GRAPHICS(EVE_GRAPHICS_IDM2040_43A, DisplayName = "IDM2040-43A (BT883)", SupportedFlash = "(?=a)b", SupportedTouch = "\b\w+FOCAL\w*\b|\b\w+GOODIX\w*\b", IntegratedPlatform = "RP2040", LibraryTargets = "\b(BT81X|BT818)\b", FirmwareFolder = "BT817")
 
 // ESD_TARGET_GRAPHICS(EVE_GRAPHICS_FT800, DisplayName = "FT800 (Generic)", SupportedDisplays = "\b\w+(QVGA|HVGA|AT043B35)\w*\b", SupportedTouch = "\b\w+RESISTIVE\w*\b", LibraryTargets="\b(FT80X|FT800)\b")
 // ESD_TARGET_GRAPHICS(EVE_GRAPHICS_FT801, DisplayName = "FT801 (Generic)", SupportedDisplays = "\b\w+(QVGA|HVGA|AT043B35)\w*\b", SupportedTouch = "\b\w+FOCAL\w*\b", LibraryTargets="\b(FT80X|FT801)\b")
@@ -139,6 +140,7 @@ ESD_TARGET_GRAPHICS(EVE_GRAPHICS_IDM2040, DisplayName = "IDM2040", IntegratedFla
 ESD_TARGET_DISPLAY(EVE_DISPLAY_QVGA, DisplayName = "QVGA (320x240)")
 ESD_TARGET_DISPLAY(EVE_DISPLAY_WQVGA, DisplayName = "WQVGA (480x272)")
 ESD_TARGET_DISPLAY(EVE_DISPLAY_WVGA, DisplayName = "WVGA (800x480)")
+ESD_TARGET_DISPLAY(EVE_DISPLAY_WVGA_NS, DisplayName = "WVGA (800x480) 1.792:1") // pixel aspect ratio 1.792:1 non square
 ESD_TARGET_DISPLAY(EVE_DISPLAY_WSVGA, DisplayName = "WSVGA (1024x600)")
 ESD_TARGET_DISPLAY(EVE_DISPLAY_WXGA, DisplayName = "WXGA (1280x800)")
 // ESD_TARGET_DISPLAY(EVE_DISPLAY_AT043B35, DisplayName = "AT043B35 (480x272)")
@@ -158,7 +160,7 @@ ESD_TARGET_PLATFORM(MM900EV_LITE, DisplayName = "MM900EV-Lite", SupportedArchite
 // ESD_TARGET_PLATFORM(MM932LC, DisplayName = "MM932LC", SupportedArchitectures = "\bFT32\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_FT4222, DisplayName = "FT4222", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bFT4222\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_MPSSE, DisplayName = "MPSSE", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bMPSSE\b")
-ESD_TARGET_PLATFORM(EVE_PLATFORM_RP2040, DisplayName = "Rapberry Pi Pico", SupportedArchitectures = "\bPICO\b")
+ESD_TARGET_PLATFORM(EVE_PLATFORM_RP2040, DisplayName = "Raspberry Pi Pico", SupportedArchitectures = "\bPICO\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_MM2040EV, DisplayName = "MM2040EV", SupportedArchitectures = "\bPICO\b")
 
 ESD_TARGET_FLASH(EVE_FLASH_W25Q16, DisplayName = "W25Q16")
@@ -271,7 +273,7 @@ Remap options.
 #define VM810C50A_N /* This module is same but no integrated LCD*/
 #endif
 
-/* 
+/*
 
 Remap manual use of internal macros, internal macros are mapped at the end of this file (due to ESD_SIMULATION overrides)
 (Conditional code should check the internal macros MPSSE_PLATFORM, etc. and not the user-specified macros.)
@@ -316,7 +318,8 @@ Validate the configured options.
     || defined(EVE_GRAPHICS_BT815) || defined(EVE_GRAPHICS_BT816)    \
     || defined(EVE_GRAPHICS_BT817) || defined(EVE_GRAPHICS_BT818)    \
     || defined(EVE_GRAPHICS_GD3X_DAZZLER)                            \
-    || defined(EVE_GRAPHICS_IDM2040)
+    || defined(EVE_GRAPHICS_IDM2040)                                 \
+    || defined(EVE_GRAPHICS_IDM2040_43A)
 #define EVE_GRAPHICS_AVAILABLE
 #endif
 
@@ -351,7 +354,7 @@ Validate the configured options.
 #define EVE_TOUCH_AVAILABLE
 #endif
 
-#if !defined(EVE_PLATFORM_AVAILABLE) && defined(WIN32)
+#if !defined(EVE_PLATFORM_AVAILABLE) && (defined(WIN32) || defined(__linux__))
 #define EVE_MULTI_PLATFORM_TARGET
 #endif
 
@@ -806,7 +809,7 @@ It may also set platform, display, and flash values if none are configured.
 
 #ifndef EVE_DISPLAY_AVAILABLE
 #define EVE_DISPLAY_AVAILABLE
-#define DISPLAY_RESOLUTION_WVGA
+#define DISPLAY_RESOLUTION_WVGA_NS
 #endif
 
 #if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
@@ -822,6 +825,30 @@ It may also set platform, display, and flash values if none are configured.
 #ifndef EVE_TOUCH_AVAILABLE
 #define EVE_TOUCH_AVAILABLE
 #ifdef DISPLAY_RESOLUTION_WXGA
+#define EVE_TOUCH_GOODIX
+#else
+#define EVE_TOUCH_FOCAL
+#endif
+#endif
+
+#elif defined(EVE_GRAPHICS_IDM2040_43A)
+
+#define BT883_ENABLE
+#define ENABLE_SPI_QUAD
+
+#ifndef EVE_DISPLAY_AVAILABLE
+#define EVE_DISPLAY_AVAILABLE
+#define DISPLAY_RESOLUTION_WQVGA
+#endif
+
+#if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
+#define EVE_PLATFORM_AVAILABLE
+#define EVE_PLATFORM_RP2040
+#endif
+
+#ifndef EVE_TOUCH_AVAILABLE
+#define EVE_TOUCH_AVAILABLE
+#ifdef DISPLAY_RESOLUTION_WQVGA
 #define EVE_TOUCH_GOODIX
 #else
 #define EVE_TOUCH_FOCAL
@@ -1404,6 +1431,13 @@ These may only be set by one of the platform target definitions, and should not 
 #define EVE_HAL_EXPORT _declspec(dllexport)
 #else
 #define EVE_HAL_EXPORT _declspec(dllimport)
+#endif
+#elif defined(EVE_MULTI_TARGET) && defined(__linux__)
+#ifdef EVE_HAL_EXPORT
+#undef EVE_HAL_EXPORT
+#define EVE_HAL_EXPORT __attribute__((visibility("default")))
+#else
+#define EVE_HAL_EXPORT
 #endif
 #else
 #ifndef EVE_HAL_EXPORT

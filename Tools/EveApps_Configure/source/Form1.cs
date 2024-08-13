@@ -57,6 +57,10 @@ namespace EveAppsConfig
                 "EVE_GRAPHICS_FT811",
                 "EVE_GRAPHICS_FT812",
                 "EVE_GRAPHICS_FT813",
+                "EVE_GRAPHICS_BT880",
+                "EVE_GRAPHICS_BT881",
+                "EVE_GRAPHICS_BT882",
+                "EVE_GRAPHICS_BT883",
                 "EVE_GRAPHICS_BT815",
                 "EVE_GRAPHICS_BT816",
                 "EVE_GRAPHICS_BT817",
@@ -83,11 +87,11 @@ namespace EveAppsConfig
         string[] MsvcHost =
         {
                 "   ",
-                "BT8XXEMU_PLATFORM       ",
                 "EVE_PLATFORM_BT8XXEMU   ",
                 "EVE_PLATFORM_FT4222     ",
                 "EVE_PLATFORM_MPSSE      ",
                 "EVE_PLATFORM_RP2040     ",
+                "EVE_PLATFORM_MM2040EV   ",
         };
         string[] LCD =
         {
@@ -101,8 +105,8 @@ namespace EveAppsConfig
                 "EVE_DISPLAY_ILI9488_HVGA_PORTRAIT       ",
                 "EVE_DISPLAY_KD2401_HVGA_PORTRAIT        "
         };
-        string[] LCD_D=
-        { 
+        string[] LCD_D =
+        {
                 "                                            ",
                 "EVE_DISPLAY_QVGA (320x240)                  ",
                 "EVE_DISPLAY_WQVGA (480x272)                 ",
@@ -197,19 +201,89 @@ namespace EveAppsConfig
 
         string[] ToBeDelete = // This should be deleted from user macro
         {
-                "BT8XXEMU_PLATFORM               ", 
-                "FT9XX_PLATFORM                  ",           
-                "FT4222_PLATFORM                 ",          
-                "MPSSE_PLATFORM                  ",           
-                "RP2040_PLATFORM                 ",          
-                "DISPLAY_RESOLUTION_             ",      
-                "DISPLAY_RESOLUTION_QVGA         ",  
-                "DISPLAY_RESOLUTION_WQVGA        ", 
-                "DISPLAY_RESOLUTION_WVGA         ",  
-                "DISPLAY_RESOLUTION_WSVGA        ", 
-                "DISPLAY_RESOLUTION_WXGA         ",  
-                "DISPLAY_RESOLUTION_HVGA_PORTRAIT", 
-                " ", 
+                "BT8XXEMU_PLATFORM               ",
+                "FT9XX_PLATFORM                  ",
+                "FT4222_PLATFORM                 ",
+                "MPSSE_PLATFORM                  ",
+                "RP2040_PLATFORM                 ",
+                "DISPLAY_RESOLUTION_             ",
+                "DISPLAY_RESOLUTION_QVGA         ",
+                "DISPLAY_RESOLUTION_WQVGA        ",
+                "DISPLAY_RESOLUTION_WVGA         ",
+                "DISPLAY_RESOLUTION_WSVGA        ",
+                "DISPLAY_RESOLUTION_WXGA         ",
+                "DISPLAY_RESOLUTION_HVGA_PORTRAIT",
+                " ",
+        };
+
+        byte[,] Module_config = new byte[32, 3] {
+                //(QVGA,WQVGA,HVGA)=1,(HVGA,VGA,WVGA,SVGA)=2,(WVGA,SVGA,WSVGA,WXGA)=3
+                //QVGA=1,WQVGA=2,WVGA=3,WSVGA=4,WXGA=5,ILI9488=6,KD2401=7
+                //FOCAL=1,GOODIX=2,RESISTIVE=3,DISABLED=4
+                {1, 1, 3}, {1, 2, 1}, {1, 2, 1}, {1, 2, 1}, {1, 2, 1}, {1, 0, 0}, {1, 0, 0}, {1, 1, 3},
+                {1, 2, 1}, {1, 2, 1}, {2, 3, 0}, {2, 3, 3}, {2, 3, 0}, {2, 3, 1}, {2, 3, 3}, {2, 0, 0},
+                {2, 6, 0}, {2, 3, 3}, {2, 0, 0}, {2, 3, 3}, {2, 0, 0}, {2, 6, 3}, {2, 3, 0}, {2, 6, 0},
+                {2, 3, 0}, {2, 3, 0}, {2, 3, 0}, {1, 2, 3}, {2, 3, 3}, {2, 3, 3}, {3, 3, 1}, {2, 0, 4},
+        };
+        bool[,] Module_config_checked = new bool[32, 9] {
+            //FLASH,UNICODE,ASTC,   PNG,  VIDEO,  CMDB,MEDIAFIFO,CAPACITIVE,RESISTIVE
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      true,    false},
+            {false, false,  false, false, false,  false, false,      true,    false},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       true,    false},
+            {true,  true,   true,  true,  true,   true,  true,       true,    false},
+        };
+
+        byte[,] EveIC_config = new byte[14, 3] {
+                //(QVGA,WQVGA,HVGA)=1,(HVGA,VGA,WVGA,SVGA)=2,(WVGA,SVGA,WSVGA,WXGA)=3
+                //QVGA=1,WQVGA=2,WVGA=3,WSVGA=4,WXGA=5,ILI9488=6,KD2401=7
+                //FOCAL=1,GOODIX=2,RESISTIVE=3,DISABLED=4
+                {1, 1, 3}, {1, 2, 0}, {2, 1, 3}, {2, 3, 0}, {2, 1, 3}, {2, 1, 0}, {1, 1, 3},
+                {1, 3, 0}, {1, 1, 3}, {1, 1, 0}, {2, 3, 1}, {2, 3, 3}, {3, 3, 1}, {3, 3, 3},
+        };
+        bool[,] EveIC_config_checked = new bool[14, 9] {
+            //FLASH,UNICODE,ASTC,   PNG,  VIDEO,  CMDB,MEDIAFIFO,CAPACITIVE,RESISTIVE
+            {false, false,  false, false, false,  false, false,      false,    true},
+            {false, false,  false, false, false,  false, false,      true,    false},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {false, false,  false, true,  true,   true,  true,       false,    true},
+            {false, false,  false, true,  true,   true,  true,       true,    false},
+            {true,  true,   true,  true,  true,   true,  true,       true,    false},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
+            {true,  true,   true,  true,  true,   true,  true,       true,    false},
+            {true,  true,   true,  true,  true,   true,  true,       false,    true},
         };
 
         private void initDefault()
@@ -245,6 +319,7 @@ namespace EveAppsConfig
 
             txt_root.Text = "../../../EveApps";
         }
+
         public Form1()
         {
             InitializeComponent();
@@ -405,16 +480,16 @@ namespace EveAppsConfig
                         text = ft9xReplaceNode(config, text, host_);
                         text = ft9xReplaceNode(LCD, text, lcd_);
                         text = ft9xReplaceNode(Flash, text, flash_);
-                        text = ft9xReplaceNode(Touch, text, touch_);
+                        text = ft9xReplaceNode(Touch, text, "");//text = ft9xReplaceNode(Touch, text, touch_);
 
                         // Clean support list
                         text = ft9xReplaceNode(Support, text, "");
 
                         // Append new support list
-                        foreach (String s in support_)
-                        {
-                            text = Ft9xAppendNode(text, s);
-                        }
+                        //foreach (String s in support_)
+                        //{
+                        //    text = Ft9xAppendNode(text, s);
+                        //}
 
                         node.InnerXml = text;
                         node.InnerXml = node.ChildNodes[0].InnerXml;
@@ -500,21 +575,47 @@ namespace EveAppsConfig
                     }
                     text = msvcReplaceNode(LCD, text, lcd_);
                     text = msvcReplaceNode(Flash, text, flash_);
-                    text = msvcReplaceNode(Touch, text, touch_);
+                    text = msvcReplaceNode(Touch, text, "");//text = msvcReplaceNode(Touch, text, touch_);
 
                     // Clean support list
                     text = msvcReplaceNode(Support, text, "");
 
                     // Append new support list
-                    foreach (String i in support_)
-                    {
-                        text = msvcAppendNode(text, i);
-                    }
+                    //foreach (String i in support_)
+                    //{
+                    //    text = msvcAppendNode(text, i);
+                    //}
                     node.InnerText = text;
                 }
 
                 File.WriteAllText(f, PrintXML(xml.OuterXml, false /*Msvc*/));
             }
+        }
+
+        private void setPicoCommand(string demo, string module, string eveIC, string mhost, string lcd)
+        {
+            Txt_Log.AppendText("**************************************************************************************\r\n");
+            Txt_Log.AppendText("set PICO_SDK_PATH=[path to pico-sdk]\r\n");
+            Txt_Log.AppendText("set PICO_TOOLCHAIN_PATH=[path to GNU Arm Embedded Toolchain\\10 2020-q4-major\\bin]\r\n");
+            Txt_Log.AppendText("cd EveApps\r\n");
+            Txt_Log.AppendText("mkdir build\r\n");
+            Txt_Log.AppendText("cd build\r\n");
+            Txt_Log.AppendText("cmake -G \"NMake Makefiles\" -DEVE_APPS_PLATFORM=" + mhost +
+                " -DEVE_APPS_GRAPHICS=" + module + eveIC + " -DEVE_APPS_DISPLAY=" + lcd + " ..\r\n");
+            if (demo == "")
+                Txt_Log.AppendText("nmake\r\n");
+            else
+            {
+                String demo_name = demo.ToString().Trim();
+                if (demo_name.StartsWith("Demo"))
+                    demo_name = demo_name.Replace("DemoApps/", "");
+                else
+                    demo_name = demo_name.Replace('/', '_');
+
+                Txt_Log.AppendText("nmake " + demo_name + "\r\n");
+            }
+            Txt_Log.AppendText("**************************************************************************************\r\n");
+            Txt_Log.ScrollToCaret();
         }
         private string[] seachProjectfile(string demo, string ext)
         {
@@ -556,8 +657,6 @@ namespace EveAppsConfig
                 }
                 return Directory.GetFiles(demo_path, ext, SearchOption.AllDirectories);
             }
-
-            return new string[] { };
         }
 
         private void btn_Generate_Click(object sender, EventArgs e)
@@ -591,6 +690,37 @@ namespace EveAppsConfig
                     lcd = LCD[id].Trim(); 
                 } 
             } catch { }
+
+            if ((module == "") && (eveIC == ""))
+            {
+                Txt_Log.AppendText("Missing Graphic.\r\n");
+                cbb_Module.BackColor = Color.Yellow;
+                cbb_EveIC.BackColor = Color.Yellow;
+                return;
+            }
+            else if ((mhost == "") && (f900host == "") && (f930host == ""))
+            {
+                Txt_Log.AppendText("Missing host platform.\t\n");
+                cbb_msvchost.BackColor = Color.Yellow;
+                cbb_ft900.BackColor = Color.Yellow;
+                cbb_ft930.BackColor = Color.Yellow;
+                return;
+            }
+            else if (lcd == "")
+            {
+                Txt_Log.AppendText("Missing LCD.\t\n");
+                cbb_LCD.BackColor = Color.Yellow;
+                return;
+            }
+            else
+            {
+                cbb_Module.BackColor = Color.White;
+                cbb_EveIC.BackColor = Color.White;
+                cbb_msvchost.BackColor = Color.White;
+                cbb_ft900.BackColor = Color.White;
+                cbb_ft930.BackColor = Color.White;
+                cbb_LCD.BackColor = Color.White;
+            }
 
             // Support list
             if (Cb_Astc.Checked) support.Add(Cb_Astc.Text);
@@ -637,19 +767,25 @@ namespace EveAppsConfig
             String[] ft930Proj = ft930ProjList.ToArray();
 
             // Process MSVC project files
-            if (msvcProj != null && msvcProj.Length > 0)
+            if (msvcProj != null && msvcProj.Length > 0 && cbb_msvchost.SelectedIndex < 4)
             {
                 setMSVC(msvcProj, module, eveIC, mhost, lcd, flash, support, touch);
             }
 
+            //Process Pico build instruction
+            if (cbb_msvchost.SelectedIndex > 3 && cbb_msvchost.SelectedIndex < 6 )
+            {
+                setPicoCommand(demo, module, eveIC, mhost, lcd);
+            }
+
             // Process Ft900 project files
-            if (ft900Proj != null && ft900Proj.Length > 0)
+            if (ft900Proj != null && ft900Proj.Length > 0 && cbb_ft900.SelectedIndex > 0)
             {
                 setFT9X(ft900Proj, Ft900host, module, eveIC, f900host, lcd, flash, support, touch);
             }
 
             // Process Ft930 project files
-            if (ft930Proj != null && ft930Proj.Length > 0)
+            if (ft930Proj != null && ft930Proj.Length > 0 && cbb_ft930.SelectedIndex > 0)
             {
                 setFT9X(ft930Proj, Ft930host, module, eveIC, f930host, lcd, flash, support, touch);
             }
@@ -678,12 +814,12 @@ namespace EveAppsConfig
             string module = "EVE_GRAPHICS_ME817EV";
             string eveIC = "";
             string mhost = "EVE_PLATFORM_FT4222";
-            string f900host = "MM900EV1B";
-            string f930host = "MM930LITE";
+            string f900host = "";
+            string f930host = "";
             string lcd = "EVE_DISPLAY_WVGA";
             string flash = "";
             string demo = "";
-            string touch = "";
+            string touch = "EVE_TOUCH_FOCAL";
             List<String> support = new List<string>(); // Support list is multiple
 
             try { if (cbb_Demo.SelectedIndex > -1) { demo = cbb_Demo.SelectedItem.ToString().Trim(); } } catch { }
@@ -703,15 +839,15 @@ namespace EveAppsConfig
             cbb_Flash.SelectedIndex = cbb_Flash.FindString(flash);
             cbb_Touch.SelectedIndex = cbb_Touch.FindString(touch);
 
-            Cb_Astc.Checked = false;
-            Cb_Capacitive.Checked = false;
-            Cb_Cmdb.Checked = false;
-            Cb_Flash.Checked = false;
-            Cb_Mediafifo.Checked = false;
-            Cb_Png.Checked = false;
+            Cb_Astc.Checked = true;
+            Cb_Capacitive.Checked = true;
+            Cb_Cmdb.Checked = true;
+            Cb_Flash.Checked = true;
+            Cb_Mediafifo.Checked = true;
+            Cb_Png.Checked = true;
             Cb_Resistive.Checked = false;
-            Cb_Unicode.Checked = false;
-            Cb_Video.Checked = false;
+            Cb_Unicode.Checked = true;
+            Cb_Video.Checked = true;
 
             if (!isSetup)
             {
@@ -747,6 +883,121 @@ namespace EveAppsConfig
             {
             }
             testDialog.Dispose();
+        }
+
+        private void cbb_Module_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((cbb_EveIC.SelectedIndex > 0) && (cbb_Module.SelectedIndex > 0))
+            {
+                cbb_EveIC.SelectedIndex = 0;
+            }
+            if (cbb_Module.SelectedIndex > 0)
+            {
+                cbb_Module.BackColor = Color.White;
+                cbb_EveIC.BackColor = Color.White;
+                if (Module_config[cbb_Module.SelectedIndex - 1, 0] == 1)
+                    noteBox.Text = "Up to 480 x 320";
+                else if (Module_config[cbb_Module.SelectedIndex - 1, 0] == 2)
+                    noteBox.Text = "Up to 800 x 600";
+                else if (Module_config[cbb_Module.SelectedIndex - 1, 0] == 3)
+                    noteBox.Text = "Up to 1280 x 800";
+                else
+                    noteBox.Text = "";
+                cbb_LCD.SelectedIndex = Module_config[cbb_Module.SelectedIndex - 1, 1];
+                cbb_Flash.SelectedIndex = 0;
+                cbb_Touch.SelectedIndex = Module_config[cbb_Module.SelectedIndex - 1, 2];
+                Cb_Flash.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 1];
+                if (Cb_Flash.Checked == false)
+                    cbb_Flash.Enabled = false;
+                else
+                    cbb_Flash.Enabled = true;
+                Cb_Unicode.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 1];
+                Cb_Astc.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 2];
+                Cb_Png.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 3];
+                Cb_Video.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 4];
+                Cb_Cmdb.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 5];
+                Cb_Mediafifo.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 6];
+                Cb_Capacitive.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 7];
+                Cb_Resistive.Checked = Module_config_checked[cbb_Module.SelectedIndex - 1, 8];
+            }
+        }
+
+        private void cbb_EveIC_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((cbb_Module.SelectedIndex > 0) && (cbb_EveIC.SelectedIndex > 0))
+            {
+                cbb_Module.SelectedIndex = 0;
+            }
+            if (cbb_EveIC.SelectedIndex > 0)
+            {
+                cbb_Module.BackColor = Color.White;
+                cbb_EveIC.BackColor = Color.White;
+                if (EveIC_config[cbb_EveIC.SelectedIndex - 1, 0] == 1)
+                    noteBox.Text = "Up to 480 x 320";
+                else if (EveIC_config[cbb_EveIC.SelectedIndex - 1, 0] == 2)
+                    noteBox.Text = "Up to 800 x 600";
+                else if (EveIC_config[cbb_EveIC.SelectedIndex - 1, 0] == 3)
+                    noteBox.Text = "Up to 1280 x 800";
+                else
+                    noteBox.Text = "";
+                cbb_LCD.SelectedIndex = EveIC_config[cbb_EveIC.SelectedIndex - 1, 1];
+                cbb_Flash.SelectedIndex = 0;
+                cbb_Touch.SelectedIndex = EveIC_config[cbb_EveIC.SelectedIndex - 1, 2];
+                Cb_Flash.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 1];
+                if (Cb_Flash.Checked == false)
+                    cbb_Flash.Enabled = false;
+                else
+                    cbb_Flash.Enabled = true;
+                Cb_Unicode.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 1];
+                Cb_Astc.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 2];
+                Cb_Png.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 3];
+                Cb_Video.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 4];
+                Cb_Cmdb.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 5];
+                Cb_Mediafifo.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 6];
+                Cb_Capacitive.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 7];
+                Cb_Resistive.Checked = EveIC_config_checked[cbb_EveIC.SelectedIndex - 1, 8];
+            }
+        }
+
+        private void cbb_msvchost_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbb_msvchost.SelectedIndex > 0)
+            {
+                cbb_ft900.SelectedIndex = 0;
+                cbb_ft930.SelectedIndex = 0;
+                cbb_msvchost.BackColor = Color.White;
+                cbb_ft900.BackColor = Color.White;
+                cbb_ft930.BackColor = Color.White;
+            }
+        }
+
+        private void cbb_ft900_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbb_ft900.SelectedIndex > 0)
+            {
+                cbb_msvchost.SelectedIndex = 0;
+                cbb_ft930.SelectedIndex = 0;
+                cbb_msvchost.BackColor = Color.White;
+                cbb_ft900.BackColor = Color.White;
+                cbb_ft930.BackColor = Color.White;
+            }
+        }
+
+        private void cbb_ft930_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbb_ft930.SelectedIndex > 0)
+            {
+                cbb_msvchost.SelectedIndex = 0;
+                cbb_ft900.SelectedIndex = 0;
+                cbb_msvchost.BackColor = Color.White;
+                cbb_ft900.BackColor = Color.White;
+                cbb_ft930.BackColor = Color.White;
+            }
+        }
+
+        private void cbb_LCD_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbb_LCD.BackColor = Color.White;
         }
     }
 }

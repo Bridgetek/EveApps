@@ -1621,6 +1621,6 @@ void DemoWashingMachine() {
 }
 
 #else
-#warning Platform is not supported
+eve_pragma_warning("Platform is not supported")
 int main(int argc, char* argv[]) {}
 #endif // #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_WVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)

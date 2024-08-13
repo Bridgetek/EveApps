@@ -179,7 +179,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_PLATFORM_FT4222;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_PLATFORM_FT4222;EVE_DISPLAY_WVGA;EVE_ADAPTIVE_FRAMERATE</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\..\common\application;..\..\..\..\common\eve_hal;..\..\..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>

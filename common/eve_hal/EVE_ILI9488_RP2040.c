@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_Platform.h"
 
@@ -84,11 +84,11 @@ void EVE_ILI9488_RP2040_bootup(EVE_HalContext *phost)
 	gpio_put(phost->SpiCsPin, 1);
 
 	gpio_init(GPIO_ILI9488_DCX);
-	gpio_set_dir(GPIO_ILI9488_DCX, GPIO_OUT); //gpios for ili9488 - dcx
+	gpio_set_dir(GPIO_ILI9488_DCX, GPIO_OUT); // gpios for ili9488 - dcx
 	gpio_put(GPIO_ILI9488_DCX, 0);
 
 	gpio_init(GPIO_ILI9488_CS);
-	gpio_set_dir(GPIO_ILI9488_CS, GPIO_OUT); //gpios for ili9488 - cs
+	gpio_set_dir(GPIO_ILI9488_CS, GPIO_OUT); // gpios for ili9488 - cs
 	gpio_put(GPIO_ILI9488_CS, 1);
 
 	uint8_t arraytemp[16];
@@ -96,24 +96,24 @@ void EVE_ILI9488_RP2040_bootup(EVE_HalContext *phost)
 	ILI9488_SPI_WriteCmd(phost, ILI9488_CMD_SOFTWARE_RESET, 0);
 	EVE_sleep(1);
 
-	//colomn address set - 0 to 319
+	// colomn address set - 0 to 319
 	arraytemp[0] = 0x00;
 	arraytemp[1] = 0x00;
 	arraytemp[2] = 0x01;
 	arraytemp[3] = 0x3f;
 	ILI9488_SPI_WriteCmdN(phost, ILI9488_CMD_COLOMNADDR, 4, arraytemp);
 
-	//row address set - 0 to 479
+	// row address set - 0 to 479
 	arraytemp[0] = 0x00;
 	arraytemp[1] = 0x00;
 	arraytemp[2] = 0x01;
 	arraytemp[3] = 0xdf;
 	ILI9488_SPI_WriteCmdN(phost, ILI9488_CMD_ROWADDR, 4, arraytemp);
 
-	//Frame rate 70HZ
+	// Frame rate 70HZ
 	ILI9488_SPI_WriteCmd(phost, ILI9488_CMD_FRAME_RATE_CONTROL, 0xB0);
 
-	//adjust control 3
+	// adjust control 3
 	arraytemp[0] = 0xa9;
 	arraytemp[1] = 0x51;
 	arraytemp[2] = 0x2c;
@@ -125,7 +125,7 @@ void EVE_ILI9488_RP2040_bootup(EVE_HalContext *phost)
 	ILI9488_SPI_WriteCmd(phost, ILI9488_CMD_IMAGEFUNCTION, 0);
 	ILI9488_SPI_WriteCmd(phost, ILI9488_CMD_WRITE_CONTROL_DISPLAY, 0x2c);
 
-	ILI9488_SPI_WriteCmd(phost, ILI9488_CMD_MADCTRL, 0x48); //bgr connection and colomn address order
+	ILI9488_SPI_WriteCmd(phost, ILI9488_CMD_MADCTRL, 0x48); // bgr connection and colomn address order
 
 	arraytemp[0] = 0x30;
 	arraytemp[1] = 0x02;

@@ -315,10 +315,14 @@ EveApps has created an online documentation (https://Bridgetek.github.io/EveApps
 To customize it according to your setup, kindly refer to Docs/Doxygen folder.
 
 ## Version
-This version is v1.6.0-rc1
+This version is v1.7.0-rc1
         
 ## Release log
 ```
+v1.7.0-rc1
+  - Updated HTML page
+  - Updated EveAppsConfig tool
+  - Fixed issues found in EveApps v1.6.0_RC1 release
 v1.6.0-rc1
   - Add online document support by Doxygen
   - Add DXT1, DXT1L2, DXT1PALETTED and DXT1L2PALETTED support in SampleApp / Bitmap

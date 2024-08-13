@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifndef EVE_ILI9488__H
 #define EVE_ILI9488__H
@@ -47,8 +47,8 @@
 
 #define ILI9488_MISO_LOWHIGH (gpio_read(GPIO_SPIM_MISO))
 
-//ILI9488 commands
-#define ILI9488_CMD_SOFTWARE_RESET (0x01) //next new command only after 5ms and sleep commands only after 120ms
+// ILI9488 commands
+#define ILI9488_CMD_SOFTWARE_RESET (0x01) // next new command only after 5ms and sleep commands only after 120ms
 #define ILI9488_CMD_READ_DISPLAY_IDENTIFICATION (0x04)
 #define ILI9488_CMD_READ_DISPLAY_POWERMODE (0x0A)
 #define ILI9488_CMD_READ_MADCTRL (0x0B)
@@ -62,7 +62,7 @@
 #define ILI9488_CMD_ALLPIXELOFF (0x22)
 #define ILI9488_CMD_ALLPIXELON (0x23)
 #define ILI9488_CMD_DISPLAYOFF (0x28)
-#define ILI9488_CMD_DISPLAYON (0x29) //need to do this
+#define ILI9488_CMD_DISPLAYON (0x29) // need to do this
 #define ILI9488_CMD_COLOMNADDR (0x2A)
 #define ILI9488_CMD_ROWADDR (0x2B)
 #define ILI9488_CMD_TEARINGEFFECT_LINEOFF (0x34)
@@ -72,7 +72,7 @@
 #define ILI9488_CMD_IDLE_OFF (0x38)
 #define ILI9488_CMD_IDLE_ON (0x39)
 
-#define ILI9488_CMD_INTERFACE_PIXEL_FORMAT (0x3A) //default is 06 and DBI 18 bits/pixel
+#define ILI9488_CMD_INTERFACE_PIXEL_FORMAT (0x3A) // default is 06 and DBI 18 bits/pixel
 #define ILI9488_INTERFACE_PIXEL_FORMAT_18BIT_DPI (0x66)
 #define ILI9488_INTERFACE_PIXEL_FORMAT_24BIT_DPI (0x70)
 
@@ -90,7 +90,7 @@
 #define ILI9488_CMD_WRITE_CTRLDISPLAYVALUE (0x53)
 #define ILI9488_CMD_READ_CTRLDISPLAYVALUE (0x54)
 
-//extended functions
+// extended functions
 #define ILI9488_CMD_INTERFACE_MODE_CONTROL (0xB0)
 #define ILI9488_CMD_FRAME_RATE_CONTROL (0xB1)
 #define ILI9488_CMD_BLANCKING_PORCH_CONTROL (0xB5)

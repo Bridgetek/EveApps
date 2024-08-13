@@ -5,21 +5,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "EVE_Platform.h"
 
@@ -95,12 +95,12 @@ EVE_HAL_EXPORT bool EVE_CoCmd_inflate_progMem(EVE_HalContext *phost, uint32_t ds
 }
 
 /** @brief Get the end memory address of data inflated by CMD_INFLATE and CMD_INFLATE2
-* At API level 2, the allocation pointer is also advanced by:
-*  - cmd_loadimage
-*  - cmd_playvideo
-*  - cmd_videoframe
-*  - cmd_endlist
-*/
+ * At API level 2, the allocation pointer is also advanced by:
+ *  - cmd_loadimage
+ *  - cmd_playvideo
+ *  - cmd_videoframe
+ *  - cmd_endlist
+ */
 EVE_HAL_EXPORT bool EVE_CoCmd_getPtr(EVE_HalContext *phost, uint32_t *result)
 {
 	uint16_t resAddr;
@@ -223,7 +223,7 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost)
  * @brief Enter fast flash state.
  * @param phost Pointer to Hal context
  * @param result
- * @return new FLASH_STATUS 
+ * @return new FLASH_STATUS
  */
 EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashFast(EVE_HalContext *phost, uint32_t *result)
 {

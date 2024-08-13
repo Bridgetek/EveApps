@@ -297,7 +297,7 @@ void SAMAPP_Widget_gauge()
     EVE_CoCmd_bgColor(s_pHalContext, 0x808080);
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x00, 0xff, 0x00));
     xOffset += xDistBtwClocks;
-    EVE_CoCmd_gauge(s_pHalContext, xOffset, yOffset, cRadius, OPT_NOTICKS, 5, 4, 55, 100);
+	EVE_CoCmd_gauge(s_pHalContext, xOffset, yOffset, cRadius, OPT_NOPOINTER, 5, 4, 55, 100);
     EVE_Cmd_wr32(s_pHalContext, COLOR_A(255));
     EVE_CoCmd_text(s_pHalContext, xOffset, (yOffset + cRadius + 6), 26, OPT_CENTER, "No Hands"); //text info
 
@@ -704,7 +704,7 @@ void SAMAPP_Widget_progressbar()
     yOffset += yDist;
     EVE_CoCmd_progress(s_pHalContext, xOffset, yOffset, 150, ySz, 0, 90, 100);
 
-    EVE_CoCmd_text(s_pHalContext, xOffset + 180, 80, 26, 0, "40 % TopBottom"); //text info
+    EVE_CoCmd_text(s_pHalContext, xOffset + 220, 80, 26, 0, "40 % TopBottom"); //text info
     EVE_CoCmd_progress(s_pHalContext, xOffset + 180, 100, ySz, 150, 0, 40, 100);
 
     SAMAPP_INFO_END;

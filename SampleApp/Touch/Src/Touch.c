@@ -755,6 +755,7 @@ void helperBouncingSquaresCall(int16_t BRx, int16_t BRy, int16_t MovingRy, uint8
 */
 void SAMAPP_Touch_touchToPlaySong()
 {
+#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     Draw_Text(s_pHalContext, "Example for: Touch test\n\n\nPlease touch on screen (1-5 fingers)");
     uint32_t val[6];
 
@@ -832,6 +833,7 @@ void SAMAPP_Touch_touchToPlaySong()
 
     EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
     SAMAPP_DELAY_NEXT;
+#endif
 }
 
 /**

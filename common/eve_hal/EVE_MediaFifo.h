@@ -9,21 +9,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifndef EVE_MEDIAFIFO__H
 #define EVE_MEDIAFIFO__H
@@ -43,7 +43,7 @@
 
 #ifdef EVE_SUPPORT_MEDIAFIFO
 
-/** Set the media FIFO. 
+/** Set the media FIFO.
 Returns false in case a coprocessor fault occurred */
 EVE_HAL_EXPORT bool EVE_MediaFifo_set(EVE_HalContext *phost, uint32_t address, uint32_t size);
 
@@ -60,15 +60,15 @@ EVE_HAL_EXPORT uint32_t EVE_MediaFifo_wp(EVE_HalContext *phost);
 /** Get the currently available space. */
 EVE_HAL_EXPORT uint32_t EVE_MediaFifo_space(EVE_HalContext *phost);
 
-/** Write a buffer to the media FIFO. 
-Waits if there is not enough space in the media FIFO. 
+/** Write a buffer to the media FIFO.
+Waits if there is not enough space in the media FIFO.
 Returns false in case a coprocessor fault occurred.
-If the transfered pointer is set, the write may exit early 
+If the transfered pointer is set, the write may exit early
 if the coprocessor function has finished, and the
 transfered amount will be set. */
 EVE_HAL_EXPORT bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t size, uint32_t *transfered);
 
-/** Wait for the media FIFO to fully empty. 
+/** Wait for the media FIFO to fully empty.
 When checking if a file is fully processed, EVE_Cmd_waitFlush must be called.
 Returns false in case a coprocessor fault occurred, or in case the coprocessor is done processing */
 EVE_HAL_EXPORT bool EVE_MediaFifo_waitFlush(EVE_HalContext *phost, bool orCmdFlush);

@@ -1,7 +1,7 @@
 /**
  * @file EVE_Cmd.c
  * @brief EVE's command read/write
- 
+
  * This file defines the generic APIs of phost access layer for the FT800 or EVE compatible silicon.
  * Application shall access FT800 or EVE resources over these APIs,regardless of I2C or SPI protocol.
  * In addition, there are some helper functions defined for FT800 coprocessor engine as well as phost commands.
@@ -9,21 +9,21 @@
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,7 +38,7 @@
 
 /**
  * @brief End read/write to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  */
 static inline void endFunc(EVE_HalContext *phost)
@@ -57,7 +57,7 @@ static inline void endFunc(EVE_HalContext *phost)
 
 /**
  * @brief Read from Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return uint16_t Read pointer
  */
@@ -73,7 +73,7 @@ EVE_HAL_EXPORT uint16_t EVE_Cmd_rp(EVE_HalContext *phost)
 
 /**
  * @brief Write to Coprocessor
- * 
+ *
  * @param phost Pointer to Hal context
  * @return uint16_t Write pointer
  */
@@ -98,7 +98,7 @@ EVE_HAL_EXPORT uint16_t EVE_Cmd_wp(EVE_HalContext *phost)
 
 /**
  * @brief Get free space of Coprocessor's command buffer
- * 
+ *
  * @param phost Pointer to Hal context
  * @return uint16_t Free space in Bytes
  */
@@ -128,7 +128,7 @@ EVE_HAL_EXPORT uint16_t EVE_Cmd_space(EVE_HalContext *phost)
 
 /**
  * @brief Start transfer data to EVE
- * 
+ *
  * @param phost Pointer to Hal context
  */
 static void startBufferTransfer(EVE_HalContext *phost)
@@ -152,7 +152,7 @@ static void startBufferTransfer(EVE_HalContext *phost)
 
 /**
  * @brief Write string to Coprocessor's comand fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Data pointer
  * @param size Size to write
@@ -180,11 +180,11 @@ static uint32_t wrString(EVE_HalContext *phost, const void *buffer, uint32_t *si
 
 /**
  * @brief Write buffer to Coprocessor's comand fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Data pointer
  * @param size Size to write
- * @param progmem True if ProgMem 
+ * @param progmem True if ProgMem
  * @param string True is string
  * @return uint32_t Byte transfered
  */
@@ -256,7 +256,7 @@ static uint32_t wrBuffer(EVE_HalContext *phost, const void *buffer, uint32_t siz
 
 /**
  * @brief Begin writing a function, keeps the transfer open
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Cmd_startFunc(EVE_HalContext *phost)
@@ -268,7 +268,7 @@ EVE_HAL_EXPORT void EVE_Cmd_startFunc(EVE_HalContext *phost)
 
 /**
  * @brief End writing a function, closes the transfer
- * 
+ *
  * @param phost Pointer to Hal context
  */
 EVE_HAL_EXPORT void EVE_Cmd_endFunc(EVE_HalContext *phost)
@@ -281,7 +281,7 @@ EVE_HAL_EXPORT void EVE_Cmd_endFunc(EVE_HalContext *phost)
 
 /**
  * @brief Write buffer to Coprocessor's comand fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Data pointer
  * @param size Size to write
@@ -297,7 +297,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_wrMem(EVE_HalContext *phost, const uint8_t *buffer, 
 
 /**
  * @brief Write buffer in ProgMem to Coprocessor's comand fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param buffer Data buffer
  * @param size Size to write
@@ -313,7 +313,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_wrProgMem(EVE_HalContext *phost, eve_progmem_const u
 
 /**
  * @brief Write a string into Coprocessor's command fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param str String to write
  * @param maxLength Length to write, up to EVE_CMD_STRING_MAX
@@ -330,7 +330,7 @@ EVE_HAL_EXPORT uint32_t EVE_Cmd_wrString(EVE_HalContext *phost, const char *str,
 
 /**
  * @brief Write a byte to Coprocessor's command fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Byte to write
  * @return true True if ok
@@ -357,7 +357,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_wr8(EVE_HalContext *phost, uint8_t value)
 
 /**
  * @brief Write 2 bytes to Coprocessor's command fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Data to write
  * @return true True if ok
@@ -385,7 +385,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_wr16(EVE_HalContext *phost, uint16_t value)
 
 /**
  * @brief Write 4 bytes to Coprocessor's command fifo
- * 
+ *
  * @param phost Pointer to Hal context
  * @param value Data to write
  * @return true True if ok
@@ -438,7 +438,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_wr32(EVE_HalContext *phost, uint32_t value)
 
 /**
  * @brief Move the write pointer forward by the specified number of bytes. Returns the previous write pointer
- * 
+ *
  * @param phost Pointer to Hal context
  * @param bytes Number of bytes to move
  * @return uint16_t Previous write pointer
@@ -472,7 +472,7 @@ void debugBackupRamG(EVE_HalContext *phost);
 
 /**
  * @brief Check for coprocessor fault
- * 
+ *
  * @param phost Pointer to Hal context
  * @param rpOrSpace Read pointer or space
  * @return true True if ok
@@ -519,7 +519,7 @@ static bool checkWait(EVE_HalContext *phost, uint16_t rpOrSpace)
 
 /**
  * @brief Wait handler
- * 
+ *
  * @param phost Pointer to Hal context
  * @param rpOrSpace Read pointer or space
  * @return true True if ok
@@ -547,7 +547,7 @@ static bool handleWait(EVE_HalContext *phost, uint16_t rpOrSpace)
 
 /**
  * @brief Wait till Command FIFO buffer empty
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if ok
  * @return false False if error
@@ -575,7 +575,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_waitFlush(EVE_HalContext *phost)
 }
 
 /** Wait for the command buffer to have at least the requested amount of free space.
- * @return 0 in case a coprocessor fault occurred 
+ * @return 0 in case a coprocessor fault occurred
  */
 EVE_HAL_EXPORT uint32_t EVE_Cmd_waitSpace(EVE_HalContext *phost, uint32_t size)
 {
@@ -593,8 +593,8 @@ EVE_HAL_EXPORT uint32_t EVE_Cmd_waitSpace(EVE_HalContext *phost, uint32_t size)
 	space = phost->CmdSpace;
 
 #if 1
-	/* Optimization. 
-	Only update space if more space is needed than already known available, 
+	/* Optimization.
+	Only update space if more space is needed than already known available,
 	or when not actually waiting for any space */
 	if (space < size || !size)
 		space = EVE_Cmd_space(phost);
@@ -617,7 +617,7 @@ EVE_HAL_EXPORT uint32_t EVE_Cmd_waitSpace(EVE_HalContext *phost, uint32_t size)
 
 /**
  * @brief Wait until Coprocessor finished logo animation
- * 
+ *
  * @param phost Pointer to Hal context
  * @return true True if ok
  * @return false False if error
@@ -644,9 +644,9 @@ EVE_HAL_EXPORT bool EVE_Cmd_waitLogo(EVE_HalContext *phost)
 }
 
 /** Wait for a 32-bit value that was set by `EVE_CoCmd_memWrite32(phost, ptr, value)`.
- * @return true when the value is found. 
+ * @return true when the value is found.
  * @return false otherwise
- * when the coprocessor has flushed, or a coprocessor fault occured. 
+ * when the coprocessor has flushed, or a coprocessor fault occured.
  */
 EVE_HAL_EXPORT bool EVE_Cmd_waitRead32(EVE_HalContext *phost, uint32_t ptr, uint32_t value)
 {
@@ -677,7 +677,7 @@ EVE_HAL_EXPORT bool EVE_Cmd_waitRead32(EVE_HalContext *phost, uint32_t ptr, uint
 }
 
 /** Restore the internal state of EVE_Cmd.
- * Call this after manually writing to the coprocessor buffer 
+ * Call this after manually writing to the coprocessor buffer
  */
 EVE_HAL_EXPORT void EVE_Cmd_restore(EVE_HalContext *phost)
 {

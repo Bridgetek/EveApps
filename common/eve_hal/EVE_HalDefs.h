@@ -5,25 +5,25 @@
  *  This file defines the generic APIs of phost access layer for the FT800 or EVE compatible silicon.
  *  Application shall access FT800 or EVE resources over these APIs,regardless of I2C or SPI protocol.
  *  In addition, there are some helper functions defined for FT800 coprocessor engine as well as phost commands.
- * 
+ *
  * @author Bridgetek
  *
  * @date 2018
- * 
+ *
  * MIT License
  *
  * Copyright (c) [2019] [Bridgetek Pte Ltd (BRTChip)]
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #ifndef EVE_HAL_INCL__H
 #define EVE_HAL_INCL__H
@@ -649,12 +649,12 @@ EVE_HAL_EXPORT void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t v
 /* This API sets the current strength of supported GPIO/IO group(s) */
 EVE_HAL_EXPORT void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPIO_DRIVE_STRENGTH_T strength, EVE_81X_GPIO_GROUP_T group);
 
-/* This API will hold the system reset active, 
+/* This API will hold the system reset active,
 EVE_Host_resetRemoval() must be called to release the system reset. */
 EVE_HAL_EXPORT void EVE_Host_resetActive(EVE_HalContext *phost);
 
-/* This API will release the system reset, 
-and the system will exit reset and behave as after POR, 
+/* This API will release the system reset,
+and the system will exit reset and behave as after POR,
 settings done through SPI commands will not be affected. */
 EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost);
 #endif

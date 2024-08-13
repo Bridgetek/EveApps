@@ -157,11 +157,11 @@ void helperRotateAroundOne(uint32_t address, uint32_t format, uint32_t x, uint32
     EVE_CoCmd_setBitmap(s_pHalContext, (int16_t) address, (int16_t) format, (int16_t) w,
         (int16_t) h);
 
-    lw = (int16_t) (w + TRANSLATE_XY);
-    lh = (int16_t) (h + TRANSLATE_XY);
+    lw = (int16_t) (w + 2 * TRANSLATE_XY);
+    lh = (int16_t) (h + 2 * TRANSLATE_XY);
 
     EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, lw, lh));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(lw >> 8, lh >> 8));
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(lw >> 9, lh >> 9));
 
     EVE_CoCmd_loadIdentity(s_pHalContext);
     EVE_CoCmd_translate(s_pHalContext, TRANSLATE_XY * MAX_CIRCLE_UNIT,
@@ -229,74 +229,31 @@ void helperRotateAndTranslateOne(uint32_t address, uint32_t format, uint32_t x, 
 }
 
 /**
-* @brief API to demonstrate load a raw file to Coprocessor
-*
-* @param fileName File to load
-* @param ramOffset Offset on RAM_G
-* @return int32_t Always 0
-*/
-int32_t helperLoadRawFromFile(const char8_t* fileName, int32_t ramOffset)
+ * @brief Load JPEG/PNG image to RAM_G
+ * 
+ * @param file File to load
+ * @param addr ram offset on RAM_G
+ * @param option option for loadImage command
+ */
+static void helperloadImage(const uint8_t *file, uint32_t addr, uint32_t option)
 {
-#if defined(FT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 FT81X only
-    int32_t FileLen = 0;
-    int32_t FileSz = 0;
-    uint8_t* pbuff = NULL;
-    FILE* file = fopen(fileName, "rb");
-    if (NULL == file)
-    {
-        printf("Error while opening file.\n");
-        return 0;
-    }
-    else
-    {
-        fseek(file, 0, SEEK_END);
-        FileSz = FileLen = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        pbuff = (uint8_t*) malloc(8192);
-        while (FileLen > 0)
-        {
-            /* download the data into the command buffer by 2kb one shot */
-            uint16_t blocklen = FileLen > 8192 ? 8192 : (uint16_t) FileLen;
+	uint32_t fileSize = 0;
+	const uint32_t bytePerTrans = 1000;
+	uint8_t buff[1000];
 
-            /* copy the data into pbuff and then transfter it to command buffer */
-            fread(pbuff, 1, blocklen, file);
-            FileLen -= blocklen;
-            /* copy data continuously into command memory */
-            EVE_Hal_wrMem(s_pHalContext, ramOffset, pbuff, blocklen);
-            ramOffset += blocklen;
-        }
-        fclose(file);
-        free(pbuff);
-    }
-    return FileSz;
-#endif
-}
+	fileSize = FileIO_File_Open(file, FILEIO_E_FOPEN_READ);
+	EVE_CoCmd_loadImage(s_pHalContext, addr, option);
 
-/**
-* @brief Load image to RAM_G
-*
-*/
-static void helperloadDefaultImage() {
-    uint32_t fileSize = 0;
-    const uint32_t bytePerTrans = 1000;
-    uint8_t buff[1000];
-
-    const uint8_t* image = TEST_DIR "\\mandrill256.jpg";
-    fileSize = FileIO_File_Open(image, FILEIO_E_FOPEN_READ);
-
-    /* Decode jpg output into location 0 and output color format as RGB565 */
-    EVE_Cmd_wr32(s_pHalContext, CMD_LOADIMAGE);
-    EVE_Cmd_wr32(s_pHalContext, 0);//destination address of jpg decode
-    EVE_Cmd_wr32(s_pHalContext, 0);//output format of the bitmap
-
-    while (fileSize > 0) {
-        /* copy the data into pbuff and then transfter it to command buffer */
-        int bytes = FileIO_File_Read(buff, bytePerTrans);
-        EVE_Cmd_wrMem(s_pHalContext, buff, bytes);
-        fileSize -= bytes;
-    }
-    /* close the opened jpg file */
-    FileIO_File_Close();
+	while (fileSize > 0)
+	{
+		/* copy the data into pbuff and then transfter it to command buffer */
+		int bytes = FileIO_File_Read(buff, bytePerTrans);
+		EVE_Cmd_wrMem(s_pHalContext, buff, bytes);
+		fileSize -= bytes;
+	}
+	/* close the opened jpg file */
+	FileIO_File_Close();
+	EVE_Cmd_waitFlush(s_pHalContext);
 }
 
 /**
@@ -344,7 +301,7 @@ void SAMAPP_Bitmap_getImage()
     // Now getImage properties
     EVE_CoCmd_getImage(s_pHalContext, &source, &fmt, &w, &h, &palette);
 
-    printf("Loaded image: \nsource: %u, format: %u, width: %u, height: %u, palette: %u", 
+    printf("Loaded image: \nsource: %u, format: %u, width: %u, height: %u, palette: %u\n", 
         source, fmt,
         w, h, palette);
 #endif // EVE_SUPPORT_GEN == EVE4
@@ -475,8 +432,7 @@ void SAMAPP_Bitmap_dithering()
             otp |= OPT_DITHER;
         }
 
-        EVE_Util_loadImageFile(s_pHalContext, address, TEST_DIR "\\loadimage-dither-testcase.png", 0);
-        EVE_Cmd_waitFlush(s_pHalContext);
+        helperloadImage(TEST_DIR "\\loadimage-dither-testcase.png", address, otp);
 
         //Start drawing bitmap
         Display_Start(s_pHalContext);
@@ -962,7 +918,7 @@ void SAMAPP_Bitmap_rotateAndTranslate()
     uint16_t tile2_y = tile1_y;
 
     Draw_Text(s_pHalContext, "Example for: Bitmap rotate and translate");
-    helperloadDefaultImage();
+	helperloadImage(TEST_DIR "\\mandrill256.jpg", 0, 0);
 
     while (count++ < 60 * 10)
     { // wait 10 seconds, 60 FPS
@@ -1005,24 +961,9 @@ void SAMAPP_Bitmap_loadImage()
 
     Draw_Text(s_pHalContext, "Example for: CMD_LOADIMAGE");
 
-    fileSize = FileIO_File_Open(image, FILEIO_E_FOPEN_READ);
-
     /******************* Decode jpg output into location 0 and output color format as RGB565 *********************/
     Display_Start(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CMD_LOADIMAGE);
-    EVE_Cmd_wr32(s_pHalContext, 0); //destination address of jpg decode
-    EVE_Cmd_wr32(s_pHalContext, 0); //output format of the bitmap
-
-    while (fileSize > 0)
-    {
-        /* copy the data into pbuff and then transfter it to command buffer */
-        int bytes = FileIO_File_Read(buff, bytePerTrans);
-        EVE_Cmd_wrMem(s_pHalContext, buff, bytes);
-        fileSize -= bytes;
-    }
-    /* close the opened jpg file */
-    FileIO_File_Close();
-
+	helperloadImage(image, 0, 0);
     int32_t ImgW = 256, ImgH = 256;
     int16_t xoffset = (int16_t) ((s_pHalContext->Width - ImgW) / 2);
     int16_t yoffset = (int16_t) ((s_pHalContext->Height - ImgH) / 2);
@@ -1040,60 +981,28 @@ void SAMAPP_Bitmap_loadImage()
 */
 void SAMAPP_Bitmap_loadImageMono()
 {
-#define BUFFERSIZE 8192
-	uint8_t *pbuff;
-	int16_t ImgW;
-	int16_t ImgH;
-	int32_t xoffset;
-	int32_t yoffset;
+	int16_t ImgW = 256;
+	int16_t ImgH = 256;
 	const char *file = TEST_DIR "\\mandrill256.jpg";
-
-	ImgW = ImgH = 256;
-	xoffset = (s_pHalContext->Width - ImgW) / 2;
-	yoffset = (s_pHalContext->Height - ImgH) / 2;
 
 	Draw_Text(s_pHalContext, "Example for: Load image and display as monochromic image");
 
-	/* decode the jpeg data */
-	if (0 >= FileIO_File_Open(file, FILEIO_E_FOPEN_READ))
-	{
-		printf("Error in opening file %s \n", "mandrill256.jpg");
-		return;
-	}
-	pbuff = (uint8_t *)malloc(8192);
+	helperloadImage(file, 0, OPT_MONO);
 
-	/// Decode jpg output into location 0 and output color format as L8
-	EVE_CoCmd_dlStart(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 255, 255));
-	EVE_CoCmd_loadImage(s_pHalContext, 0, OPT_MONO);
-
-	int bytes = FileIO_File_Read(pbuff, BUFFERSIZE);
-	while (bytes)
-	{
-		uint16_t blocklen = bytes > BUFFERSIZE ? BUFFERSIZE : (uint16_t)bytes;
-
-		/* copy data continuously into command memory */
-		EVE_Cmd_wrMem(s_pHalContext, pbuff, blocklen); // alignment is already taken care by this api
-		bytes = FileIO_File_Read(pbuff, BUFFERSIZE);
-	}
-	free(pbuff);
-	FileIO_File_Close();
-	EVE_Cmd_waitFlush(s_pHalContext);
+	// Decode jpg output into location 0 and output color format as L8
+	Display_Start(s_pHalContext);
 
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2F((int16_t)(xoffset * 16), (int16_t)(yoffset * 16)));
+	EVE_CoDl_blendFunc(s_pHalContext, SRC_ALPHA, ZERO);
+	EVE_CoCmd_setBitmap(s_pHalContext, 0, L8, ImgW, ImgH);
+	EVE_CoDl_vertex2f_4(s_pHalContext, (s_pHalContext->Width - ImgW) / 2 * 16, (s_pHalContext->Height - ImgH) / 2 * 16);
+	EVE_CoDl_blendFunc_default(s_pHalContext);
 	EVE_CoDl_end(s_pHalContext);
 
-	xoffset = s_pHalContext->Width / 2;
-	yoffset = s_pHalContext->Height / 2;
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(0, 0, 255));
-	EVE_CoCmd_text(s_pHalContext, (int16_t)xoffset, (int16_t)yoffset, 26, OPT_CENTER,
-	    "Display bitmap by jpg decode L8");
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 255);
+	EVE_CoCmd_text(s_pHalContext, (s_pHalContext->Width) / 2, (s_pHalContext->Height) / 2, 26, OPT_CENTER, "Display bitmap by jpg decode L8");
 
-	EVE_CoCmd_dl(s_pHalContext, DISPLAY());
-	EVE_CoCmd_swap(s_pHalContext);
-	EVE_Cmd_waitFlush(s_pHalContext);
+	Display_End(s_pHalContext);
 	SAMAPP_DELAY;
 }
 
@@ -1512,7 +1421,7 @@ void SAMAPP_Bitmap_DXT1L2PALETTED()
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 50, 31, OPT_CENTER,
 	    "DXT1L2Paletted: 28.6KB.");
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 80, 31, OPT_CENTER,
-	    "RGB565: 150KB.");
+	    "Original: 150KB.");
 
 	EVE_CoCmd_dl(s_pHalContext, DISPLAY());
 	// swap the current display list with the new display list
@@ -1535,52 +1444,37 @@ void SAMAPP_Bitmap_paletted8()
 
     Draw_Text(s_pHalContext, "Example for: Paletted8 format");
 
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\Background_index.raw", RAM_G, LOAD);
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\Background_lut.raw", pal_mem_addr, LOAD);
+	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\Background_index.raw", RAM_G);
+	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\Background_lut.raw", pal_mem_addr);
 
     p_bmhdr = &SAMAPP_Bitmap_RawData_Header[3];
-    EVE_Cmd_waitFlush(s_pHalContext);
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BEGIN(EDGE_STRIP_B));// clear screen
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(s_pHalContext->Width * 16, 0));
+	Display_Start(s_pHalContext);
+    EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
+	EVE_CoDl_bitmapLayout(s_pHalContext, p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height);
+	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height);
 
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-	App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT_H(p_bmhdr->Stride >> 10, p_bmhdr->Height >> 9));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS); // start drawing bitmaps
 
-    App_WrDl_Buffer(s_pHalContext,
-        BITMAP_SIZE(NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE_H(p_bmhdr->Width >> 9, p_bmhdr->Height >> 9));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS)); // start drawing bitmaps
+    EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
+	EVE_CoDl_colorMask(s_pHalContext, 0, 0, 0, 1);
+	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 3);
+	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
 
-    App_WrDl_Buffer(s_pHalContext, BLEND_FUNC(ONE, ZERO));
+	EVE_CoDl_blendFunc(s_pHalContext, DST_ALPHA, ONE_MINUS_DST_ALPHA);
+	EVE_CoDl_colorMask(s_pHalContext, 1, 0, 0, 0);
+	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 2);
+	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
 
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 0, 1));
-	App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(pal_mem_addr + 3));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
+	EVE_CoDl_colorMask(s_pHalContext, 0, 1, 0, 0);
+	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 1);
+	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
 
-    App_WrDl_Buffer(s_pHalContext, BLEND_FUNC(DST_ALPHA, ONE_MINUS_DST_ALPHA));
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(1, 0, 0, 0));
-	App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(pal_mem_addr + 2));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
+    EVE_CoDl_colorMask(s_pHalContext, 0, 0, 1, 0);
+	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 0);
+	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
 
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 1, 0, 0));
-	App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(pal_mem_addr + 1));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 1, 0));
-	App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(pal_mem_addr + 0));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_DELAY;
 #endif
 }
@@ -1845,7 +1739,6 @@ void SAMAPP_Bitmap()
     SAMAPP_Bitmap_getImage();
     SAMAPP_Bitmap_nonSquareDisplay();
     SAMAPP_Bitmap_dithering();
-    SAMAPP_Bitmap_ASTC();
     SAMAPP_Bitmap_ASTCLayoutRAMG();
     SAMAPP_Bitmap_ASTCLayoutFlash();
     SAMAPP_Bitmap_ASTCMultiCellRAMG();
