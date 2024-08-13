@@ -320,9 +320,11 @@ This version is v1.7.0-rc1
 ## Release log
 ```
 v1.7.0-rc1
-  - Updated HTML page
   - Updated EveAppsConfig tool
-  - Fixed issues found in EveApps v1.6.0_RC1 release
+  - Resolve the Flash blob inconsistency issue and update the README with a reminder
+  - Address the audio playback freeze problem
+  - Fix the underrun issue affecting certain demos, including HDPictureViewer, Lift2, and AudioPlayback
+  - Correct the errors in the inflate function, formatted text display, and bulk transfer function in utility sample application
 v1.6.0-rc1
   - Add online document support by Doxygen
   - Add DXT1, DXT1L2, DXT1PALETTED and DXT1L2PALETTED support in SampleApp / Bitmap
