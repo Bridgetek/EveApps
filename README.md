@@ -1,4 +1,4 @@
-
+![image](https://github.com/user-attachments/assets/f71682cf-6d24-4572-a7d8-6aca959fed0f)
 
 # EveApps
 
@@ -104,13 +104,15 @@ nmake [Project name]
 Example: 
 ```
 $ cmake.exe -G "NMake Makefiles" -DEVE_APPS_PLATFORM=EVE_PLATFORM_RP2040 -DEVE_APPS_GRAPHICS=EVE_GRAPHICS_BT817 -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA ..
-$ nmake 
+$ nmake SampleApp_Widget
 ```
 
-Display resolution is set via `EVE_APPS_DISPLAY`, example: cmake -G "NMake Makefiles"  -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA
+Display resolution is selected via preprocessor macro `EVE_APPS_DISPLAY`, for example:   
+`cmake -G "NMake Makefiles"  -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA  xxx`   
 By default, WVGA is set
 
-EVE graphics is set via `EVE_APPS_GRAPHICS`, example: cmake -G "NMake Makefiles"  -DEVE_APPS_GRAPHICS=EVE_GRAPHICS_BT815
+EVE Chip is selected via preprocessor macro `EVE_APPS_GRAPHICS`, for example:   
+`cmake -G "NMake Makefiles"  -DEVE_APPS_GRAPHICS=EVE_GRAPHICS_BT815 xxx`   
 By default, MULTI is set
 
 #### Connections
