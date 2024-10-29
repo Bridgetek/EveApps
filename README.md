@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/f71682cf-6d24-4572-a7d8-6aca959fed0f)
 
 # EveApps
 
