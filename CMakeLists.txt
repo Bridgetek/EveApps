@@ -357,7 +357,6 @@ IF(WIN32 AND ((EVE_APPS_PLATFORM STREQUAL "MULTI") OR (EVE_APPS_GRAPHICS STREQUA
 ENDIF()
 
 # Common setup #################################################################
-ADD_SUBDIRECTORY(dependencies)
 ADD_SUBDIRECTORY(common)
 INCLUDE_DIRECTORIES("common/eve_hal")
 INCLUDE_DIRECTORIES("common/eve_hal/Hdr")
