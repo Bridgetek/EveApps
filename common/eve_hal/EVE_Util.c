@@ -1370,7 +1370,6 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 			eve_printf_debug("%s channel SPI (%s unsupported)\n", spiChannels, requested);
 #endif
 	}
-#endif
 
 	/* Sanity check after SPI change */
 	if (EVE_Hal_rd32(phost, REG_FREQUENCY) != freq)
@@ -1385,6 +1384,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 		}
 		return false;
 	}
+#endif
 
 	/* In some cases, for example, QSPI on MM817EV board with MM930LITE,
 	   the drive strength is required to adjust for better signal integrity.

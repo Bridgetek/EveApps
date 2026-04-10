@@ -407,11 +407,7 @@ size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, co
 	{
 		eve_printf_debug("Re-mount SD card\n");
 		s_FatFSLoaded = false;
-#ifndef RP2040_PLATFORM
 		sdhost_init();
-#else
-		sd_init_card();
-#endif
 		EVE_Util_loadSdCard(phost);
 		fResult = f_open(&InfSrc, filename, FA_READ | FA_OPEN_EXISTING);
 	}
