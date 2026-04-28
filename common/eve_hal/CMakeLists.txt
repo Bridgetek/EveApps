@@ -25,24 +25,9 @@ ELSE()
   )
 ENDIF()
 
-IF (WIN32)
-  TARGET_LINK_LIBRARIES(eve_hal
-    libMPSSE
-    LibFT4222
-    ftd2xx
-    bt8xxemu
-  )
-ELSEIF(UNIX)
-  TARGET_LINK_LIBRARIES(eve_hal
-    # libMPSSE
-    ft4222
-    # ftd2xx
-    # bt8xxemu
-  )
-ELSEIF(IS_PLATFORM_RP2040)
+IF(IS_PLATFORM_RP2040)
   # Add the standard library to the build
   TARGET_LINK_LIBRARIES(eve_hal pico_stdlib)
-  
   # Add any user requested libraries
   TARGET_LINK_LIBRARIES(eve_hal
     hardware_spi
@@ -55,6 +40,20 @@ ELSEIF(IS_PLATFORM_FT900)
 ELSEIF(IS_PLATFORM_FT930)
   TARGET_LINK_LIBRARIES(eve_hal fatfs)
   TARGET_LINK_LIBRARIES(eve_hal "ft930;m;c;stub")
+ELSEIF (WIN32)
+  TARGET_LINK_LIBRARIES(eve_hal
+    libMPSSE
+    LibFT4222
+    ftd2xx
+    bt8xxemu
+  )
+ELSEIF(UNIX)
+  TARGET_LINK_LIBRARIES(eve_hal
+    # libMPSSE
+    ft4222
+    # ftd2xx
+    # bt8xxemu
+  ）
 ENDIF()
 
 IF (WIN32)
