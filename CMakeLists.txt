@@ -318,7 +318,11 @@ ENDIF()
 # C language version ###########################################################
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-
+# Suppress GCC 14 strict pointer type errors globally (temporary)
+add_compile_options(
+    -Wno-incompatible-pointer-types   # function pointer signature mismatches
+    -Wno-implicit-function-declaration # missing #include (malloc, sd_init_card, etc.)
+)
 # Most graphics boards have a default display and platform specified in the configuration header
 # MULTI and DEFAULT behave the same, it depends on the selected graphics board
 # For embedded targets, the platforma always needs to be specified, though, since CMake needs to set the proper build options
