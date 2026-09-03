@@ -161,8 +161,6 @@
 #endif /* RTC_PRESENT */
 
 /* Standard C libraries */
-#define ESD_USING_NEW_LIB /**< Using NewLib C Library for runtime */
-
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>

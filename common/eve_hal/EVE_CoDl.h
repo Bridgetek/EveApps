@@ -10,8 +10,6 @@
  * If EVE_DL_OPTIMIZE is set to 1 in EVE_Config, these functions will ignore duplicate calls.
  * To bypass optmization, call `EVE_CoCmd_dl` directly (within a subroutine or saved context.)
  *
- * If ESD_DL_END_PRIMITIVE is set to 0 in EVE_Config, the END() instruction will be avoided.
- *
  * Compatibility:
  * - EVE_CoDl_vertexFormat and EVE_CoDl_vertex2f implement fallback functionality for
  *   VERTEX_FORMAT, VERTEX_TRANSLATE_X, and VERTEX_TRANSLATE_Y on FT80X series.
@@ -57,11 +55,11 @@
 /**
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_CoDlImpl_resetDlState(EVE_HalContext *phost);
+void EVE_CoDlImpl_resetDlState(EVE_HalContext *phost);
 /**
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost);
+void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost);
 
 /**
  * @param phost Pointer to Hal context
@@ -71,11 +69,6 @@ static inline void EVE_CoDl_display(EVE_HalContext *phost)
 	EVE_CoCmd_dl(phost, DISPLAY());
 }
 
-/* Fixed point vertex with subprecision depending on current vertex format */
-ESD_FUNCTION(EVE_CoDl_vertex2f, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(x, Type = int16_t)
-ESD_PARAMETER(y, Type = int16_t)
 /**
  * @brief Fixed point vertex with subprecision depending on current vertex format
  *
@@ -85,20 +78,10 @@ ESD_PARAMETER(y, Type = int16_t)
  */
 static inline void EVE_CoDl_vertex2f(EVE_HalContext *phost, int16_t x, int16_t y)
 {
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (EVE_CHIPID < EVE_FT810)
-	{
-		/* Compatibility */
-		x <<= EVE_DL_STATE.VertexFormat; /* 4 - frac */
-		y <<= EVE_DL_STATE.VertexFormat; /* 4 - frac */
-		x += EVE_DL_STATE.VertexTranslateX;
-		y += EVE_DL_STATE.VertexTranslateY;
-	}
-#endif
 	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 }
 
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 /**
  * @param phost Pointer to Hal context
  * @param x
@@ -107,15 +90,9 @@ static inline void EVE_CoDl_vertex2f(EVE_HalContext *phost, int16_t x, int16_t y
  * @param cell
  * @note Compatibility for FT80X series
  */
-EVE_HAL_EXPORT void EVE_CoDlImpl_vertex2ii_translate(EVE_HalContext *phost, uint16_t x, uint16_t y, uint8_t handle, uint8_t cell);
+void EVE_CoDlImpl_vertex2ii_translate(EVE_HalContext *phost, uint16_t x, uint16_t y, uint8_t handle, uint8_t cell);
 #endif
 
-ESD_FUNCTION(EVE_CoDl_vertex2ii, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(x, Type = uint16_t)
-ESD_PARAMETER(y, Type = uint16_t)
-ESD_PARAMETER(handle, Type = uint8_t)
-ESD_PARAMETER(cell, Type = uint8_t)
 /**
  * @param phost Pointer to Hal context
  * @param x
@@ -125,7 +102,7 @@ ESD_PARAMETER(cell, Type = uint8_t)
  */
 inline static void EVE_CoDl_vertex2ii(EVE_HalContext *phost, uint16_t x, uint16_t y, uint8_t handle, uint8_t cell)
 {
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 	if (EVE_CHIPID < EVE_FT810 && (EVE_DL_STATE.VertexTranslateX || EVE_DL_STATE.VertexTranslateY))
 	{
 		/* Compatibility for FT80X series */
@@ -154,13 +131,9 @@ inline static void EVE_CoDl_bitmapSource(EVE_HalContext *phost, uint32_t addr)
  */
 inline static void EVE_CoDl_bitmapSource_ex(EVE_HalContext *phost, uint32_t addr, bool flash)
 {
-	EVE_CoCmd_dl(phost, BITMAP_SOURCE2(flash, addr));
+	EVE_CoCmd_dl(phost, BITMAP_SOURCE_EX(flash, addr));
 }
 
-/* Specify clear color RGB */
-ESD_FUNCTION(EVE_CoDl_clearColorRgb_ex, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(c, Type = rgb32_t, DisplayName = "Color")
 /**
  * @brief Specify clear color RGB
  *
@@ -185,10 +158,6 @@ inline static void EVE_CoDl_clearColorRgb(EVE_HalContext *phost, uint8_t r, uint
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(r, g, b));
 }
 
-/* Specify clear alpha channel */
-ESD_FUNCTION(EVE_CoDl_clearColorA, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(alpha, Type = uint8_t, DisplayName = "Alpha", Default = 255, Min = 0, Max = 255)
 /**
  * @brief Specify clear alpha channel
  *
@@ -200,10 +169,6 @@ inline static void EVE_CoDl_clearColorA(EVE_HalContext *phost, uint8_t alpha)
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_A(alpha));
 }
 
-/* Specify clear color: Alpha (bits 31:24) + RGB (bits 23:0) */
-ESD_FUNCTION(EVE_CoDl_clearColorArgb_ex, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(c, Type = argb32_t, DisplayName = "Color")
 /**
  * @brief Specify clear color: Alpha (bits 31:24) + RGB (bits 23:0)
  *
@@ -216,12 +181,8 @@ inline static void EVE_CoDl_clearColorArgb_ex(EVE_HalContext *phost, uint32_t c)
 	EVE_CoDl_clearColorA(phost, c >> 24);
 }
 
-/* Set current tag. Must be returned to 255 after usage, to ensure next widgets don't draw with invalid tag */
-ESD_FUNCTION(EVE_CoDl_tag, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(s, Type = uint8_t, DisplayName = "Tag", Default = 255, Min = 0, Max = 255)
 /**
- * @brief Set current tag.
+ * @brief Set current tag. Must be returned to 255 after usage, to ensure next widgets don't draw with invalid tag
  *
  * @warning: Must be returned to 255 after usage, to ensure next widgets don't draw with invalid tag
  * @param phost Pointer to Hal context
@@ -232,10 +193,6 @@ inline static void EVE_CoDl_tag(EVE_HalContext *phost, uint8_t s)
 	EVE_CoCmd_dl(phost, TAG(s));
 }
 
-/* Specify color RGB */
-ESD_FUNCTION(EVE_CoDl_colorRgb_ex, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(c, Type = rgb32_t, DisplayName = "Color")
 /**
  * @brief Specify color RGB
  *
@@ -270,10 +227,6 @@ inline static void EVE_CoDl_colorRgb(EVE_HalContext *phost, uint8_t r, uint8_t g
 	EVE_CoDl_colorRgb_ex(phost, rgb);
 }
 
-/* Specify alpha channel */
-ESD_FUNCTION(EVE_CoDl_colorA, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(alpha, Type = uint8_t, DisplayName = "Alpha", Default = 255, Min = 0, Max = 255)
 /**
  * @brief Specify alpha channel
  *
@@ -293,10 +246,6 @@ inline static void EVE_CoDl_colorA(EVE_HalContext *phost, uint8_t alpha)
 #endif
 }
 
-/* Specify color: Alpha (bits 31:24) + RGB (bits 23:0) */
-ESD_FUNCTION(EVE_CoDl_colorArgb_ex, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(c, Type = argb32_t, DisplayName = "Color")
 /**
  * @brief Specify color: Alpha (bits 31:24) + RGB (bits 23:0)
  *
@@ -309,10 +258,6 @@ inline static void EVE_CoDl_colorArgb_ex(EVE_HalContext *phost, uint32_t c)
 	EVE_CoDl_colorA(phost, c >> 24);
 }
 
-/* Specify bitmap handle, see BITMAP_HANDLE */
-ESD_FUNCTION(EVE_CoDl_bitmapHandle, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(handle, Type = uint8_t, Min = 0, Max = 31)
 /**
  * @brief Specify bitmap handle, see BITMAP_HANDLE
  *
@@ -332,10 +277,6 @@ inline static void EVE_CoDl_bitmapHandle(EVE_HalContext *phost, uint8_t handle)
 #endif
 }
 
-/* Specify cell number for bitmap, see CELL */
-ESD_FUNCTION(EVE_CoDl_cell, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(cell, Type = uint8_t, Min = 0, Max = 255)
 /**
  * @brief Specify cell number for bitmap, see CELL
  *
@@ -440,9 +381,6 @@ static inline void EVE_CoDl_stencilOp(EVE_HalContext *phost, uint8_t sfail, uint
 	EVE_CoCmd_dl(phost, STENCIL_OP(sfail, spass));
 }
 
-ESD_FUNCTION(EVE_CoDl_pointSize, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(size, Type = esd_int16_f4_t)
 /**
  * @param phost Pointer to Hal context
  * @param size
@@ -460,9 +398,6 @@ inline static void EVE_CoDl_pointSize(EVE_HalContext *phost, int16_t size)
 #endif
 }
 
-ESD_FUNCTION(EVE_CoDl_lineWidth, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(width, Type = esd_int16_f4_t)
 /**
  * @param phost Pointer to Hal context
  * @param width
@@ -741,9 +676,6 @@ static inline void EVE_CoDl_jump(EVE_HalContext *phost, uint16_t dest)
 	EVE_CoCmd_dl(phost, JUMP(dest));
 }
 
-ESD_FUNCTION(EVE_CoDl_begin, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(prim, Type = uint8_t)
 /**
  * @param phost Pointer to Hal context
  * @param prim
@@ -787,8 +719,6 @@ static inline void EVE_CoDl_colorMask(EVE_HalContext *phost, bool r, bool g, boo
 	EVE_CoCmd_dl(phost, COLOR_MASK(r, g, b, a));
 }
 
-ESD_FUNCTION(EVE_CoDl_end, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 /**
  * @param phost Pointer to Hal context
  */
@@ -807,9 +737,6 @@ inline static void EVE_CoDl_end(EVE_HalContext *phost)
 #endif
 }
 
-/* Save EVE context, see SAVE_CONTEXT */
-ESD_FUNCTION(EVE_CoDl_saveContext, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 /**
  * @brief Save EVE context, see SAVE_CONTEXT
  *
@@ -817,20 +744,17 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
  */
 inline static void EVE_CoDl_saveContext(EVE_HalContext *phost)
 {
-#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 	uint8_t nextState;
 #endif
 	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
-#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 	nextState = (phost->DlStateIndex + 1) & EVE_DL_STATE_STACK_MASK;
 	phost->DlState[nextState] = phost->DlState[phost->DlStateIndex];
 	phost->DlStateIndex = nextState;
 #endif
 }
 
-/* Restore EVE context, see RESTORE_CONTEXT */
-ESD_FUNCTION(EVE_CoDl_restoreContext, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 /**
  * @brief Restore EVE context, see RESTORE_CONTEXT
  *
@@ -839,7 +763,7 @@ ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Int
 inline static void EVE_CoDl_restoreContext(EVE_HalContext *phost)
 {
 	EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
-#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 	phost->DlStateIndex = (phost->DlStateIndex - 1) & EVE_DL_STATE_STACK_MASK;
 #endif
 }
@@ -861,11 +785,6 @@ static inline void EVE_CoDl_macro(EVE_HalContext *phost, uint16_t m)
 	EVE_CoCmd_dl(phost, MACRO(m));
 }
 
-ESD_FUNCTION(EVE_CoDl_clear, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(c, Type = bool, DisplayName = "Clear Color")
-ESD_PARAMETER(s, Type = bool, DisplayName = "Clear Stencil")
-ESD_PARAMETER(t, Type = bool, DisplayName = "Clear Tag")
 /**
  * @param phost Pointer to Hal context
  * @param c clear color
@@ -883,7 +802,7 @@ static inline void EVE_CoDl_clear(EVE_HalContext *phost, bool c, bool s, bool t)
  */
 static inline void EVE_CoDl_vertexFormat(EVE_HalContext *phost, uint8_t frac)
 {
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	if (EVE_CHIPID >= EVE_FT810)
 	{
 #if EVE_DL_OPTIMIZE
@@ -899,17 +818,13 @@ static inline void EVE_CoDl_vertexFormat(EVE_HalContext *phost, uint8_t frac)
 	else
 #endif
 	{
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 		/* Compatibility for FT80X series */
 		EVE_DL_STATE.VertexFormat = (4 - frac);
 #endif
 	}
 }
 
-/* Set palette source, see PALETTE_SOURCE command */
-ESD_FUNCTION(EVE_CoDl_paletteSource, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(addr, Type = uint32_t, Min = 0)
 /**
  * @brief Set palette source, see PALETTE_SOURCE command
  *
@@ -940,7 +855,7 @@ inline static void EVE_CoDl_paletteSource(EVE_HalContext *phost, uint32_t addr)
  */
 static inline void EVE_CoDl_vertexTranslateX(EVE_HalContext *phost, int16_t x)
 {
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	if (EVE_CHIPID >= EVE_FT810)
 	{
 		EVE_CoCmd_dl(phost, VERTEX_TRANSLATE_X(x));
@@ -948,7 +863,7 @@ static inline void EVE_CoDl_vertexTranslateX(EVE_HalContext *phost, int16_t x)
 	else
 #endif
 	{
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 		/* Compatibility for FT80X series */
 		EVE_DL_STATE.VertexTranslateX = x;
 #endif
@@ -961,7 +876,7 @@ static inline void EVE_CoDl_vertexTranslateX(EVE_HalContext *phost, int16_t x)
  */
 static inline void EVE_CoDl_vertexTranslateY(EVE_HalContext *phost, int16_t y)
 {
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	if (EVE_CHIPID >= EVE_FT810)
 	{
 		EVE_CoCmd_dl(phost, VERTEX_TRANSLATE_Y(y));
@@ -969,7 +884,7 @@ static inline void EVE_CoDl_vertexTranslateY(EVE_HalContext *phost, int16_t y)
 	else
 #endif
 	{
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 		/* Compatibility for FT80X series */
 		EVE_DL_STATE.VertexTranslateY = y;
 #endif
@@ -981,7 +896,7 @@ static inline void EVE_CoDl_vertexTranslateY(EVE_HalContext *phost, int16_t y)
  */
 static inline void EVE_CoDl_nop(EVE_HalContext *phost)
 {
-#if (EVE_SUPPORT_CHIPID >= EVE_BT815) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 	if (EVE_CHIPID >= EVE_BT815)
 	{
 		EVE_CoCmd_dl(phost, NOP());
@@ -995,7 +910,7 @@ static inline void EVE_CoDl_nop(EVE_HalContext *phost)
  */
 static inline void EVE_CoDl_bitmapExtFormat(EVE_HalContext *phost, uint16_t format)
 {
-#if (EVE_SUPPORT_CHIPID >= EVE_BT815) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 	if (EVE_CHIPID >= EVE_BT815)
 	{
 		EVE_CoCmd_dl(phost, BITMAP_EXT_FORMAT(format));
@@ -1012,7 +927,7 @@ static inline void EVE_CoDl_bitmapExtFormat(EVE_HalContext *phost, uint16_t form
  */
 static inline void EVE_CoDl_bitmapSwizzle(EVE_HalContext *phost, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-#if (EVE_SUPPORT_CHIPID >= EVE_BT815) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 	if (EVE_CHIPID >= EVE_BT815)
 	{
 		EVE_CoCmd_dl(phost, BITMAP_SWIZZLE(r, g, b, a));
@@ -1020,11 +935,6 @@ static inline void EVE_CoDl_bitmapSwizzle(EVE_HalContext *phost, uint8_t r, uint
 #endif
 }
 
-/* Fixed point vertex using 4 bits subprecision */
-ESD_FUNCTION(EVE_CoDl_vertex2f_4, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(x, Type = esd_int16_f4_t)
-ESD_PARAMETER(y, Type = esd_int16_f4_t)
 /**
  * @brief Fixed point vertex using 4 bits subprecision
  *
@@ -1046,11 +956,6 @@ inline static void EVE_CoDl_vertex2f_4(EVE_HalContext *phost, int16_t x, int16_t
 	}
 }
 
-/* Fixed point vertex using 2 bits subprecision */
-ESD_FUNCTION(EVE_CoDl_vertex2f_2, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(x, Type = esd_int16_f2_t)
-ESD_PARAMETER(y, Type = esd_int16_f2_t)
 /**
  * @brief Fixed point vertex using 2 bits subprecision
  *
@@ -1064,11 +969,6 @@ inline static void EVE_CoDl_vertex2f_2(EVE_HalContext *phost, int16_t x, int16_t
 	EVE_CoDl_vertex2f(phost, x, y);
 }
 
-/* Fixed point vertex using 0 bits subprecision, or integer point vertex */
-ESD_FUNCTION(EVE_CoDl_vertex2f_0, Type = void, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
-ESD_PARAMETER(x, Type = int16_t)
-ESD_PARAMETER(y, Type = int16_t)
 /**
  * @brief Fixed point vertex using 0 bits subprecision, or integer point vertex
  *

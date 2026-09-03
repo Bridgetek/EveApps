@@ -35,7 +35,7 @@
 ***********************************************************************
 **********************************************************************/
 
-EVE_HAL_EXPORT void EVE_CoCmd_d(EVE_HalContext *phost, uint32_t cmd)
+void EVE_CoCmd_d(EVE_HalContext *phost, uint32_t cmd)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, cmd, 0))
@@ -45,7 +45,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_d(EVE_HalContext *phost, uint32_t cmd)
 	EVE_Cmd_wr32(phost, cmd);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0)
+void EVE_CoCmd_dd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, cmd, d0))
@@ -58,7 +58,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dd(EVE_HalContext *phost, uint32_t cmd, uint32_t d
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_ddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1)
+void EVE_CoCmd_ddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, cmd, d0))
@@ -72,7 +72,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_ddd(EVE_HalContext *phost, uint32_t cmd, uint32_t 
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2)
+void EVE_CoCmd_dddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, cmd, d0))
@@ -87,7 +87,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dddd(EVE_HalContext *phost, uint32_t cmd, uint32_t
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_ddddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2, uint32_t d3)
+void EVE_CoCmd_ddddd(EVE_HalContext *phost, uint32_t cmd, uint32_t d0, uint32_t d1, uint32_t d2, uint32_t d3)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, cmd, d0))
@@ -103,7 +103,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_ddddd(EVE_HalContext *phost, uint32_t cmd, uint32_
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_ddww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_ddww(EVE_HalContext *phost, uint32_t cmd,
     uint32_t d0, uint16_t w1, uint16_t w2)
 {
 #if EVE_CMD_HOOKS
@@ -119,7 +119,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_ddww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_ddwww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_ddwww(EVE_HalContext *phost, uint32_t cmd,
     uint32_t d0, uint16_t w1, uint16_t w2, uint16_t w3)
 {
 #if EVE_CMD_HOOKS
@@ -137,7 +137,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_ddwww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dddwwww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dddwwww(EVE_HalContext *phost, uint32_t cmd,
     uint32_t d0, uint32_t d1,
     uint16_t w2, uint16_t w3, uint16_t w4, uint16_t w5)
 {
@@ -157,7 +157,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dddwwww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwdd(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwdd(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint32_t d2, uint32_t d3)
 {
 #if EVE_CMD_HOOKS
@@ -174,7 +174,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwdd(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwdwwd(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwdwwd(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint32_t d2,
     uint16_t w3, uint16_t w4, uint32_t d5)
 {
@@ -194,7 +194,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwdwwd(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwdw(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwdw(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint32_t d4, uint16_t w5)
 {
@@ -215,7 +215,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwdw(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwdww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwdww(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint32_t d4, uint16_t w5, uint16_t w6)
 {
@@ -236,7 +236,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwdww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwww(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3)
 {
 #if EVE_CMD_HOOKS
@@ -253,7 +253,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwww(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3, uint16_t w4)
 {
 #if EVE_CMD_HOOKS
@@ -272,7 +272,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwd(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwd(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3, uint32_t d4)
 {
 #if EVE_CMD_HOOKS
@@ -290,7 +290,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwd(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwwww(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint16_t w4, uint16_t w5, uint16_t w6)
 {
@@ -312,7 +312,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwww(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwwwww(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint16_t w4, uint16_t w5, uint16_t w6, uint16_t w7)
 {
@@ -334,7 +334,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwww(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwwwz(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint16_t w4, uint16_t w5, const char *s)
 {
@@ -355,7 +355,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz_s(EVE_HalContext *phost, uint32_t cmd,
+void EVE_CoCmd_dwwwwwwz_s(EVE_HalContext *phost, uint32_t cmd,
     uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
     uint16_t w4, uint16_t w5, const char *s, uint32_t len)
 {
@@ -376,18 +376,11 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz_s(EVE_HalContext *phost, uint32_t cmd,
 	EVE_Cmd_endFunc(phost);
 }
 
-#if defined(_DEBUG) && defined(EVE_MULTI_GRAPHICS_TARGET)
-EVE_HAL_EXPORT void EVE_CoCmd_debugUnsupported(const char *cmd, uint32_t chipId)
-{
-	eve_printf_debug("Coprocessor command %s is not supported on target platform %lx\n", cmd, (unsigned long)chipId);
-}
-#endif
-
 /**********************************************************************
 ***********************************************************************
 **********************************************************************/
 
-EVE_HAL_EXPORT bool EVE_CoCmd_getMatrix(EVE_HalContext *phost, int32_t *m)
+bool EVE_CoCmd_getMatrix(EVE_HalContext *phost, int32_t *m)
 {
 	uint16_t resAddr;
 	int i;
@@ -415,7 +408,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_getMatrix(EVE_HalContext *phost, int32_t *m)
 	return true;
 }
 
-EVE_HAL_EXPORT void EVE_CoCmd_setRotate(EVE_HalContext *phost, uint32_t r)
+void EVE_CoCmd_setRotate(EVE_HalContext *phost, uint32_t r)
 {
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	const bool swapXY = EVE_CHIPID >= EVE_FT810 ? r & 0x2 : false;
@@ -466,11 +459,9 @@ EVE_HAL_EXPORT void EVE_CoCmd_setRotate(EVE_HalContext *phost, uint32_t r)
 /**
  * @returns new frequency, or 0 in case of failure
  */
-EVE_HAL_EXPORT uint32_t EVE_CoCmd_pclkFreq(EVE_HalContext *phost, uint32_t ftarget, int32_t rounding)
+uint32_t EVE_CoCmd_pclkFreq(EVE_HalContext *phost, uint32_t ftarget, int32_t rounding)
 {
 	uint16_t resAddr;
-
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_PCLKFREQ, EVE_CHIPID >= EVE_BT817, 0);
 
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_PCLKFREQ, ftarget))
@@ -496,7 +487,7 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_pclkFreq(EVE_HalContext *phost, uint32_t ftarg
 ***********************************************************************
 **********************************************************************/
 
-EVE_HAL_EXPORT uint32_t EVE_CoCmd_calibrate(EVE_HalContext *phost)
+uint32_t EVE_CoCmd_calibrate(EVE_HalContext *phost)
 {
 	uint16_t resAddr;
 
@@ -522,11 +513,9 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_calibrate(EVE_HalContext *phost)
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 
-EVE_HAL_EXPORT bool EVE_CoCmd_animStart(EVE_HalContext *phost, int32_t ch, uint32_t aoptr, uint32_t loop)
+bool EVE_CoCmd_animStart(EVE_HalContext *phost, int32_t ch, uint32_t aoptr, uint32_t loop)
 {
 	uint32_t flashStatus;
-
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_ANIMSTART, EVE_CHIPID >= EVE_BT815, false);
 
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_ANIMSTART, ch))
@@ -556,11 +545,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_animStart(EVE_HalContext *phost, int32_t ch, uint3
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 
-EVE_HAL_EXPORT uint32_t EVE_CoCmd_calibrateSub(EVE_HalContext *phost, uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+uint32_t EVE_CoCmd_calibrateSub(EVE_HalContext *phost, uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
 	uint16_t resAddr;
-
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_CALIBRATESUB, EVE_CHIPID >= EVE_BT817, 0);
 
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_CALIBRATESUB, 0))

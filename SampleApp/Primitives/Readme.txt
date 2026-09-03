@@ -87,12 +87,12 @@
 4. CONFIGURATION INSTRUCTIONS
     Sample application uses the macros to configure the platforms: 
 	
-    Host platform: Defined with ESD_TARGET_PLATFORM, such as:
+    Host platform: The host platform defines the system where the application runs, such as:
         - Window host: EVE_PLATFORM_FT4222, EVE_PLATFORM_MPSSE
         - Emulator   : EVE_PLATFORM_BT8XXEMU
         - FT9X   host: MM900EV1A, MM900EV1B...
     
-    EVE platform: Defined with ESD_TARGET_GRAPHICS, such as:
+    EVE platform: EVE chip definition, such as:
 		EVE_GRAPHICS_FT800  EVE_GRAPHICS_FT801
 		EVE_GRAPHICS_FT810  EVE_GRAPHICS_FT811
 		EVE_GRAPHICS_FT812  EVE_GRAPHICS_FT813

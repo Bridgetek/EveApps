@@ -42,13 +42,13 @@
  * @return true True if ok
  * @return false False if error
  */
-EVE_HAL_EXPORT bool EVE_Util_loadSdCard(EVE_HalContext *phost)
+bool EVE_Util_loadSdCard(EVE_HalContext *phost)
 {
 	/* no-op */
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_Util_sdCardReady(EVE_HalContext *phost)
+bool EVE_Util_sdCardReady(EVE_HalContext *phost)
 {
 	/* no-op */
 	return true;
@@ -66,7 +66,7 @@ EVE_HAL_EXPORT bool EVE_Util_sdCardReady(EVE_HalContext *phost)
 #ifdef _WIN32
 static bool loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename, const wchar_t *filenameW)
 #else
-EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename)
+bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename)
 #endif
 {
 	FILE *afile;
@@ -115,12 +115,12 @@ EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename)
+bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename)
 {
 	return loadRawFile(phost, address, filename, NULL);
 }
 
-EVE_HAL_EXPORT bool EVE_Util_loadRawFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename)
+bool EVE_Util_loadRawFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename)
 {
 	return loadRawFile(phost, address, NULL, filename);
 }
@@ -139,7 +139,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadRawFileW(EVE_HalContext *phost, uint32_t addres
 #ifdef _WIN32
 static bool loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename, const wchar_t *filenameW)
 #else
-EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename)
+bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename)
 #endif
 {
 	FILE *afile;
@@ -197,12 +197,12 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t add
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename)
+bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename)
 {
 	return loadInflateFile(phost, address, filename, NULL);
 }
 
-EVE_HAL_EXPORT bool EVE_Util_loadInflateFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename)
+bool EVE_Util_loadInflateFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename)
 {
 	return loadInflateFile(phost, address, NULL, filename);
 }
@@ -220,9 +220,9 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFileW(EVE_HalContext *phost, uint32_t ad
  * @return false False if error
  */
 #ifdef _WIN32
-static bool loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, const wchar_t *filenameW, uint32_t *format)
+static bool loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, const wchar_t *filenameW, uint32_t *format, uint32_t options)
 #else
-EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format)
+bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format, uint32_t options)
 #endif
 {
 	FILE *afile;
@@ -258,7 +258,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 	}
 	EVE_Cmd_wr32(phost, CMD_LOADIMAGE);
 	EVE_Cmd_wr32(phost, address);
-	EVE_Cmd_wr32(phost, OPT_NODL);
+	EVE_Cmd_wr32(phost, options);
 	// TODO: Let it write into the scratch display list handle,
 	//  and read it out and write into the bitmapInfo the proper
 	//  values to use. Replace compressed bool with uint8 enum to
@@ -291,14 +291,14 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format)
+bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format, uint32_t options)
 {
-	return loadImageFile(phost, address, filename, NULL, format);
+	return loadImageFile(phost, address, filename, NULL, format, options);
 }
 
-EVE_HAL_EXPORT bool EVE_Util_loadImageFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename, uint32_t *format)
+bool EVE_Util_loadImageFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename, uint32_t *format, uint32_t options)
 {
-	return loadImageFile(phost, address, NULL, filename, format);
+	return loadImageFile(phost, address, NULL, filename, format, options);
 }
 
 #endif
@@ -306,7 +306,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFileW(EVE_HalContext *phost, uint32_t addr
 #ifdef _WIN32
 static bool loadCmdFile(EVE_HalContext *phost, const char *filename, const wchar_t *filenameW, uint32_t *transfered)
 #else
-EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
+bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
 #endif
 {
 	FILE *afile;
@@ -360,12 +360,12 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *file
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
+bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
 {
 	return loadCmdFile(phost, filename, NULL, transfered);
 }
 
-EVE_HAL_EXPORT bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered)
+bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered)
 {
 	return loadCmdFile(phost, NULL, filename, transfered);
 }
@@ -375,7 +375,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *
 #ifdef _WIN32
 static size_t readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename, const wchar_t *filenameW)
 #else
-EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
 #endif
 {
 	// Read up to `size` number of bytes from the file into `buffer`, then return the number of read bytes
@@ -412,12 +412,12 @@ EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, 
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
 {
 	return readFile(phost, buffer, size, filename, NULL);
 }
 
-EVE_HAL_EXPORT size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename)
+size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename)
 {
 	return readFile(phost, buffer, size, NULL, filename);
 }
@@ -428,12 +428,12 @@ EVE_HAL_EXPORT size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer,
 #ifdef _WIN32
 static bool loadMediaFile(EVE_HalContext *phost, const char *filename, const wchar_t *filenameW, uint32_t *transfered)
 #else
-EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
+bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
 #endif
 {
 	FILE *afile;
 	uint32_t remaining = 0;
-	uint32_t blockSize = ((phost->MediaFifoSize >> 3) << 2) - 4;
+	uint16_t blockSize = (uint16_t)((phost->MediaFifoSize >> 3) << 2) - 4;
 #ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 6255)
@@ -497,7 +497,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *fi
 
 		if (blocklen == 0)
 		{
-			eve_printf_debug("Read 0 bytes, unexpected end of file, %i bytes remaining", (int)remaining);
+			eve_printf_debug("Read 0 bytes, unexpected end of file, %i bytes remaining\n", (int)remaining);
 			break;
 		}
 
@@ -553,12 +553,12 @@ void EVE_Util_closeFile(EVE_HalContext *phost)
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
+bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
 {
 	return loadMediaFile(phost, filename, NULL, transfered);
 }
 
-EVE_HAL_EXPORT bool EVE_Util_loadMediaFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered)
+bool EVE_Util_loadMediaFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered)
 {
 	return loadMediaFile(phost, NULL, filename, transfered);
 }

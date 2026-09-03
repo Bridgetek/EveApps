@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <!--# source file list-->
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT88X.c" />
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_FlashHelper.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_RP2040.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_RP2040.c" />
     <ClCompile Include="..\..\..\..\common\application\fatfs\source\diskio_ft9xx.c">
@@ -30,23 +30,18 @@
     <ClCompile Include="..\..\..\..\common\application\fatfs\source\ffunicode.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\FlashHelper.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Cmd.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_IO.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_State.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_Widgets.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoDl.c" />
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT81X.c" />
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT80X.c" />
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT81X.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Hal.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMU.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMUC.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT4222.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT9XX.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MPSSE.c" />
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MULTI.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_WIN32.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_FT9XX.c" />
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_FATFS.c" />
@@ -63,8 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <!--# header file list-->
-    <ClInclude Include="..\..\..\..\common\application\FlashHelper.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h" />
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_FlashHelper.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalDefs.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoCmd.h" />
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Cmd.h" />
@@ -150,14 +145,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

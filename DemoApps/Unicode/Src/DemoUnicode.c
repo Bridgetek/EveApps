@@ -65,8 +65,7 @@ int main(int argc, char* argv[])
         WelcomeScreen(s_pHalContext, info);
         DemoUnicode();
         EVE_Util_clearScreen(s_pHalContext);
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -243,17 +242,17 @@ int loadXfont() {
 #if FONT_IN_SDCARD
 	Display_Start(s_pHalContext);
 
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, file_font_chinese_xfont, addrXfont_Cn, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrXfont_Cn, file_font_chinese_xfont);
 	EVE_Cmd_waitFlush(s_pHalContext);
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, file_font_chinese_glyph, addrGlyph_Cn, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrGlyph_Cn, file_font_chinese_glyph);
 	EVE_Cmd_waitFlush(s_pHalContext);
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, file_font_english_xfont, addrXfont_En, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrXfont_En, file_font_english_xfont);
 	EVE_Cmd_waitFlush(s_pHalContext);
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, file_font_english_glyph, addrGlyph_En, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrGlyph_En, file_font_english_glyph);
 	EVE_Cmd_waitFlush(s_pHalContext);
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, file_font_japanese_xfont, addrXfont_Ja, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrXfont_Ja, file_font_japanese_xfont);
 	EVE_Cmd_waitFlush(s_pHalContext);
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, file_font_japanese_glyph, addrGlyph_Ja, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrGlyph_Ja, file_font_japanese_glyph);
 	EVE_Cmd_waitFlush(s_pHalContext);
 
 	Display_End(s_pHalContext);

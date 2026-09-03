@@ -118,8 +118,6 @@ static inline eve_deprecated("Use `EVE_Hal_open`") bool Ft_Gpu_Hal_Open(EVE_HalC
 #define Ft_Gpu_Hal_Close EVE_Hal_close
 #define Ft_Gpu_Hal_DeInit EVE_Hal_release
 
-#define Ft_Gpu_Hal_ESD_Idle EVE_Hal_idle
-
 #define Ft_Gpu_Hal_StartTransfer EVE_Hal_startTransfer
 #define Ft_Gpu_Hal_Transfer8 EVE_Hal_transfer8
 #define Ft_Gpu_Hal_Transfer16 EVE_Hal_transfer16

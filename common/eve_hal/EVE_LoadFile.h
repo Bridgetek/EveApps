@@ -67,21 +67,21 @@ typedef enum
 #endif
 
 /** Load SD card */
-EVE_HAL_EXPORT bool EVE_Util_loadSdCard(EVE_HalContext *phost);
-EVE_HAL_EXPORT bool EVE_Util_sdCardReady(EVE_HalContext *phost);
+bool EVE_Util_loadSdCard(EVE_HalContext *phost);
+bool EVE_Util_sdCardReady(EVE_HalContext *phost);
 
-EVE_HAL_EXPORT bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename);
-EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename);
+bool EVE_Util_loadRawFile(EVE_HalContext *phost, uint32_t address, const char *filename);
+bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const char *filename);
 
 /** Load a file using CMD_LOADIMAGE.
 The image format is provided as output to the optional format argument */
-EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format);
+bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format, uint32_t options);
 
 /** Load a file into the coprocessor FIFO */
-EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered);
+bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered);
 
 /** Read a file into a buffer, returns the number of bytes read */
-EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename);
+size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename);
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 /** Load a file into the media FIFO.
@@ -89,25 +89,25 @@ If transfered is set, the file may be streamed partially,
 and will be kept open until EVE_Util_closeFile is called,
 and stop once the coprocessor has processed it.
 Filename may be omitted in subsequent calls */
-EVE_HAL_EXPORT bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered);
+bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered);
 
-EVE_HAL_EXPORT void EVE_Util_closeFile(EVE_HalContext *phost);
+void EVE_Util_closeFile(EVE_HalContext *phost);
 #endif
 
 #ifdef _WIN32
 
-EVE_HAL_EXPORT bool EVE_Util_loadRawFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename);
-EVE_HAL_EXPORT bool EVE_Util_loadInflateFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename);
+bool EVE_Util_loadRawFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename);
+bool EVE_Util_loadInflateFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename);
 
 /** Load a file using CMD_LOADIMAGE.
 The image format is provided as output to the optional format argument */
-EVE_HAL_EXPORT bool EVE_Util_loadImageFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename, uint32_t *format);
+bool EVE_Util_loadImageFileW(EVE_HalContext *phost, uint32_t address, const wchar_t *filename, uint32_t *format, uint32_t options);
 
 /** Load a file into the coprocessor FIFO */
-EVE_HAL_EXPORT bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered);
+bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered);
 
 /** Read a file into a buffer, returns the number of bytes read */
-EVE_HAL_EXPORT size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename);
+size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename);
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 /** Load a file into the media FIFO.
@@ -115,7 +115,7 @@ If transfered is set, the file may be streamed partially,
 and will be kept open until EVE_Util_closeFile is called,
 and stop once the coprocessor has processed it.
 Filename may be omitted in subsequent calls  */
-EVE_HAL_EXPORT bool EVE_Util_loadMediaFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered);
+bool EVE_Util_loadMediaFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered);
 #endif
 
 #endif

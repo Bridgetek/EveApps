@@ -128,10 +128,6 @@ uint64_t EVE_millis64()
 	return (uint64_t)(now.tv_sec - s_Millis_Start.tv_sec) * 1000 + (now.tv_usec - s_Millis_Start.tv_usec) / 1000;
 }
 
-#if defined(ESD_SIMULATION)
-int Ft_Sleep__ESD(int ms);
-#endif
-
 /**
  * @brief Sleep in millisecond
  *
@@ -139,9 +135,6 @@ int Ft_Sleep__ESD(int ms);
  */
 void EVE_sleep(uint32_t ms)
 {
-#if defined(ESD_SIMULATION)
-	Ft_Sleep__ESD(ms);
-#else
 	struct timespec req, rem;
 	req.tv_sec = ms / 1000; // Convert milliseconds to seconds
 	req.tv_nsec = (ms % 1000) * 1000000; // Convert remainder to nanoseconds
@@ -150,7 +143,6 @@ void EVE_sleep(uint32_t ms)
 	{
 		req = rem; // Set remaining time as new request
 	}
-#endif
 }
 
 #endif

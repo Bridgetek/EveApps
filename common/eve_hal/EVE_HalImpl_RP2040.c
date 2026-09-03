@@ -67,7 +67,7 @@ void EVE_HalImpl_release()
  * @brief List the available devices
  *
  */
-EVE_HAL_EXPORT size_t EVE_Hal_list()
+size_t EVE_Hal_list()
 {
 	/* List two SPI channels, but they may be used multiple times with different CS/PWD pin selection */
 	return 2;
@@ -79,7 +79,7 @@ EVE_HAL_EXPORT size_t EVE_Hal_list()
  * @param deviceInfo
  * @param deviceIdx
  */
-EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
+void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 {
 	memset(deviceInfo, 0, sizeof(EVE_DeviceInfo));
 	strcpy_s(deviceInfo->DisplayName, sizeof(deviceInfo->DisplayName), deviceIdx ? "RP2040 SPI1" : "RP2040 SPI0");
@@ -96,7 +96,7 @@ EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
  * @return true True if ok
  * @return false False if error
  */
-EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
+bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 {
 	return deviceIdx ? (phost->SpiPort == spi1) : (phost->SpiPort == spi0);
 }
@@ -181,10 +181,6 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 	eve_printf_debug("CS: GP%i, SCK: GP%i, MOSI: GP%i, MISO: GP%i, PWD: GP%i\n",
 	    (int)phost->SpiCsPin, (int)phost->SpiSckPin, (int)phost->SpiMosiPin,
 	    (int)phost->SpiMisoPin, (int)phost->PowerDownPin);
-
-#ifdef EVE_MULTI_GRAPHICS_TARGET
-	phost->GpuDefs = &EVE_GpuDefs_FT80X;
-#endif
 
 	gpio_init(phost->PowerDownPin);
 	gpio_set_dir(phost->PowerDownPin, GPIO_OUT);

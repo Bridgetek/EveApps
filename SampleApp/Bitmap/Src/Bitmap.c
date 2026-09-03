@@ -85,8 +85,7 @@ int main(int argc, char* argv[])
 
         EVE_Util_clearScreen(s_pHalContext);
 
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+        Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -113,21 +112,22 @@ int main(int argc, char* argv[])
 void helperDrawASTC(const char* title, uint32_t source, uint16_t fmt, uint16_t x, uint16_t y, 
     uint16_t w, uint16_t h, uint16_t margin, uint16_t numcell)
 {
-#if defined(BT81X_ENABLE) // BT81X
+#if EVE_SUPPORT_GEN >= EVE3
     int m1 = 30;
 
     if (title != 0 ) {
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+        EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
         EVE_CoCmd_text(s_pHalContext, x, y, 16, 0, title);
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xFF, 0xFF, 0xFF));
+		EVE_CoDl_colorRgb(s_pHalContext, 0xFF, 0xFF, 0xFF);
     }
     EVE_CoCmd_setBitmap(s_pHalContext, source, fmt, w, h);
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
     for (int i=0; i< numcell; i++)
     {
-        EVE_Cmd_wr32(s_pHalContext, CELL(i));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F((x + m1 + margin*i) * 16, y * 16));
+        EVE_CoDl_cell(s_pHalContext, i);
+        EVE_CoDl_vertex2f(s_pHalContext, VP(x + m1 + margin*i), VP(y));
     }
+	EVE_CoDl_end(s_pHalContext);
 #endif // BT81X
 }
 
@@ -145,36 +145,32 @@ void helperDrawASTC(const char* title, uint32_t source, uint16_t fmt, uint16_t x
 void helperRotateAroundOne(uint32_t address, uint32_t format, uint32_t x, uint32_t y,
     uint32_t w, uint32_t h, uint32_t rotation_angle)
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X only
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X only
     int16_t lw;
     int16_t lh;
     const uint32_t TRANSLATE_XY = 100;
-    const uint32_t precision = 16;
 
-    EVE_Cmd_wr32(s_pHalContext, SAVE_CONTEXT());
+    EVE_CoDl_saveContext(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
     EVE_CoCmd_setBitmap(s_pHalContext, (int16_t) address, (int16_t) format, (int16_t) w,
         (int16_t) h);
 
     lw = (int16_t) (w + 2 * TRANSLATE_XY);
     lh = (int16_t) (h + 2 * TRANSLATE_XY);
-
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, lw, lh));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(lw >> 9, lh >> 9));
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, lw, lh);
 
     EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, TRANSLATE_XY * MAX_CIRCLE_UNIT,
-        TRANSLATE_XY * MAX_CIRCLE_UNIT);
+    EVE_CoCmd_translate(s_pHalContext, TRANSLATE_XY * MAX_CIRCLE_UNIT, TRANSLATE_XY * MAX_CIRCLE_UNIT);
     EVE_CoCmd_rotateAround(s_pHalContext, w / 2, h / 2,
         rotation_angle * MAX_CIRCLE_UNIT / MAX_ANGLE, MAX_CIRCLE_UNIT);
     EVE_CoCmd_setMatrix(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(x * precision, y * precision));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(x), VP(y));
 
-    EVE_Cmd_wr32(s_pHalContext, END());
+    EVE_CoDl_end(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
+    EVE_CoDl_restoreContext(s_pHalContext);
 #endif // Win32 BT81X only
 }
 
@@ -192,23 +188,21 @@ void helperRotateAroundOne(uint32_t address, uint32_t format, uint32_t x, uint32
 void helperRotateAndTranslateOne(uint32_t address, uint32_t format, uint32_t x, uint32_t y,
     uint32_t w, uint32_t h, uint32_t rotation_angle)
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X only
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X only
     int16_t lw;
     int16_t lh;
     const uint32_t TRANSLATE_XY = 100;
-    const uint32_t precision = 16;
 
-    EVE_Cmd_wr32(s_pHalContext, SAVE_CONTEXT());
+    EVE_CoDl_saveContext(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
     EVE_CoCmd_setBitmap(s_pHalContext, (int16_t) address, (int16_t) format, (int16_t) w,
         (int16_t) h);
 
     lw = (int16_t) (w * 2);
     lh = (int16_t) (h * 2);
 
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, lw, lh));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(lw >> 8, lh >> 8));
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, lw, lh);
 
     EVE_CoCmd_loadIdentity(s_pHalContext);
 
@@ -220,40 +214,12 @@ void helperRotateAndTranslateOne(uint32_t address, uint32_t format, uint32_t x, 
 
     EVE_CoCmd_setMatrix(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(x * precision, y * precision));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(x), VP(y));
 
-    EVE_Cmd_wr32(s_pHalContext, END());
+    EVE_CoDl_end(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
+    EVE_CoDl_restoreContext(s_pHalContext);
 #endif // Win32 BT81X only
-}
-
-/**
- * @brief Load JPEG/PNG image to RAM_G
- * 
- * @param file File to load
- * @param addr ram offset on RAM_G
- * @param option option for loadImage command
- */
-static void helperloadImage(const uint8_t *file, uint32_t addr, uint32_t option)
-{
-	uint32_t fileSize = 0;
-	const uint32_t bytePerTrans = 1000;
-	uint8_t buff[1000];
-
-	fileSize = FileIO_File_Open(file, FILEIO_E_FOPEN_READ);
-	EVE_CoCmd_loadImage(s_pHalContext, addr, option);
-
-	while (fileSize > 0)
-	{
-		/* copy the data into pbuff and then transfter it to command buffer */
-		int bytes = FileIO_File_Read(buff, bytePerTrans);
-		EVE_Cmd_wrMem(s_pHalContext, buff, bytes);
-		fileSize -= bytes;
-	}
-	/* close the opened jpg file */
-	FileIO_File_Close();
-	EVE_Cmd_waitFlush(s_pHalContext);
 }
 
 /**
@@ -268,33 +234,21 @@ void SAMAPP_Bitmap_getImage()
     uint32_t w;
     uint32_t h;
     uint32_t palette;
-    source = 0;
-    fmt = 4;
-    w = 8;
-    h = 12;
-    palette = 16;
 
     Draw_Text(s_pHalContext, "Example for: CMD_GETIMAGE");
 
     // Now try to update the allocation pointer
-    uint16_t format = RGB565;
-    uint8_t type = LOADIMAGE;
-    EVE_CoCmd_dlStart(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+	Display_Start(s_pHalContext);
 
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "/CR_003_dithering.png", RAM_G, type);
+    EVE_Util_loadImageFile(s_pHalContext, RAM_G, TEST_DIR "/CR_003_dithering.png", NULL, OPT_RGB565);
     EVE_Cmd_waitFlush(s_pHalContext);
-    EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, format, 800, 600);
+    EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, RGB565, 800, 600);
 
     //Start drawing bitmap
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-    EVE_Cmd_wr32(s_pHalContext, END());
-    EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-    EVE_Cmd_waitFlush(s_pHalContext);
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+    EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
+    EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
 
     EVE_sleep(500);
 
@@ -302,8 +256,7 @@ void SAMAPP_Bitmap_getImage()
     EVE_CoCmd_getImage(s_pHalContext, &source, &fmt, &w, &h, &palette);
 
     printf("Loaded image: \nsource: %u, format: %u, width: %u, height: %u, palette: %u\n", 
-        source, fmt,
-        w, h, palette);
+        source, fmt, w, h, palette);
 #endif // EVE_SUPPORT_GEN == EVE4
 }
 
@@ -314,7 +267,7 @@ void SAMAPP_Bitmap_getImage()
 void SAMAPP_Bitmap_nonSquareDisplay()
 {
 #if EVE_SUPPORT_GEN == EVE4
-#ifdef DISPLAY_RESOLUTION_1280x800
+#ifdef DISPLAY_RESOLUTION_WXGA
 #define LCD_W 218
 #define LCD_H 136
 #define EXPECT_W 1280
@@ -326,47 +279,46 @@ void SAMAPP_Bitmap_nonSquareDisplay()
 #define EXPECT_H 480
 #endif
 
-    const uint32_t precision = 16;
-
     EVE_Util_clearScreen(s_pHalContext);
 
     // Non-square pixel panel support in EVE4
     // EVE_Hal_wr8(s_pHalContext, REG_PCLK, 1);
-    Ft_Gpu_HorizontalScanoutFilter(s_pHalContext, LCD_W, LCD_H);
+	uint32_t logical_W = s_pHalContext->Height * LCD_W / LCD_H;
+	// Configure panel
+	EVE_Hal_wr32(s_pHalContext, REG_HSIZE, logical_W);
+	EVE_CoCmd_hsf(s_pHalContext, s_pHalContext->Width);
 
-    Draw_Text_Format(s_pHalContext, "Example for non square pixel LCD: Draw Bitmap");
+    Draw_Text(s_pHalContext, "Example for non square pixel LCD: Draw Bitmap");
     Draw_Image(s_pHalContext, TEST_DIR "/TC_NF_24_001_862x480_862x480_RGB565_Converted.png",
         RGB565);
     EVE_sleep(2000);
 
-    Draw_Text_Format(s_pHalContext, "Example for non square pixel LCD: Draw primitive");
+    Draw_Text(s_pHalContext, "Example for non square pixel LCD: Draw primitive");
     Display_Start(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 128, 0));
+    EVE_CoDl_colorRgb(s_pHalContext, 0, 128, 0);
     Draw_Point(s_pHalContext, s_pHalContext->Height / 2, s_pHalContext->Height / 2,
         s_pHalContext->Height / 2);
 
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 128, 0));
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(LINES));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(0, s_pHalContext->Height / 2 * precision));
-    EVE_Cmd_wr32(s_pHalContext,
-        VERTEX2F(s_pHalContext->Height * precision, s_pHalContext->Height / 2 * precision));
+    EVE_CoDl_colorRgb(s_pHalContext, 255, 128, 0);
+    EVE_CoDl_begin(s_pHalContext, LINES);
+    EVE_CoDl_vertex2f(s_pHalContext, 0, VP(s_pHalContext->Height / 2));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Height), VP(s_pHalContext->Height / 2));
     EVE_CoCmd_text(s_pHalContext, 10, (uint16_t) (s_pHalContext->Height / 2 + 10), 30, 0, "line x");
 
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(LINES));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(s_pHalContext->Height / 2 * precision, 0));
-    EVE_Cmd_wr32(s_pHalContext,
-        VERTEX2F(s_pHalContext->Height / 2 * precision, s_pHalContext->Height * precision));
+    EVE_CoDl_begin(s_pHalContext, LINES);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Height / 2), 0);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Height / 2), VP(s_pHalContext->Height));
     EVE_CoCmd_text(s_pHalContext, (uint16_t) (s_pHalContext->Height / 2 + 10), 10, 30, 0, "line y");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+    EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
     Display_End(s_pHalContext);
-    EVE_sleep(2 * 1000);
+    EVE_sleep(2000);
 
     // Non-square pixel panel support in BT815A
     EVE_Hal_wr8(s_pHalContext, REG_PCLK, 1); /* after this display is visible on the LCD */
 
     // Now draw a circle
     Display_Start(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 128, 0));
+    EVE_CoDl_colorRgb(s_pHalContext, 0, 128, 0);
 
     uint32_t r[] = { s_pHalContext->Height * 4 / 13, s_pHalContext->Height * 2 / 13, s_pHalContext
         ->Height * 4 / 13, s_pHalContext->Height * 2 / 18, 0 };
@@ -432,13 +384,14 @@ void SAMAPP_Bitmap_dithering()
             otp |= OPT_DITHER;
         }
 
-        helperloadImage(TEST_DIR "\\loadimage-dither-testcase.png", address, otp);
+        EVE_Util_loadImageFile(s_pHalContext, address, TEST_DIR "\\loadimage-dither-testcase.png", NULL, otp);
 
         //Start drawing bitmap
         Display_Start(s_pHalContext);
         EVE_CoCmd_setBitmap(s_pHalContext, address, format, w, h);
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 0, 0));
+        EVE_CoDl_begin(s_pHalContext, BITMAPS);
+        EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
+		EVE_CoDl_end(s_pHalContext);
         Display_End(s_pHalContext);
 
         SAMAPP_DELAY;
@@ -452,13 +405,10 @@ void SAMAPP_Bitmap_dithering()
 */
 void SAMAPP_Bitmap_ASTC()
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
     Draw_Text(s_pHalContext, "Example for: ASTC bitmap");
-    EVE_Cmd_waitFlush(s_pHalContext);
 
-    EVE_CoCmd_dlStart(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 0, 0, 0 }, (uint8_t[]) { 255, 255, 255 });
 
     uint16_t iw = 32;
     uint16_t ih = 32;
@@ -468,13 +418,10 @@ void SAMAPP_Bitmap_ASTC()
     /* Switch Flash to FULL Mode */
     EVE_CoCmd_setBitmap(s_pHalContext, (0x800000 | BITMAP_ADDRESS_ON_FLASH / 32), format, iw, ih);
     //Start drawing bitmap
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-    EVE_Cmd_wr32(s_pHalContext, END());
-    EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-    EVE_Cmd_waitFlush(s_pHalContext);
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+    EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
+    EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_DELAY;
 #endif // Win32 BT81X
 }
@@ -485,12 +432,12 @@ void SAMAPP_Bitmap_ASTC()
 */
 void SAMAPP_Bitmap_ASTCLayoutRAMG()
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
     const char* files = TEST_DIR "\\numbers_astc12x10.raw";
     int16_t x = 0;
     int16_t y = 0;
 
-    Ftf_Write_File_To_RAM_G(s_pHalContext, files, 0);
+    EVE_Util_loadRawFile(s_pHalContext, 0, files);
 
     Draw_Text(s_pHalContext, "Example for: ASTC bitmap on RAM_G");
 
@@ -555,7 +502,7 @@ void SAMAPP_Bitmap_ASTCLayoutRAMG()
     helperDrawASTC("5x5", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 50, 70, 2);
 
     y += 70;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
+    EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
         "Note: Multi-celled bitmaps must have a size which is a multiple of 4 blocks");
 
@@ -570,7 +517,7 @@ void SAMAPP_Bitmap_ASTCLayoutRAMG()
 */
 void SAMAPP_Bitmap_ASTCLayoutFlash()
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
     char* files = TEST_DIR "\\numbers_astc12x10.raw";
     int16_t x = 0;
     int16_t y = 0;
@@ -646,7 +593,7 @@ void SAMAPP_Bitmap_ASTCLayoutFlash()
     helperDrawASTC("5x5", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 50, 70, 1);
 
     y += 70;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
+    EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
         "Note: Multi-celled bitmaps must have a size which is a multiple of 4 blocks");
 
@@ -661,7 +608,7 @@ void SAMAPP_Bitmap_ASTCLayoutFlash()
 */
 void SAMAPP_Bitmap_ASTCLayoutCell_1_3x2()
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
     char* files[] = { TEST_DIR "\\ASTC_layout_cell_1_3x2_casei_36x240_ASTC_12x10_KHR.raw", 0 };
     const int32_t astc_flash_addr = 4096;
     int32_t source = ATFLASH(astc_flash_addr);
@@ -683,54 +630,56 @@ void SAMAPP_Bitmap_ASTCLayoutCell_1_3x2()
     x = 30;
     y = 30;
     EVE_CoCmd_fillWidth(s_pHalContext, s_pHalContext->Width - 20);
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+    EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
     EVE_CoCmd_text(s_pHalContext, x, y, 28, OPT_FILL,
         "Display CELL 1 for 3x2 case for ASTC in RAM_G is ok:");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+    EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
     EVE_CoCmd_setBitmap(s_pHalContext, source, COMPRESSED_RGBA_ASTC_12x10_KHR, 12 * 3, 10 * 2);
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
 
     y += 55;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+    EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
     EVE_CoCmd_text(s_pHalContext, x + 50, y, 22, 0, "CELL 0:");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, CELL(0)); //#CELL 0
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F((x + 50 + 70) * 16, (y - 2) * 16));
+    EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+    EVE_CoDl_cell(s_pHalContext, 0); //#CELL 0
+    EVE_CoDl_vertex2f(s_pHalContext, VP(x + 50 + 70), VP(y - 2));
 
     x += 200;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
     EVE_CoCmd_text(s_pHalContext, x, y, 22, 0, "CELL 1:");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, CELL(1)); //#CELL 1
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F((x + 70) * 16, (y - 2) * 16));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+	EVE_CoDl_cell(s_pHalContext, 1); //#CELL 1
+	EVE_CoDl_vertex2f(s_pHalContext, VP(x + 70), VP(y - 2));
+	EVE_CoDl_end(s_pHalContext);
 
     x = 30;
     y += 80;
     source = ATFLASH(astc_flash_addr);
     EVE_CoCmd_fillWidth(s_pHalContext, s_pHalContext->Width - 20);
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
     EVE_CoCmd_text(s_pHalContext, x, y, 28, OPT_FILL,
         "Display CELL 1 for 3x2 case for ASTC in Flash shall show some artifacts:");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
     EVE_CoCmd_setBitmap(s_pHalContext, source, COMPRESSED_RGBA_ASTC_12x10_KHR, 12 * 3, 10 * 2);
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
 
     y += 50;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
     EVE_CoCmd_text(s_pHalContext, x + 50, y, 22, 0, "CELL 0:");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, CELL(0)); //#CELL 0
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F((x + 50 + 70) * 16, (y - 2) * 16));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+	EVE_CoDl_cell(s_pHalContext, 0); //#CELL 0
+	EVE_CoDl_vertex2f(s_pHalContext, VP(x + 50 + 70), VP(y - 2));
 
     x += 150;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
     EVE_CoCmd_text(s_pHalContext, x + 50, y, 22, 0, "CELL 1:");
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, CELL(1)); //#CELL 1
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F((x + 50 + 70) * 16, (y - 2) * 16));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+	EVE_CoDl_cell(s_pHalContext, 1); //#CELL 1
+	EVE_CoDl_vertex2f(s_pHalContext, VP(x + 50 + 70), VP(y - 2));
+	EVE_CoDl_end(s_pHalContext);
 
     y += 70;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
     EVE_CoCmd_text(s_pHalContext, 30, y, 28, OPT_FILL,
         "Note: Multi-celled bitmaps must have a size which is a multiple of 4 blocks");
 
@@ -748,7 +697,7 @@ void SAMAPP_Bitmap_ASTCLayoutCell_1_3x2()
 */
 void SAMAPP_Bitmap_ASTCMultiCellRAMG()
 {
-#if defined (BT81X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE3
     const char* astc_file = TEST_DIR "\\cell_100x672_COMPRESSED_RGBA_ASTC_4x4_KHR.raw";
     int16_t x = 0;
     int16_t y = 20;
@@ -756,15 +705,10 @@ void SAMAPP_Bitmap_ASTCMultiCellRAMG()
 
     Draw_Text(s_pHalContext, "Example for: Multicell ASTC bitmap on RAM_G");
 
-    uint32_t fs = Ftf_Write_File_To_RAM_G(s_pHalContext, astc_file, astc_addr);
-    if (fs == 0)
-    {
-        APP_ERR("Error when write raw file to RAM_G");
-        return;
-    }
+	EVE_Util_loadRawFile(s_pHalContext, astc_addr, astc_file);
 
     Display_Start(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+    EVE_CoDl_colorRgb(s_pHalContext, 0x33, 0x33, 0x33);
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, 0,
         "Each cell of the multi-cell ASTC bitmap shall be multiple of 4 blocks in height.\n\n"
         "For example, if one bitmap is in 100x672: The legal cell size is 100x192, 100x96. \n"
@@ -773,15 +717,15 @@ void SAMAPP_Bitmap_ASTCMultiCellRAMG()
         "Image of 100x96 (7 cells, 600 blocks / cell):\n");
 
     y += 180;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
+	EVE_CoDl_colorRgb(s_pHalContext, 0xff, 0xff, 0xff);
     helperDrawASTC(0, astc_addr, COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
 
     y += 140;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+	EVE_CoDl_colorRgb(s_pHalContext, 0x33, 0x33, 0x33);
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
         "Image of 100x84 (8 cells, 525 blocks / cell):\n");
     y += 40;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
     helperDrawASTC(0, astc_addr, COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 84, 105, 7);
 
     Display_End(s_pHalContext);
@@ -798,7 +742,7 @@ void SAMAPP_Bitmap_ASTCMultiCellRAMG()
 */
 void SAMAPP_Bitmap_ASTCMultiCellFlash()
 {
-#if defined (BT81X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE3
     const char* astc_file = TEST_DIR "\\cell_100x672_COMPRESSED_RGBA_ASTC_4x4_KHR.raw";
     int16_t x = 0;
     int16_t y = 20;
@@ -807,20 +751,18 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
 
     Draw_Text(s_pHalContext, "Example for: Multicell ASTC bitmap on Flash");
 
-    uint32_t fs = Ftf_Write_File_To_Flash_By_RAM_G(s_pHalContext, astc_file, astc_addr);
-    if (fs == 0)
-    {
-        APP_ERR("Error when write raw file to Flash");
-        return;
-    }
-
-    // On large screen, disable REG_ADAPTIVE_FRAMERATE so image can displayed
-    if (s_pHalContext->Width > 800) {
-        EVE_Hal_wr8(s_pHalContext, REG_ADAPTIVE_FRAMERATE, 0);
+    if (0 == Ftf_Write_File_To_Flash_By_RAM_G(s_pHalContext, astc_file, astc_addr))
+	{
+		APP_ERR("Error when write raw file to flash");
+		return;
+	}
+    // On large screen, enable REG_ADAPTIVE_FRAMERATE so image can displayed
+    if (s_pHalContext->Width >= 800) {
+        EVE_Hal_wr8(s_pHalContext, REG_ADAPTIVE_FRAMERATE, 1);
     }
 
     Display_Start(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+	EVE_CoDl_colorRgb(s_pHalContext, 0x33, 0x33, 0x33);
     EVE_CoCmd_fillWidth(s_pHalContext, s_pHalContext->Width - 20);
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, 0,
         "Each cell of the multi-cell ASTC bitmap shall be multiple of 4 blocks in height.\n\n"
@@ -830,20 +772,20 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
         "Image of 100x96 (7 cells, 600 blocks / cell):\n");
 
     y += 180;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
+	EVE_CoDl_colorRgb(s_pHalContext, 0xff, 0xff, 0xff);
     helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
 
     y += 140;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+	EVE_CoDl_colorRgb(s_pHalContext, 0x33, 0x33, 0x33);
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
         "Image of 100x84 (8 cells, 525 blocks / cell):\n");
     y += 40;
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
     helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 84, 105, 7);
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
 
-    if (s_pHalContext->Width > 800) {
+    if (s_pHalContext->Width >= 800) {
         EVE_Hal_wr8(s_pHalContext, REG_ADAPTIVE_FRAMERATE, save_adaptive);
     }
 #endif
@@ -855,44 +797,32 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
 */
 void SAMAPP_Bitmap_rotate()
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
-    uchar8_t imagefile[] = TEST_DIR "\\lenaface_COMPRESSED_RGBA_ASTC_4x4_KHR.raw";
-    uint16_t image_w = 32;
-    uint16_t image_h = 32;
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
+	uint16_t image_w = 256;
+	uint16_t image_h = 256;
 
     Draw_Text(s_pHalContext, "Example for: Bitmap rotate");
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, imagefile, RAM_G, LOAD);
+	EVE_Util_loadImageFile(s_pHalContext, 0, TEST_DIR "\\mandrill256.jpg", NULL, OPT_RGB565);
 
     for (uint16_t i = 0; i <= 360; i++)
     {
-        EVE_CoCmd_dlStart(s_pHalContext); // start
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0, 0, 255));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-        EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE((0)));
+		Display_Start(s_pHalContext);
 
-        EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, COMPRESSED_RGBA_ASTC_4x4_KHR, image_w, image_h);
-        EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(BILINEAR, BORDER, BORDER, image_w, image_h));
-        EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(image_w >> 9, image_h >> 9));
-        EVE_CoCmd_text(s_pHalContext, 10, 0, 24, 0, "CMD_ROTATEAROUND"); //text info
-        EVE_Cmd_waitFlush(s_pHalContext);
-
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-
+        EVE_CoDl_begin(s_pHalContext, BITMAPS);
+		EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, RGB565, image_w, image_h);
         EVE_CoCmd_loadIdentity(s_pHalContext);
         EVE_CoCmd_rotateAround(s_pHalContext, image_w / 2, image_h / 2, i * 65536 / 360, 65536 * 1);
         EVE_CoCmd_setMatrix(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext,
-            VERTEX2F((s_pHalContext->Width / 2 - image_w / 2) * 16,
-                (s_pHalContext->Height / 2 - image_h / 2) * 16));
-        EVE_Cmd_wr32(s_pHalContext, END());
+        EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - image_w / 2), VP(s_pHalContext->Height / 2 - image_h / 2));
+        EVE_CoDl_end(s_pHalContext);
 
         EVE_CoCmd_loadIdentity(s_pHalContext);
         EVE_CoCmd_setMatrix(s_pHalContext);
+		
+		EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
+		EVE_CoCmd_text(s_pHalContext, 10, 0, 24, 0, "CMD_ROTATEAROUND"); //text info
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        EVE_Cmd_waitFlush(s_pHalContext);
+        Display_End(s_pHalContext);
         EVE_sleep(5);
     }
     SAMAPP_DELAY;
@@ -905,7 +835,7 @@ void SAMAPP_Bitmap_rotate()
 */
 void SAMAPP_Bitmap_rotateAndTranslate()
 {
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
+#if (EVE_SUPPORT_GEN >= EVE3) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
     int count = 0;
     const uint32_t TRANSLATE_XY = 100;
 
@@ -918,14 +848,12 @@ void SAMAPP_Bitmap_rotateAndTranslate()
     uint16_t tile2_y = tile1_y;
 
     Draw_Text(s_pHalContext, "Example for: Bitmap rotate and translate");
-	helperloadImage(TEST_DIR "\\mandrill256.jpg", 0, 0);
+	EVE_Util_loadImageFile(s_pHalContext, 0, TEST_DIR "\\mandrill256.jpg", NULL, OPT_RGB565);
 
     while (count++ < 60 * 10)
     { // wait 10 seconds, 60 FPS
       /*Display List start*/
-        EVE_CoCmd_dlStart(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0, 0, 0));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 0, 0, 0 }, (uint8_t[]) { 255, 255, 255 });
 
         static uint16_t rotation_angle = 0;
         static uint16_t font_size = 29;
@@ -939,39 +867,10 @@ void SAMAPP_Bitmap_rotateAndTranslate()
         EVE_CoCmd_text(s_pHalContext, tile1_x + TRANSLATE_XY / 2, tile1_y, font_size, option, "Rotate by RotateAround");
         EVE_CoCmd_text(s_pHalContext, tile2_x + TRANSLATE_XY / 2, tile2_y, font_size, option, "Rotate by Rotate and Translate");
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY()); //send command display - to end display commands
-        EVE_CoCmd_swap(s_pHalContext);// draw the new screen
-        EVE_Cmd_waitFlush(s_pHalContext);// Wait until EVE is free
+        Display_End(s_pHalContext);
     }
     SAMAPP_DELAY;
 #endif
-}
-
-/**
-* @brief Load image to RAM_G
-*
-*/
-void SAMAPP_Bitmap_loadImage()
-{
-    uint32_t fileSize = 0;
-    const uint32_t bytePerTrans = 1000;
-    uint8_t buff[1000];
-
-    const uint8_t* image = TEST_DIR "\\mandrill256.jpg";
-
-    Draw_Text(s_pHalContext, "Example for: CMD_LOADIMAGE");
-
-    /******************* Decode jpg output into location 0 and output color format as RGB565 *********************/
-    Display_Start(s_pHalContext);
-	helperloadImage(image, 0, 0);
-    int32_t ImgW = 256, ImgH = 256;
-    int16_t xoffset = (int16_t) ((s_pHalContext->Width - ImgW) / 2);
-    int16_t yoffset = (int16_t) ((s_pHalContext->Height - ImgH) / 2);
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(xoffset * 16, yoffset * 16));
-    Display_End(s_pHalContext);
-
-    SAMAPP_DELAY;
 }
 
 /**
@@ -981,13 +880,14 @@ void SAMAPP_Bitmap_loadImage()
 */
 void SAMAPP_Bitmap_loadImageMono()
 {
+#if EVE_SUPPORT_GEN >= EVE2
 	int16_t ImgW = 256;
 	int16_t ImgH = 256;
 	const char *file = TEST_DIR "\\mandrill256.jpg";
 
 	Draw_Text(s_pHalContext, "Example for: Load image and display as monochromic image");
 
-	helperloadImage(file, 0, OPT_MONO);
+	EVE_Util_loadImageFile(s_pHalContext, 0, file, NULL, OPT_MONO);
 
 	// Decode jpg output into location 0 and output color format as L8
 	Display_Start(s_pHalContext);
@@ -995,7 +895,7 @@ void SAMAPP_Bitmap_loadImageMono()
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
 	EVE_CoDl_blendFunc(s_pHalContext, SRC_ALPHA, ZERO);
 	EVE_CoCmd_setBitmap(s_pHalContext, 0, L8, ImgW, ImgH);
-	EVE_CoDl_vertex2f_4(s_pHalContext, (s_pHalContext->Width - ImgW) / 2 * 16, (s_pHalContext->Height - ImgH) / 2 * 16);
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width - ImgW) / 2), VP((s_pHalContext->Height - ImgH) / 2));
 	EVE_CoDl_blendFunc_default(s_pHalContext);
 	EVE_CoDl_end(s_pHalContext);
 
@@ -1004,6 +904,7 @@ void SAMAPP_Bitmap_loadImageMono()
 
 	Display_End(s_pHalContext);
 	SAMAPP_DELAY;
+#endif
 }
 
 /**
@@ -1012,62 +913,31 @@ void SAMAPP_Bitmap_loadImageMono()
 */
 void SAMAPP_Bitmap_loadImageFullColor()
 {
-#define BUFFERSIZE 8192
-    uint8_t* pbuff;
-    int16_t ImgW;
-    int16_t ImgH;
-    int16_t xoffset;
-    int16_t yoffset;
+#if EVE_SUPPORT_GEN >= EVE2
+	int16_t ImgW = 256;
+	int16_t ImgH = 256;
     const char* file = TEST_DIR "\\mandrill256.jpg";
 
-    ImgW = ImgH = 256;
-    xoffset = (int16_t) ((s_pHalContext->Width - ImgW) / 2);
-    yoffset = (int16_t) ((s_pHalContext->Height - ImgH) / 2);
-
-    Draw_Text(s_pHalContext, "Example for: Load image full color ");
-
-    /* decode the jpeg data */
-    if (0 >= FileIO_File_Open(file, FILEIO_E_FOPEN_READ))
-    {
-        printf("Error in opening file %s \n", "mandrill256.jpg");
-        return;
-    }
-    pbuff = (uint8_t*) malloc(8192);
+	Draw_Text(s_pHalContext, "Example for: Load image and display as full color image");
 
     /// Decode jpg output into location 0 and output color format as L8
     Display_Start(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CMD_LOADIMAGE);
-    EVE_Cmd_wr32(s_pHalContext, 0); //destination address of jpg decode
-    EVE_Cmd_wr32(s_pHalContext, 0); //output format of the bitmap
+	EVE_Util_loadImageFile(s_pHalContext, 0, file, NULL, OPT_RGB565);
 
-    int bytes = FileIO_File_Read(pbuff, BUFFERSIZE);
-    while (bytes)
-    {
-        uint16_t blocklen = bytes > BUFFERSIZE ? BUFFERSIZE : (uint16_t) bytes;
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width - ImgW) / 2), VP((s_pHalContext->Height - ImgH) / 2));
+    EVE_CoDl_end(s_pHalContext);
 
-        /* copy data continuously into command memory */
-        EVE_Cmd_wrMem(s_pHalContext, pbuff, blocklen); //alignment is already taken care by this api
-        bytes = FileIO_File_Read(pbuff, BUFFERSIZE);
-    }
-    free(pbuff);
-	FileIO_File_Close();
-    EVE_Cmd_waitFlush(s_pHalContext);
-
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(xoffset * 16, yoffset * 16));
-    EVE_Cmd_wr32(s_pHalContext, END());
-
-    xoffset = (int16_t) ((s_pHalContext->Width) / 2);
-    yoffset = (int16_t) ((s_pHalContext->Height) / 2);
-    EVE_CoCmd_text(s_pHalContext, xoffset, yoffset, 26, OPT_CENTER, "Display bitmap by jpg decode");
+	EVE_CoCmd_text(s_pHalContext, (s_pHalContext->Width) / 2, (s_pHalContext->Height) / 2, 26, OPT_CENTER, "Display bitmap by jpg decode");
 
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
+#endif
 }
 
 /**
-* @brief Load DXT1 compressed image. The BRIDGETEK DXT1 conversion utility outputs 4 seperate files: c0,c1,b0,b1.
-* The 4 files should be combined to create the final image.  The bitmap size can be reduced up to 4 folds of the original size.
+* @brief Load DXT1 compressed image. The BRIDGETEK DXT1 conversion utility outputs 2 seperate files.
+* The 2 files should be combined to create the final image.  The bitmap size can be reduced up to 4 folds of the original size.
 *
 */
 void SAMAPP_Bitmap_DXT1()
@@ -1075,77 +945,72 @@ void SAMAPP_Bitmap_DXT1()
     //RAM_G is starting address in graphics RAM, for example 00 0000h
     uint16_t imgWidth = 320;
     uint16_t imgHeight = 240;
-	uint16_t c0_c1_width = imgWidth / 4;
-	uint16_t c0_c1_height = imgHeight / 4;
-    uint16_t c0_c1_stride = c0_c1_width * 2;
-    uint16_t b0_b1_width = imgWidth;
-    uint16_t b0_b1_height = imgHeight;
-    uint16_t b0_b1_stride = b0_b1_width / 8;
-	uint16_t szPerFile = c0_c1_stride * c0_c1_height;
-	uint16_t colorHandle = 1;
-	uint16_t gradientHandle = 2;
+	uint16_t colorLayer_width = imgWidth / 4;
+	uint16_t colorLayer_height = imgHeight / 4;
+	uint16_t colorLayer_stride = colorLayer_width * 2;
+    uint16_t gradientLayer_width = imgWidth;
+	uint16_t gradientLayer_height = imgHeight;
+	uint16_t gradientLayer_stride = gradientLayer_width / 8;
+	uint16_t szPerFile = colorLayer_stride * colorLayer_height * 2 ;
+	uint8_t colorHandle = 1;
+	uint8_t gradientHandle = 2;
 
-    Draw_Text(s_pHalContext, "Example for: Load DXT1 compressed image");
+	if (gradientLayer_width % 8 != 0)
+		gradientLayer_stride += 1;
 
-    Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_c0.raw", RAM_G);
-    Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_c1.raw",
-        RAM_G + szPerFile);
-    Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_b0.raw",
-        RAM_G + szPerFile * 2);
-    Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_b1.raw",
-        RAM_G + szPerFile * 3);
+    Draw_Text(s_pHalContext, "Example for: Load DXT1_L1_RGB565 compressed image");
 
-    EVE_CoCmd_dlStart(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 255, 255));
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\bird_320x240_RGB565.raw");
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G + szPerFile, TEST_DIR "\\bird_320x240_L1.raw");
+
+    Display_Start(s_pHalContext);
 
     EVE_CoCmd_loadIdentity(s_pHalContext);
     EVE_CoCmd_setMatrix(s_pHalContext);
 
     EVE_CoDl_saveContext(s_pHalContext);
 
-	// C0&C1 handle
+	// color handle
 	EVE_CoDl_bitmapHandle(s_pHalContext, colorHandle);
-#if defined(FT81X_ENABLE) || defined(BT88X_ENABLE)
-	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, RGB565, c0_c1_width, c0_c1_height);
+#if EVE_SUPPORT_GEN >= EVE2
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, RGB565, colorLayer_width, colorLayer_height);
 #else
 	EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
-	EVE_CoDl_bitmapLayout(s_pHalContext, RGB565, c0_c1_stride, c0_c1_height);
+	EVE_CoDl_bitmapLayout(s_pHalContext, RGB565, colorLayer_stride, colorLayer_height);
 #endif
 	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
 
-    // B0&B1 handle
+    // gradient handle
 	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
-#if defined(FT81X_ENABLE) || defined(BT88X_ENABLE)
-	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G + szPerFile * 2, L1, imgWidth, imgHeight);
+#if EVE_SUPPORT_GEN >= EVE2
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G + szPerFile, L1, imgWidth, imgHeight);
 #else
-	EVE_CoDl_bitmapSource(s_pHalContext, RAM_G + szPerFile * 2);
+	EVE_CoDl_bitmapSource(s_pHalContext, RAM_G + szPerFile);
 	EVE_CoDl_bitmapLayout(s_pHalContext, L1, imgWidth / 8, imgHeight);
 #endif
-	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
                                                                                            
     // start drawing bitmaps
-	EVE_CoCmd_dl(s_pHalContext, COLOR_MASK(1, 1, 1, 1));
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
-	EVE_CoCmd_dl(s_pHalContext, ALPHA_FUNC(ALWAYS, 0));
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_A(0x55));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - b0_b1_width / 2, 
-		s_pHalContext->Height / 2 - b0_b1_height / 2, gradientHandle, 0));
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE, ONE));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_A(0xAA));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - b0_b1_width / 2, 
-		s_pHalContext->Height / 2 - b0_b1_height / 2, gradientHandle, 1));
+	EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
+	EVE_CoDl_colorA(s_pHalContext, 0x55);
+	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2));
+	EVE_CoDl_blendFunc(s_pHalContext, ONE, ONE);
+	EVE_CoDl_colorA(s_pHalContext, 0xAA);
+	EVE_CoDl_cell(s_pHalContext, 1);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2));
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_MASK(1, 1, 1, 0));
+	EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 0);
 	EVE_CoCmd_scale(s_pHalContext, 4UL * 65536UL, 4UL * 65536UL); // Color passes, scaled up 4x, nearest
 	EVE_CoCmd_setMatrix(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(DST_ALPHA, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - b0_b1_width / 2,
-		s_pHalContext->Height / 2 - b0_b1_height / 2, colorHandle, 1)); // Color layer 1 (RGB*L2)
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - b0_b1_width / 2,
-		s_pHalContext->Height / 2 - b0_b1_height / 2, colorHandle, 0)); // Color layer 0 (RGB*(1-L2) + DST)
+	EVE_CoDl_blendFunc(s_pHalContext, DST_ALPHA, ZERO);
+	EVE_CoDl_bitmapHandle(s_pHalContext, colorHandle);
+	EVE_CoDl_cell(s_pHalContext, 1);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 1 (RGB*L2)
+	EVE_CoDl_blendFunc(s_pHalContext, ONE_MINUS_DST_ALPHA, ONE);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 0 (RGB*(1-L2) + DST)
 	EVE_CoDl_end(s_pHalContext);
 	EVE_CoDl_restoreContext(s_pHalContext);
 
@@ -1153,82 +1018,73 @@ void SAMAPP_Bitmap_DXT1()
 	EVE_CoCmd_loadIdentity(s_pHalContext);
 	EVE_CoCmd_setMatrix(s_pHalContext);
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
     EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 50, 31, OPT_CENTER,
-        "DXT1: 37.5KB.");
+        "DXT1_L1_RGB565: 37.5KB.");
     EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 80, 31, OPT_CENTER,
         "RGB565: 150KB.");
 
-    EVE_CoCmd_dl(s_pHalContext, DISPLAY());
-    //swap the current display list with the new display list
-    EVE_CoCmd_swap(s_pHalContext);
-    //write to the FIFO command buffer - bitmap will appear after this command
-    EVE_Cmd_waitFlush(s_pHalContext);
+    Display_End(s_pHalContext);
     SAMAPP_DELAY;
 }
 
 /**
- * @brief Load DXT1L2 compressed image. The BRIDGETEK DXT1L2 conversion utility outputs 3 seperate files: c0,c1,L2
- * The 3 files should be combined to create the final image.  The bitmap size can be reduced up to 4 folds of the original size.
+ * @brief Load DXT1L2 compressed image. The BRIDGETEK DXT1L2 conversion utility outputs 2 seperate files
+ * The 2 files should be combined to create the final image.  The bitmap size can be reduced up to 4 folds of the original size.
  *
  */
 void SAMAPP_Bitmap_DXT1L2()
 {
-#if defined(FT81X_ENABLE) || defined(BT88X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE2
 	// RAM_G is starting address in graphics RAM, for example 00 0000h
 	uint16_t imgWidth = 320;
 	uint16_t imgHeight = 240;
-	uint16_t c0_c1_width = imgWidth / 4;
-	uint16_t c0_c1_height = imgHeight / 4;
-	uint16_t c0_c1_stride = c0_c1_width * 2;
-	uint16_t cFileSize = c0_c1_stride * c0_c1_height;
-	uint16_t colorHandle = 1;
-	uint16_t gradientHandle = 2;
+	uint16_t colorLayer_width = imgWidth / 4;
+	uint16_t colorLayer_height = imgHeight / 4;
+	uint16_t colorLayer_stride = colorLayer_width * 2;
+	uint16_t cFileSize = colorLayer_stride * colorLayer_height * 2;
+	uint8_t colorHandle = 1;
+	uint8_t gradientHandle = 2;
 
-	Draw_Text(s_pHalContext, "Example for: Load DXT1L2 compressed image");
+	Draw_Text(s_pHalContext, "Example for: Load DXT1_L2_RGB565 compressed image");
 
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_c0.raw", RAM_G);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_c1.raw",
-	    RAM_G + cFileSize);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_L2.raw",
-	    RAM_G + cFileSize * 2);
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\bird_320x240_RGB565.raw");
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G + cFileSize, TEST_DIR "\\bird_320x240_L2.raw");
 
-	EVE_CoCmd_dlStart(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 255, 255));
+	Display_Start(s_pHalContext);
 
 	EVE_CoCmd_loadIdentity(s_pHalContext);
 	EVE_CoCmd_setMatrix(s_pHalContext);
 
 	EVE_CoDl_saveContext(s_pHalContext);
 
-    // C0&C1 handle
+    // color handle
 	EVE_CoDl_bitmapHandle(s_pHalContext, colorHandle);
-	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, RGB565, c0_c1_width, c0_c1_height);
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, RGB565, colorLayer_width, colorLayer_height);
 	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
 
-	// L2 handle
+	// gradient handle
 	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
-	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G + cFileSize * 2, L2, imgWidth, imgHeight);
-	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G + cFileSize, L2, imgWidth, imgHeight);
 
 	// start drawing bitmaps
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
-	EVE_CoCmd_dl(s_pHalContext, ALPHA_FUNC(ALWAYS, 0));
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_A(0xFF));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2, 
-		s_pHalContext->Height / 2 - imgHeight / 2, gradientHandle, 0));
+	EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
+	EVE_CoDl_colorA(s_pHalContext, 0xFF);
+	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2));
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_MASK(1, 1, 1, 0));
+	EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 0);
 	EVE_CoCmd_scale(s_pHalContext, 4UL * 65536UL, 4UL * 65536UL); // Color passes, scaled up 4x, nearest
 	EVE_CoCmd_setMatrix(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(DST_ALPHA, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2,
-		s_pHalContext->Height / 2 - imgHeight / 2, colorHandle, 1)); // Color layer 1 (RGB*L2)
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2, 
-		s_pHalContext->Height / 2 - imgHeight / 2, colorHandle, 0)); // Color layer 0 (RGB*(1-L2) + DST)
+	EVE_CoDl_blendFunc(s_pHalContext, DST_ALPHA, ZERO);
+	EVE_CoDl_bitmapHandle(s_pHalContext, colorHandle);
+	EVE_CoDl_cell(s_pHalContext, 1);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 1 (RGB*L2)
+	EVE_CoDl_blendFunc(s_pHalContext, ONE_MINUS_DST_ALPHA, ONE);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 0 (RGB*(1-L2) + DST)
 	EVE_CoDl_end(s_pHalContext);
 	EVE_CoDl_restoreContext(s_pHalContext);
 
@@ -1236,17 +1092,13 @@ void SAMAPP_Bitmap_DXT1L2()
 	EVE_CoCmd_loadIdentity(s_pHalContext);
 	EVE_CoCmd_setMatrix(s_pHalContext);
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 50, 31, OPT_CENTER,
-	    "DXT1L2: 37.5KB.");
+	    "DXT1_L2_RGB565: 37.5KB.");
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 80, 31, OPT_CENTER,
 	    "RGB565: 150KB.");
 
-	EVE_CoCmd_dl(s_pHalContext, DISPLAY());
-	// swap the current display list with the new display list
-	EVE_CoCmd_swap(s_pHalContext);
-	// write to the FIFO command buffer - bitmap will appear after this command
-	EVE_Cmd_waitFlush(s_pHalContext);
+	Display_End(s_pHalContext);
 	SAMAPP_DELAY;
 #endif
 }
@@ -1258,33 +1110,26 @@ void SAMAPP_Bitmap_DXT1L2()
  */
 void SAMAPP_Bitmap_DXT1PALETTED()
 {
-#if defined(FT81X_ENABLE) || defined(BT88X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE2
 	// RAM_G is starting address in graphics RAM, for example 00 0000h
 	uint16_t imgWidth = 320;
 	uint16_t imgHeight = 240;
 	uint16_t palWidth = imgWidth / 4;
 	uint16_t palHeight = imgHeight / 4;
-	uint16_t fileSize = (imgWidth / 4) * (imgHeight / 4) * 2;//index file and b0/b1 file both use 2 bytes per block
+	uint16_t fileSize = (imgWidth / 4) * (imgHeight / 4) * 2;
 	uint16_t paletteAddr = RAM_G;
 	uint16_t colorAddr = paletteAddr + 512;
 	uint16_t gradientAddr = colorAddr + fileSize;
-	uint16_t colorHandle = 1;
-	uint16_t gradientHandle = 2;
+	uint8_t colorHandle = 1;
+	uint8_t gradientHandle = 2;
 
-	Draw_Text(s_pHalContext, "Example for: Load DXT1Paletted compressed image");
+	Draw_Text(s_pHalContext, "Example for: Load DXT1_L1_Paletted565 compressed image");
 
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_lut.raw", paletteAddr);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_index.raw",
-	    colorAddr);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_b0.raw",
-	    gradientAddr);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_b1.raw",
-	    gradientAddr + fileSize);
+	EVE_Util_loadRawFile(s_pHalContext, paletteAddr, TEST_DIR "\\bird_320x240_lut.raw");
+	EVE_Util_loadRawFile(s_pHalContext, colorAddr, TEST_DIR "\\bird_320x240_index.raw");
+	EVE_Util_loadRawFile(s_pHalContext, gradientAddr, TEST_DIR "\\bird_320x240_L1.raw");
 
-	EVE_CoCmd_dlStart(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 255, 255));
-
+	Display_Start(s_pHalContext);
 
 	EVE_CoCmd_loadIdentity(s_pHalContext);
 	EVE_CoCmd_setMatrix(s_pHalContext);
@@ -1297,32 +1142,32 @@ void SAMAPP_Bitmap_DXT1PALETTED()
 	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
 	EVE_CoDl_paletteSource(s_pHalContext, paletteAddr);
 
-	// L2 handle
+	// L1 handle
 	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
 	EVE_CoCmd_setBitmap(s_pHalContext, gradientAddr, L1, imgWidth, imgHeight);
-	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
 
 	// start drawing bitmaps
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
-	EVE_CoCmd_dl(s_pHalContext, ALPHA_FUNC(ALWAYS, 0));
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_A(0x55));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2, 
-		s_pHalContext->Height / 2 - imgHeight / 2, gradientHandle, 0));
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE, ONE));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_A(0xAA));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2,
-		s_pHalContext->Height / 2 - imgHeight / 2, gradientHandle, 1));
+	EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
+	EVE_CoDl_colorA(s_pHalContext, 0x55);
+	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2));
+	EVE_CoDl_blendFunc(s_pHalContext, ONE, ONE);
+	EVE_CoDl_colorA(s_pHalContext, 0xAA);
+	EVE_CoDl_cell(s_pHalContext, 1);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2));
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_MASK(1, 1, 1, 0));
+	EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 0);
 	EVE_CoCmd_scale(s_pHalContext, 4UL * 65536UL, 4UL * 65536UL); // Color passes, scaled up 4x, nearest
 	EVE_CoCmd_setMatrix(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(DST_ALPHA, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2,
-		s_pHalContext->Height / 2 - imgHeight / 2, colorHandle, 1)); // Color layer 1 (RGB*L2)
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2,
-		s_pHalContext->Height / 2 - imgHeight / 2, colorHandle, 0)); // Color layer 0 (RGB*(1-L2) + DST)
+	EVE_CoDl_blendFunc(s_pHalContext, DST_ALPHA, ZERO);
+	EVE_CoDl_bitmapHandle(s_pHalContext, colorHandle);
+	EVE_CoDl_cell(s_pHalContext, 1);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 1 (RGB*L2)
+	EVE_CoDl_blendFunc(s_pHalContext, ONE_MINUS_DST_ALPHA, ONE);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 0 (RGB*(1-L2) + DST)
 	EVE_CoDl_end(s_pHalContext);
 	EVE_CoDl_restoreContext(s_pHalContext);
 
@@ -1332,15 +1177,11 @@ void SAMAPP_Bitmap_DXT1PALETTED()
 
 	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 0, 0));
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 50, 31, OPT_CENTER,
-	    "DXT1Paletted: 28.6KB.");
+	    "DXT1_L1_Paletted565: 28.6KB.");
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 80, 31, OPT_CENTER,
 	    "RGB565: 150KB.");
 
-	EVE_CoCmd_dl(s_pHalContext, DISPLAY());
-	// swap the current display list with the new display list
-	EVE_CoCmd_swap(s_pHalContext);
-	// write to the FIFO command buffer - bitmap will appear after this command
-	EVE_Cmd_waitFlush(s_pHalContext);
+	Display_End(s_pHalContext);
 	SAMAPP_DELAY;
 #endif
 }
@@ -1352,7 +1193,7 @@ void SAMAPP_Bitmap_DXT1PALETTED()
  */
 void SAMAPP_Bitmap_DXT1L2PALETTED()
 {
-#if defined(FT81X_ENABLE) || defined(BT88X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE2
 	// RAM_G is starting address in graphics RAM, for example 00 0000h
 	uint16_t imgWidth = 320;
 	uint16_t imgHeight = 240;
@@ -1362,20 +1203,16 @@ void SAMAPP_Bitmap_DXT1L2PALETTED()
 	uint16_t paletteAddr = RAM_G;
 	uint16_t colorAddr = paletteAddr + 512;
 	uint16_t gradientAddr = colorAddr + idxFileSize;
-	uint16_t colorHandle = 1;
-	uint16_t gradientHandle = 2;
+	uint8_t colorHandle = 1;
+	uint8_t gradientHandle = 2;
 
-	Draw_Text(s_pHalContext, "Example for: Load DXT1L2Paletted compressed image");
+	Draw_Text(s_pHalContext, "Example for: Load DXT1_L2_Paletted565 compressed image");
 
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_lut.raw", paletteAddr);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_index.raw",
-	    colorAddr);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\bird_320x240_L2.raw",
-	    gradientAddr);
+	EVE_Util_loadRawFile(s_pHalContext, paletteAddr, TEST_DIR "\\bird_320x240_lut.raw");
+	EVE_Util_loadRawFile(s_pHalContext, colorAddr, TEST_DIR "\\bird_320x240_index.raw");
+	EVE_Util_loadRawFile(s_pHalContext, gradientAddr, TEST_DIR "\\bird_320x240_L2.raw");
 
-	EVE_CoCmd_dlStart(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 255, 255));
+	Display_Start(s_pHalContext);
 
 	EVE_CoCmd_loadIdentity(s_pHalContext);
 	EVE_CoCmd_setMatrix(s_pHalContext);
@@ -1391,25 +1228,25 @@ void SAMAPP_Bitmap_DXT1L2PALETTED()
 	// L2 handle
 	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
 	EVE_CoCmd_setBitmap(s_pHalContext, gradientAddr, L2, imgWidth, imgHeight);
-	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, imgWidth, imgHeight);
 
 	// start drawing bitmaps
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
-	EVE_CoCmd_dl(s_pHalContext, ALPHA_FUNC(ALWAYS, 0));
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_A(0xFF));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2, 
-		s_pHalContext->Height / 2 - imgHeight / 2, gradientHandle, 0));
+	EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
+	EVE_CoDl_colorA(s_pHalContext, 0xFF);
+	EVE_CoDl_bitmapHandle(s_pHalContext, gradientHandle);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2));
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_MASK(1, 1, 1, 0));
+	EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 0);
 	EVE_CoCmd_scale(s_pHalContext, 4UL * 65536UL, 4UL * 65536UL); // Color passes, scaled up 4x, nearest
 	EVE_CoCmd_setMatrix(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(DST_ALPHA, ZERO));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2, 
-		s_pHalContext->Height / 2 - imgHeight / 2, colorHandle, 1)); // Color layer 1 (RGB*L2)
-	EVE_CoCmd_dl(s_pHalContext, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2II(s_pHalContext->Width / 2 - imgWidth / 2, 
-		s_pHalContext->Height / 2 - imgHeight / 2, colorHandle, 0)); // Color layer 0 (RGB*(1-L2) + DST)
+	EVE_CoDl_blendFunc(s_pHalContext, DST_ALPHA, ZERO);
+	EVE_CoDl_bitmapHandle(s_pHalContext, colorHandle);
+	EVE_CoDl_cell(s_pHalContext, 1);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 1 (RGB*L2)
+	EVE_CoDl_blendFunc(s_pHalContext, ONE_MINUS_DST_ALPHA, ONE);
+	EVE_CoDl_cell(s_pHalContext, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - imgWidth / 2), VP(s_pHalContext->Height / 2 - imgHeight / 2)); // Color layer 0 (RGB*(1-L2) + DST)
 	EVE_CoDl_end(s_pHalContext);
 	EVE_CoDl_restoreContext(s_pHalContext);
 
@@ -1417,17 +1254,13 @@ void SAMAPP_Bitmap_DXT1L2PALETTED()
 	EVE_CoCmd_loadIdentity(s_pHalContext);
 	EVE_CoCmd_setMatrix(s_pHalContext);
 
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 0, 0));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 50, 31, OPT_CENTER,
-	    "DXT1L2Paletted: 28.6KB.");
+	    "DXT1_L2_Paletted565: 28.6KB.");
 	EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 80, 31, OPT_CENTER,
 	    "Original: 150KB.");
 
-	EVE_CoCmd_dl(s_pHalContext, DISPLAY());
-	// swap the current display list with the new display list
-	EVE_CoCmd_swap(s_pHalContext);
-	// write to the FIFO command buffer - bitmap will appear after this command
-	EVE_Cmd_waitFlush(s_pHalContext);
+	Display_End(s_pHalContext);
 	SAMAPP_DELAY;
 #endif
 }
@@ -1438,14 +1271,14 @@ void SAMAPP_Bitmap_DXT1L2PALETTED()
 */
 void SAMAPP_Bitmap_paletted8()
 {
-#ifdef FT81X_ENABLE
+#if EVE_SUPPORT_GEN >= EVE2
     const SAMAPP_Bitmap_header_t* p_bmhdr;
     int32_t pal_mem_addr = 900 * 1024;
 
     Draw_Text(s_pHalContext, "Example for: Paletted8 format");
 
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\Background_index.raw", RAM_G);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\Background_lut.raw", pal_mem_addr);
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\Background_index.raw");
+	EVE_Util_loadRawFile(s_pHalContext, pal_mem_addr, TEST_DIR "\\Background_lut.raw");
 
     p_bmhdr = &SAMAPP_Bitmap_RawData_Header[3];
 	Display_Start(s_pHalContext);
@@ -1458,20 +1291,20 @@ void SAMAPP_Bitmap_paletted8()
     EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
 	EVE_CoDl_colorMask(s_pHalContext, 0, 0, 0, 1);
 	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 3);
-	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
 
 	EVE_CoDl_blendFunc(s_pHalContext, DST_ALPHA, ONE_MINUS_DST_ALPHA);
 	EVE_CoDl_colorMask(s_pHalContext, 1, 0, 0, 0);
 	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 2);
-	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
 
 	EVE_CoDl_colorMask(s_pHalContext, 0, 1, 0, 0);
 	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 1);
-	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
 
     EVE_CoDl_colorMask(s_pHalContext, 0, 0, 1, 0);
 	EVE_CoDl_paletteSource(s_pHalContext, pal_mem_addr + 0);
-	EVE_CoDl_vertex2ii(s_pHalContext, 0, 0, 0, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
 
 	EVE_CoDl_end(s_pHalContext);
 	Display_End(s_pHalContext);
@@ -1485,29 +1318,25 @@ void SAMAPP_Bitmap_paletted8()
 */
 void SAMAPP_Bitmap_paletted4444()
 {
-#if defined(FT81X_ENABLE) || defined(BT88X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE2
 	uint16_t bitmapHeight = 128;
 	uint16_t bitmapWidth = 128;
 
 	Draw_Text(s_pHalContext, "Example for: Paletted4444 format");
 
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\Tomato_lut.raw", RAM_G);
-	Ftf_Write_File_To_RAM_G(s_pHalContext, TEST_DIR "\\Tomato_index.raw", 1024);
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\Tomato_lut.raw");
+	EVE_Util_loadRawFile(s_pHalContext, 1024, TEST_DIR "\\Tomato_index.raw");
 
-	EVE_CoCmd_dlStart(s_pHalContext);
-	EVE_CoCmd_dl(s_pHalContext, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(s_pHalContext, COLOR_RGB(255, 255, 255));
+	Display_Start(s_pHalContext);
 	EVE_CoCmd_setBitmap(s_pHalContext, 1024, PALETTED4444, bitmapWidth, bitmapHeight);
 	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, bitmapWidth, bitmapHeight);
 	EVE_CoDl_paletteSource(s_pHalContext, RAM_G);
 
 	EVE_CoDl_begin(s_pHalContext, BITMAPS);
-	EVE_CoCmd_dl(s_pHalContext, VERTEX2F((s_pHalContext->Width / 2 - bitmapWidth / 2) * 16, (s_pHalContext->Height / 2 - bitmapHeight / 2) * 16));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2 - bitmapWidth / 2), VP(s_pHalContext->Height / 2 - bitmapHeight / 2));
 	EVE_CoDl_end(s_pHalContext);
 
-	EVE_CoCmd_dl(s_pHalContext, DISPLAY());
-	EVE_CoCmd_swap(s_pHalContext);
-	EVE_Cmd_waitFlush(s_pHalContext);
+	Display_End(s_pHalContext);
 	SAMAPP_DELAY;
 #endif
 }
@@ -1519,13 +1348,9 @@ void SAMAPP_Bitmap_paletted4444()
 */
 void SAMAPP_Bitmap_higherResolutionBitmap()
 {
-#if defined(FT81X_ENABLE) // FT81X only
+#if EVE_SUPPORT_GEN >= EVE2
     Draw_Text(s_pHalContext, "Example for: Bitmap resolutions up to 2048x2048");
-    EVE_Cmd_waitFlush(s_pHalContext);
-
-    EVE_CoCmd_dlStart(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+	Display_Start(s_pHalContext);
 
     uint16_t iw = 800;
     uint16_t ih = 480;
@@ -1533,205 +1358,20 @@ void SAMAPP_Bitmap_higherResolutionBitmap()
 
     //load bitmap file into graphics RAM
     //RAM_G is starting address in graphics RAM, for example 00 0000h
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\flower_800x480_800x480_RGB565.raw", RAM_G,
-        LOAD);
-    EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, format, iw, ih);
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\flower_800x480_800x480_RGB565.raw");
 
     //Start drawing bitmap
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(1));
-    EVE_Cmd_wr32(s_pHalContext, SAVE_CONTEXT());
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-    EVE_Cmd_wr32(s_pHalContext, END());
-    EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-    EVE_Cmd_waitFlush(s_pHalContext);
+    EVE_CoDl_saveContext(s_pHalContext);
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+	EVE_CoDl_bitmapHandle(s_pHalContext, 1);
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, format, iw, ih);
+    EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
+    EVE_CoDl_end(s_pHalContext);
+    EVE_CoDl_restoreContext(s_pHalContext);
+	Display_End(s_pHalContext);
 
     SAMAPP_DELAY;
 #endif
-}
-
-/**
-* @brief API to demonstrate scale, rotate and translate functionality
-*
-*/
-void SAMAPP_Bitmap_matrix()
-{
-    /*************************************************************************/
-    /* Below code demonstrates the usage of bitmap matrix processing apis.   */
-    /* Mainly matrix apis consists if scale, rotate and translate.           */
-    /* Units of translation and scale are interms of 1/65536, rotation is in */
-    /* degrees and in terms of 1/65536. +ve theta is anticlock wise, and -ve  */
-    /* theta is clock wise rotation                                          */
-    /*************************************************************************/
-
-    /* Lena image with 40x40 rgb565 is used as an example */
-    int32_t imagewidth;
-    int32_t imagestride;
-    int32_t imageheight;
-    int32_t imagexoffset;
-    int32_t imageyoffset;
-
-    Draw_Text(s_pHalContext, "Example for: Scale, rotate and translate functionality");
-
-    /* Download the bitmap data */
-    Ftf_Write_File_nBytes_To_RAM_G(s_pHalContext, TEST_DIR "\\SAMAPP_Bitmap_RawData.bin", RAM_G,
-        SAMAPP_Bitmap_RawData_Header[0].Stride * SAMAPP_Bitmap_RawData_Header[0].Height,
-        SAMAPP_Bitmap_RawData_Header[0].Arrayoffset);
-
-    EVE_CoCmd_dlStart(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0xff, 0xff, 0xff));
-    EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(32, 32, 32));
-    EVE_CoCmd_text(s_pHalContext, 10, 5, 16, 0, "BM with rotation");
-    EVE_CoCmd_text(s_pHalContext, 10, 20 + 40 + 5, 16, 0, "BM with scaling");
-    EVE_CoCmd_text(s_pHalContext, 10, 20 + 40 + 20 + 80 + 5, 16, 0, "BM with flip");
-
-    imagewidth = SAMAPP_Bitmap_RawData_Header[0].Width;
-    imageheight = SAMAPP_Bitmap_RawData_Header[0].Height;
-    imagestride = SAMAPP_Bitmap_RawData_Header[0].Stride;
-    imagexoffset = 10 * 16;
-    imageyoffset = 20 * 16;
-
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(0));
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_LAYOUT(SAMAPP_Bitmap_RawData_Header[0].Format, imagestride, imageheight));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth, imageheight));
-    /******************************************* Perform display of plain bitmap ************************************/
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 45 degrees anti clock wise and the rotation is performed on top left coordinate */
-    imagexoffset += (imagewidth + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_rotate(s_pHalContext, (-45 * 65536 / 360)); //rotate by 45 degrees anticlock wise
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 30 degrees clock wise and the rotation is performed on top left coordinate */
-    imagexoffset += (int32_t) (imagewidth * 1.42 + 10) * 16; //add the width*1.41 as diagonal is new width and extra 10 pixels
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_rotate(s_pHalContext, 30 * 65536 / 360); //rotate by 33 degrees clock wise
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 45 degrees anti clock wise and the rotation is performed wrt centre of the bitmap */
-    imagexoffset += (int32_t) (imagewidth * 1.42 + 10) * 16; //add the width*1.41 as diagonal is new width and extra 10 pixels
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_rotate(s_pHalContext, -45 * 65536 / 360); //rotate by 45 degrees anticlock wise
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 2);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 45 degrees clock wise and the rotation is performed so that whole bitmap is viewable */
-    imagexoffset += (int32_t) (imagewidth * 1.42 + 10) * 16; //add the width*1.41 as diagonal is new width and extra 10 pixels
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_rotate(s_pHalContext, 45 * 65536 / 360); //rotate by 45 degrees clock wise
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 10, -65536 * imageheight / 2);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth * 2, imageheight * 2));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 90 degrees anti clock wise and the rotation is performed so that whole bitmap is viewable */
-    imagexoffset += (imagewidth * 2 + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_rotate(s_pHalContext, -90 * 65536 / 360); //rotate by 90 degrees anticlock wise
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 2);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth, imageheight));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 180 degrees clock wise and the rotation is performed so that whole bitmap is viewable */
-    imagexoffset += (imagewidth + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_rotate(s_pHalContext, -180 * 65536 / 360); //rotate by 180 degrees anticlock wise
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 2);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-    /******************************************* Perform display of bitmap with scale ************************************/
-    /* Perform display of plain bitmap with scale factor of 2x2 in x & y direction */
-    imagexoffset = (10) * 16;
-    imageyoffset += (imageheight + 20) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_scale(s_pHalContext, 2 * 65536, 2 * 65536); //scale by 2x2
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth * 2, imageheight * 2));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with scale factor of .5x.25 in x & y direction, rotate by 45 degrees clock wise wrt top left */
-    imagexoffset += (imagewidth * 2 + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-
-    EVE_CoCmd_rotate(s_pHalContext, 45 * 65536 / 360); //rotate by 45 degrees clock wise
-    EVE_CoCmd_scale(s_pHalContext, 65536 / 2, 65536 / 4); //scale by .5x.25
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 2);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with scale factor of .5x2 in x & y direction, rotate by 75 degrees anticlock wise wrt center of the image */
-    imagexoffset += (imagewidth + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_rotate(s_pHalContext, -75 * 65536 / 360); //rotate by 75 degrees anticlock wise
-    EVE_CoCmd_scale(s_pHalContext, 65536 / 2, 2 * 65536); //scale by .5x2
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 8);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth * 5 / 2, imageheight * 5 / 2));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-    /******************************************* Perform display of bitmap flip ************************************/
-    /* perform display of plain bitmap with 1x1 and flip right */
-    imagexoffset = (10) * 16;
-    imageyoffset += (imageheight * 2 + 20) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_scale(s_pHalContext, -1 * 65536, 1 * 65536); //flip right
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 2);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth, imageheight));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 2x2 scaling, flip bottom */
-    imagexoffset += (imagewidth + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-    EVE_CoCmd_scale(s_pHalContext, 2 * 65536, -2 * 65536); //flip bottom and scale by 2 on both sides
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 4,
-        (int32_t) (-65536 * imageheight / 1.42));
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_SIZE(BILINEAR, BORDER, BORDER, imagewidth * 4, imageheight * 4));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    /* Perform display of plain bitmap with 2x1 scaling, rotation and flip right and make sure whole image is viewable */
-    imagexoffset += (imagewidth * 2 + 10) * 16;
-    EVE_CoCmd_loadIdentity(s_pHalContext);
-    EVE_CoCmd_translate(s_pHalContext, 65536 * imagewidth / 2, 65536 * imageheight / 2); //make the rotation coordinates at the center
-
-    EVE_CoCmd_rotate(s_pHalContext, -45 * 65536 / 360); //rotate by 45 degrees anticlock wise
-    EVE_CoCmd_scale(s_pHalContext, -2 * 65536, 1 * 65536); //flip right and scale by 2 on x axis
-    EVE_CoCmd_translate(s_pHalContext, -65536 * imagewidth / 2, -65536 * imageheight / 8);
-    EVE_CoCmd_setMatrix(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext,
-        BITMAP_SIZE(BILINEAR, BORDER, BORDER, (imagewidth * 5), (imageheight * 5)));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(imagexoffset, imageyoffset));
-
-    EVE_Cmd_wr32(s_pHalContext, END());
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-
-    /* Wait till coprocessor completes the operation */
-    EVE_Cmd_waitFlush(s_pHalContext);
-    SAMAPP_DELAY;
 }
 
 void SAMAPP_Bitmap() 
@@ -1746,7 +1386,6 @@ void SAMAPP_Bitmap()
     SAMAPP_Bitmap_ASTCLayoutCell_1_3x2();
     SAMAPP_Bitmap_rotate();
     SAMAPP_Bitmap_rotateAndTranslate();
-    SAMAPP_Bitmap_loadImage();
     SAMAPP_Bitmap_loadImageMono();
     SAMAPP_Bitmap_loadImageFullColor();
     SAMAPP_Bitmap_DXT1();

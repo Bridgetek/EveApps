@@ -35,12 +35,12 @@
 #ifdef EVE_SUPPORT_MEDIAFIFO
 
 /**
- * @brief Set the media FIFO.
- *
+ * @brief Set the media FIFO. 
+ * 
  * @param phost Pointer to Hal context
- * @param address
- * @param size
- * @returns false in case a coprocessor fault occurred
+ * @param address Media FIFO address
+ * @param size Media FIFO size
+ * @returns false in case a coprocessor fault occurred 
  */
 bool EVE_MediaFifo_set(EVE_HalContext *phost, uint32_t address, uint32_t size)
 {
@@ -54,11 +54,7 @@ bool EVE_MediaFifo_set(EVE_HalContext *phost, uint32_t address, uint32_t size)
 
 	if (phost->MediaFifoAddress != address || phost->MediaFifoSize != size)
 	{
-		EVE_Cmd_startFunc(phost);
-		EVE_Cmd_wr32(phost, CMD_MEDIAFIFO);
-		EVE_Cmd_wr32(phost, address);
-		EVE_Cmd_wr32(phost, size);
-		EVE_Cmd_endFunc(phost);
+		EVE_CoCmd_mediaFifo(phost, address, size);
 
 		/* Must flush for fifo pointers to be ready. */
 		res = EVE_Cmd_waitFlush(phost);
@@ -84,6 +80,11 @@ bool EVE_MediaFifo_set(EVE_HalContext *phost, uint32_t address, uint32_t size)
 	return res;
 }
 
+/**
+ * @brief Close the media FIFO.
+ * 
+ * @param phost Pointer to Hal context
+ */
 void EVE_MediaFifo_close(EVE_HalContext *phost)
 {
 	phost->MediaFifoAddress = 0;
@@ -125,28 +126,22 @@ uint32_t EVE_MediaFifo_space(EVE_HalContext *phost)
 
 	int32_t rp = EVE_Hal_rd32(phost, REG_MEDIAFIFO_READ);
 	int32_t wp = EVE_Hal_rd32(phost, REG_MEDIAFIFO_WRITE);
-#if 1
+
 	return rp > wp
 	    ? (rp - wp - 4)
 	    : (rp + phost->MediaFifoSize - wp - 4);
-#else
-	int32_t diff = wp - rp;
-	if (diff < 0)
-		diff += phost->MediaFifoSize;
-	eve_assert(diff >= 0 && diff < phost->MediaFifoSize);
-	return phost->MediaFifoSize - diff - 4;
-#endif
 }
 
 /**
- * @brief Write a buffer to the media FIFO.
+ * @brief Write a buffer to the media FIFO. 
+ * 
  * Waits if there is not enough space in the media FIFO.
  *
  * @param phost Pointer to Hal context
- * @param buffer
- * @param size
- * @param transfered
- * @returns false in case a coprocessor fault occurred
+ * @param buffer Data to write 
+ * @param size Data size
+ * @param transfered transfered length
+ * @returns false in case a coprocessor fault occurred 
  */
 bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t size, uint32_t *transfered)
 {
@@ -162,7 +157,6 @@ bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t 
 		return false;
 	}
 
-#if 1
 	/* Two strategies.
 	- Wait for entire space and write the entire buffer.
 	- Wait for half the fifo to be available, and write in parts. */
@@ -239,65 +233,27 @@ bool EVE_MediaFifo_wrMem(EVE_HalContext *phost, const uint8_t *buffer, uint32_t 
 			if (transfered)
 			{
 				*transfered = done;
-				if (EVE_Cmd_rp(phost) == EVE_Cmd_wp(phost))
+				if (EVE_Cmd_space(phost) == (EVE_CMD_FIFO_SIZE - 4))
 					return true; /* Early exit, finished processing. */
 			}
 		}
 
 		return true;
 	}
-#else
-	eve_scope()
-	{
-		uint32_t halfSize = ((phost->MediaFifoSize >> 3) << 2) - 4;
-		uint32_t remaining = size;
-		uint32_t done = 0;
-		uint32_t wp;
-
-		/* Write to media FIFO as soon as space is available */
-		wp = EVE_Hal_rd32(phost, REG_MEDIAFIFO_WRITE);
-		while (remaining)
-		{
-			uint32_t transfer = min(
-			    EVE_MediaFifo_waitSpace(phost, 4),
-			    min(halfSize, remaining));
-			if (!transfer)
-				return false; // !phost->CmdFault;
-			int32_t overflow = (int32_t)(wp + transfer) - (int32_t)(phost->MediaFifoSize);
-			if (overflow > 0)
-			{
-				EVE_Hal_wrMem(phost, phost->MediaFifoAddress + wp, &buffer[done], transfer - overflow);
-				EVE_Hal_wrMem(phost, phost->MediaFifoAddress, &buffer[done + transfer - overflow], overflow);
-			}
-			else
-			{
-				EVE_Hal_wrMem(phost, phost->MediaFifoAddress + wp, &buffer[done], transfer);
-			}
-			wp += transfer;
-			done += transfer;
-			remaining -= transfer;
-			if (wp >= phost->MediaFifoSize)
-				wp -= phost->MediaFifoSize;
-			eve_assert(wp < phost->MediaFifoSize);
-			EVE_Hal_wr32(phost, REG_MEDIAFIFO_WRITE, wp);
-
-			if (transfered)
-			{
-				*transfered = done;
-				if (EVE_Cmd_rp(phost) == EVE_Cmd_wp(phost))
-					return true; /* Early exit, finished processing. */
-			}
-		}
-
-		return true;
-	}
-#endif
 }
 
 #if defined(_DEBUG)
 void debugBackupRamG(EVE_HalContext *phost);
 #endif
 
+/**
+ * @brief Check for coprocessor fault
+ * 
+ * @param phost Pointer to Hal context
+ * @param rpOrSpace Read pointer or space
+ * @return true True if ok
+ * @return false False if coprocessor fault
+ */
 static bool checkWait(EVE_HalContext *phost, uint32_t rpOrSpace)
 {
 	if (EVE_CMD_FAULT(rpOrSpace))
@@ -334,6 +290,14 @@ static bool checkWait(EVE_HalContext *phost, uint32_t rpOrSpace)
 	return true;
 }
 
+/**
+ * @brief Wait handler
+ * 
+ * @param phost Pointer to Hal context
+ * @param rpOrSpace Read pointer or space
+ * @return true True if ok
+ * @return false False if error
+ */
 static bool handleWait(EVE_HalContext *phost, uint16_t rpOrSpace)
 {
 	/* Check for coprocessor fault */
@@ -359,8 +323,8 @@ static bool handleWait(EVE_HalContext *phost, uint16_t rpOrSpace)
  * @brief Wait for the media FIFO to fully empty.
  *
  * @param phost Pointer to Hal context
- * @param orCmdFlush
- * @returns false in case a coprocessor fault occurred
+ * @param orCmdFlush Need cmd_flush or not
+ * @returns false in case a coprocessor fault occurred 
  */
 bool EVE_MediaFifo_waitFlush(EVE_HalContext *phost, bool orCmdFlush)
 {
@@ -371,9 +335,9 @@ bool EVE_MediaFifo_waitFlush(EVE_HalContext *phost, bool orCmdFlush)
  * @brief Wait for the media FIFO to have at least the requested amount of free space.
  *
  * @param phost Pointer to Hal context
- * @param size
- * @param orCmdFlush
- * @returns 0 in case a coprocessor fault occurred
+ * @param size Space size
+ * @param orCmdFlush Need cmd_flush or not
+ * @returns 0 in case a coprocessor fault occurred 
  */
 uint32_t EVE_MediaFifo_waitSpace(EVE_HalContext *phost, uint32_t size, bool orCmdFlush)
 {
@@ -400,13 +364,11 @@ uint32_t EVE_MediaFifo_waitSpace(EVE_HalContext *phost, uint32_t size, bool orCm
 	eve_assert(!phost->CmdWaiting);
 	phost->CmdWaiting = true;
 
-#if 1
 	space = EVE_MediaFifo_space(phost);
 	if (!checkWait(phost, space))
 		return 0;
-#endif
 
-	do
+	while (space < size)
 	{
 		space = EVE_MediaFifo_space(phost);
 		if (!handleWait(phost, (uint16_t)space))
@@ -418,7 +380,7 @@ uint32_t EVE_MediaFifo_waitSpace(EVE_HalContext *phost, uint32_t size, bool orCm
 		if (orCmdFlush && cmdSpace == (EVE_CMD_FIFO_SIZE - 4))
 			return 0; /* Processed */
 		phost->CmdWaiting = true;
-	} while (space < size);
+	} 
 
 	phost->CmdWaiting = false;
 	return space;

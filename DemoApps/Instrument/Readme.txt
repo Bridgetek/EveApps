@@ -48,7 +48,7 @@
 4. CONFIGURATION INSTRUCTIONS
     Host platform: EVE_PLATFORM_FT4222 or EVE_PLATFORM_MPSSE
     
-    EVE platform: Defined with ESD_TARGET_GRAPHICS, such as:
+    EVE platform: EVE chip definition, such as:
         EVE_GRAPHICS_BT815, EVE_GRAPHICS_BT816, EVE_GRAPHICS_BT817, 
         EVE_GRAPHICS_BT818...
     

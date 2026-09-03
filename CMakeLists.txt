@@ -1,10 +1,29 @@
+# ====================================================================================
+# == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 1.5.1)
+set(toolchainVersion 13_2_Rel1)
+set(picotoolVersion 2.0.0)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+# ====================================================================================
+set(PICO_BOARD pico CACHE STRING "Board type")
+
 # CMake project ################################################################
 #
 # 1. Build for FT9XX example: Edit the FT9XX_TOOLCHAIN location path at first
-#  cd build && cmake  -G "Eclipse CDT4 - Unix Makefiles" -DEVE_APPS_PLATFORM=MM900EV3A -DEVE_APPS_GRAPHICS=BT817 -DEVE_APPS_DISPLAY=WXGA -DCMAKE_BUILD_TYPE=Debug "-DFT9XX_TOOLCHAIN=C:\Program Files (x86)\Bridgetek\FT9xx Toolchain" ..
+#  cd build && cmake  -G "Eclipse CDT4 - Unix Makefiles" -DEVE_APPS_PLATFORM=MM900EV3A -DEVE_APPS_GRAPHICS=BT817 -DEVE_APPS_DISPLAY=WXGA -DCMAKE_BUILD_TYPE=Debug "-DFT9XX_TOOLCHAIN=E:\Users\nvtua\AppData\Local\Bridgetek\FT9xx Toolchain\Toolchain" ..
 #  cmake --build ./ 
 #
 # 2. Build for RP2040 example:
+#  set PICO_SDK_PATH=[path-to-pico-sdk]
+#  set PICO_TOOLCHAIN_PATH=[path-to-gnu-arm-toolchain]
 #  cd build && cmake  -G "NMake Makefiles" -DEVE_APPS_PLATFORM=RP2040 -DEVE_APPS_GRAPHICS=BT817 -DEVE_APPS_DISPLAY=WXGA -DCMAKE_BUILD_TYPE=Debug ..
 #  nmake SampleApp
 #
@@ -59,11 +78,9 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/")
 
 # Options ######################################################################
 SET(WITH_EVE_TESTS OFF CACHE BOOL "Build EVE test projects")
-SET(WITH_ESD_CORE OFF CACHE BOOL "Build ESD Core library")
-SET(WITH_ESD_LITTLEFS OFF CACHE BOOL "Build ESD Core library with LittleFS support")
 
 # Valid option input ###########################################################
-set(LIST_GRAPHICS MULTI
+set(LIST_GRAPHICS DEFAULT
                   VM800B35A_BK
                   VM800B43A_BK
                   VM800B50A_BK
@@ -110,8 +127,7 @@ set(LIST_GRAPHICS MULTI
                   EVE_GRAPHICS_BT817
                   EVE_GRAPHICS_BT818
   )
-set(LIST_PLATFORM MULTI
-                  DEFAULT
+set(LIST_PLATFORM DEFAULT
                   MM900EV1A
                   MM900EV1B
                   MM900EV2A
@@ -128,8 +144,7 @@ set(LIST_PLATFORM MULTI
                   EVE_PLATFORM_RP2040
                   EVE_PLATFORM_MM2040EV
   )
-set(LIST_DISPLAY  MULTI
-                  DEFAULT
+set(LIST_DISPLAY  DEFAULT
                   EVE_DISPLAY_QVGA
                   EVE_DISPLAY_WQVGA
                   EVE_DISPLAY_WVGA
@@ -140,11 +155,11 @@ set(LIST_DISPLAY  MULTI
   )
 
 # Set cache ####################################################################
-SET(EVE_APPS_GRAPHICS "MULTI" CACHE STRING "Graphics Module")
+SET(EVE_APPS_GRAPHICS "DEFAULT" CACHE STRING "Graphics Module")
 SET_PROPERTY(CACHE EVE_APPS_GRAPHICS PROPERTY STRINGS ${LIST_GRAPHICS})
 
 # TODO: Set a better default here automatically when CMake is run with an embedded platform
-SET(EVE_APPS_PLATFORM "MULTI" CACHE STRING "Platform Target")
+SET(EVE_APPS_PLATFORM "DEFAULT" CACHE STRING "Platform Target")
 SET_PROPERTY(CACHE EVE_APPS_PLATFORM PROPERTY STRINGS ${LIST_PLATFORM})
 
 SET(EVE_APPS_DISPLAY "DEFAULT" CACHE STRING "Display Resolution")
@@ -200,7 +215,6 @@ validate_input("EVE_APPS_DISPLAY"  LIST_DISPLAY)
 STRING(REGEX MATCH "MM90.*"                    IS_PLATFORM_FT9XX    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "(EVE_PLATFORM_RP2040|EVE_PLATFORM_MM2040EV)"       IS_PLATFORM_RP2040   ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "(EVE_PLATFORM_FT4222|EVE_PLATFORM_MPSSE|EVE_PLATFORM_BT8XXEMU)" IS_PLATFORM_WINDOW   ${EVE_APPS_PLATFORM})
-STRING(REGEX MATCH "(MULTI|DEFAULT).*"         IS_PLATFORM_MULTI    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "MM900.*"                   IS_PLATFORM_FT900    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "MM930.*"                   IS_PLATFORM_FT930    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "EVE_PLATFORM_FT4222"       IS_PLATFORM_FT4222   ${EVE_APPS_PLATFORM})
@@ -209,7 +223,6 @@ STRING(REGEX MATCH "EVE_PLATFORM_BT8XXEMU"     IS_PLATFORM_EMULATOR ${EVE_APPS_P
 SET(IS_PLATFORM_FT9XX    "${IS_PLATFORM_FT9XX}"    CACHE STRING "Platform Target FT9XX   ")
 SET(IS_PLATFORM_RP2040   "${IS_PLATFORM_RP2040}"   CACHE STRING "Platform Target RP2040  ")
 SET(IS_PLATFORM_WINDOW   "${IS_PLATFORM_WINDOW}"   CACHE STRING "Platform Target WINDOW  ")
-SET(IS_PLATFORM_MULTI    "${IS_PLATFORM_MULTI}"    CACHE STRING "Platform Target MULTI   ")
 SET(IS_PLATFORM_FT900    "${IS_PLATFORM_FT900}"    CACHE STRING "Platform Target FT900   ")
 SET(IS_PLATFORM_FT930    "${IS_PLATFORM_FT930}"    CACHE STRING "Platform Target FT930   ")
 SET(IS_PLATFORM_FT4222   "${IS_PLATFORM_FT4222}"   CACHE STRING "Platform Target FT4222  ")
@@ -219,7 +232,6 @@ SET(IS_PLATFORM_EMULATOR "${IS_PLATFORM_EMULATOR}" CACHE STRING "Platform Target
 mark_as_advanced(IS_PLATFORM_FT9XX   )
 mark_as_advanced(IS_PLATFORM_RP2040  )
 mark_as_advanced(IS_PLATFORM_WINDOW  )
-mark_as_advanced(IS_PLATFORM_MULTI   )
 mark_as_advanced(IS_PLATFORM_FT900   )
 mark_as_advanced(IS_PLATFORM_FT930   )
 mark_as_advanced(IS_PLATFORM_FT4222  )
@@ -235,8 +247,8 @@ ENDIF ()
 
 # Platform SDk setting #########################################################
 IF(IS_PLATFORM_RP2040)
-  validate_env_rp2040("$ENV{PICO_SDK_PATH}" "PICO_SDK_PATH")
-  validate_env_rp2040("$ENV{PICO_TOOLCHAIN_PATH}" "PICO_TOOLCHAIN_PATH")
+  #validate_env_rp2040("$ENV{PICO_SDK_PATH}" "PICO_SDK_PATH")
+  #validate_env_rp2040("$ENV{PICO_TOOLCHAIN_PATH}" "PICO_TOOLCHAIN_PATH")
 
   # Pull in Pico SDK (must be before project)
   INCLUDE(pico_sdk_import.cmake)
@@ -247,17 +259,13 @@ IF(IS_PLATFORM_RP2040)
 
   INCLUDE_DIRECTORIES(common/application/fatfs/source)
 
-ELSEIF(IS_PLATFORM_WINDOW OR IS_PLATFORM_MULTI)
+ELSEIF(IS_PLATFORM_WINDOW)
   PROJECT("EVE_Apps" C CXX)
   
   # Strip binary in release mode
   IF (CMAKE_COMPILER_IS_GNUCXX)
     SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
   ENDIF ()
-  
-  if (IS_PLATFORM_MULTI)
-    MESSAGE(STATUS "Multi-platform desktop EVE HAL build selected (targets FT4222, MPSSE, and BT8XXEMU)")
-  endif ()
   
   SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE})
   SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -323,23 +331,17 @@ add_compile_options(
     -Wno-incompatible-pointer-types   # function pointer signature mismatches
     -Wno-implicit-function-declaration # missing #include (malloc, sd_init_card, etc.)
 )
+
 # Most graphics boards have a default display and platform specified in the configuration header
-# MULTI and DEFAULT behave the same, it depends on the selected graphics board
 # For embedded targets, the platforma always needs to be specified, though, since CMake needs to set the proper build options
-if(NOT EVE_APPS_GRAPHICS STREQUAL "MULTI")
-  if(NOT EVE_APPS_GRAPHICS STREQUAL "")
-    add_definitions("-D${EVE_APPS_GRAPHICS}")
-  endif()
+if(NOT EVE_APPS_GRAPHICS STREQUAL "DEFAULT")
+  add_definitions("-D${EVE_APPS_GRAPHICS}")
 endif()
-if(NOT EVE_APPS_PLATFORM STREQUAL "MULTI")
-  if(NOT EVE_APPS_PLATFORM STREQUAL "DEFAULT")
-    add_definitions("-D${EVE_APPS_PLATFORM}")
-  endif()
+if(NOT EVE_APPS_PLATFORM STREQUAL "DEFAULT")
+  add_definitions("-D${EVE_APPS_PLATFORM}")
 endif()
-if(NOT EVE_APPS_DISPLAY STREQUAL "MULTI")
-  if(NOT EVE_APPS_DISPLAY STREQUAL "DEFAULT")
-    add_definitions("-D${EVE_APPS_DISPLAY}")
-  endif()
+if(NOT EVE_APPS_DISPLAY STREQUAL "DEFAULT")
+  add_definitions("-D${EVE_APPS_DISPLAY}")
 endif()
 
 # Set host platform build flag #################################################
@@ -349,27 +351,14 @@ ELSEIF(IS_PLATFORM_FT930)
   ADD_DEFINITIONS("-D__FT930__")
 ENDIF()
 
-if(WITH_ESD_CORE AND WITH_ESD_LITTLEFS)
-  ADD_DEFINITIONS("-DESD_LITTLEFS_FLASH")
-  INCLUDE_DIRECTORIES("dependencies/littlefs")
-endif()
-
-IF(WIN32 AND ((EVE_APPS_PLATFORM STREQUAL "MULTI") OR (EVE_APPS_GRAPHICS STREQUAL "MULTI")))
-  IF(WITH_ESD_CORE AND WITH_ESD_LITTLEFS)
-     ADD_DEFINITIONS(-DLFS_IMPORT)
-  ENDIF()
-ENDIF()
-
 # Common setup #################################################################
 ADD_SUBDIRECTORY(common)
 INCLUDE_DIRECTORIES("common/eve_hal")
 INCLUDE_DIRECTORIES("common/eve_hal/Hdr")
 
 # Project setup ################################################################
-IF(NOT EVE_APPS_GRAPHICS STREQUAL "MULTI")
-  ADD_SUBDIRECTORY(DemoApps)
-  ADD_SUBDIRECTORY(SampleApp)
-ENDIF()
+ADD_SUBDIRECTORY(DemoApps)
+ADD_SUBDIRECTORY(SampleApp)
 
 IF (WITH_EVE_TESTS)
   ADD_SUBDIRECTORY(tests)

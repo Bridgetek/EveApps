@@ -62,8 +62,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoJackpot();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -568,7 +567,7 @@ void jackpotSetup() {
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(ramOffset));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, ICON_STRIDE, ICON_HEIGHT));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, ICON_WIDTH, ICON_HEIGHT));
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, path, ramOffset, LOADIMAGE);
+		EVE_Util_loadImageFile(s_pHalContext, ramOffset, path, NULL, 0);
 		ramOffset += (ICON_STRIDE*ICON_HEIGHT);
 	}
 
@@ -586,7 +585,7 @@ void jackpotSetup() {
 #if defined(DISPLAY_RESOLUTION_WVGA)
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(s_pHalContext->Width >> 9, STATUS_BAR_HEIGHT >> 9));
 #endif
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, path, ramOffset, LOADIMAGE);
+	EVE_Util_loadImageFile(s_pHalContext, ramOffset, path, NULL, 0);
 	ramOffset += (2 * STATUS_BAR_HEIGHT);
 
 	printf("Loading background bitmap\n");
@@ -597,7 +596,7 @@ void jackpotSetup() {
 	strcat(path, fileName);
 	strcat(path, bitmapExtention);
 	bitmapInfo[1].Offset = ramOffset;
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, path, ramOffset, LOADIMAGE);
+	EVE_Util_loadImageFile(s_pHalContext, ramOffset, path, NULL, 0);
 	ramOffset += (bitmapInfo[1].Stride*bitmapInfo[1].Height);
 
 	printf("loading coins\n");
@@ -613,7 +612,7 @@ void jackpotSetup() {
 		strcat(path, "JH.bin");
 #endif
 		bitmapInfo[i - 14].Offset = ramOffset;
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, path, ramOffset, INFLATE);
+		EVE_Util_loadInflateFile(s_pHalContext, ramOffset, path);
 		ramOffset += (bitmapInfo[i - 14].Stride*bitmapInfo[i - 14].Height);
 	}
 
@@ -627,7 +626,7 @@ void jackpotSetup() {
 	strcat(path, "overlayH.raw");
 #endif
 	bitmapInfo[9].Offset = ramOffset;
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, path, ramOffset, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, ramOffset, path);
 	ramOffset += (bitmapInfo[9].Stride*bitmapInfo[9].Height * 2);
 
 	printf("loading outer overlay\n");
@@ -640,7 +639,7 @@ void jackpotSetup() {
 	strcat(path, "outerH.raw");
 #endif
 	bitmapInfo[10].Offset = ramOffset;
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, path, ramOffset, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, ramOffset, path);
 	ramOffset += (bitmapInfo[10].Stride*bitmapInfo[10].Height);
 
 	EVE_Cmd_wr32(s_pHalContext, DISPLAY());

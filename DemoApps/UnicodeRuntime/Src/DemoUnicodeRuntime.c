@@ -64,8 +64,7 @@ int main(int argc, char* argv[])
         WelcomeScreen(s_pHalContext, info);
         DemoUnicodeRuntime();
         EVE_Util_clearScreen(s_pHalContext);
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -434,9 +433,9 @@ static void displayUnicode_simple(char *stream, int numChars, int fontCn,
 }
 static void set_font(char *xfont, char* glyph, uint32_t addrXfont,
 	uint32_t addrGlyph) {
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, xfont, addrXfont, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrXfont, xfont);
 	EVE_Cmd_waitFlush(s_pHalContext);
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, glyph, addrGlyph, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, addrGlyph, glyph);
 	EVE_Cmd_waitFlush(s_pHalContext);
 }
 static void displayUnicode(char *stream, char *xfont, char* glyph,

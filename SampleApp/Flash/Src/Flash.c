@@ -66,8 +66,7 @@ int main(int argc, char* argv[])
 
         EVE_Util_clearScreen(s_pHalContext);
 
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+        Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -124,6 +123,7 @@ void healperClearMessage() {
 *
 */
 void SAMAPP_Flash_state() {
+#if EVE_SUPPORT_GEN >= EVE3
     const char* flash_status[4] = { "INIT", "DETACHED", "BASIC", "FULL" };
     char mes[50];
     int mesLen = 50;
@@ -208,6 +208,7 @@ void SAMAPP_Flash_state() {
 
     healperClearMessage();
     EVE_sleep(2000);
+#endif
 }
 
 /**
@@ -215,6 +216,7 @@ void SAMAPP_Flash_state() {
 *
 */
 void SAMAPP_Flash_program() {
+#if EVE_SUPPORT_GEN >= EVE3
     char mes[50];
     int mesLen = 50;
 
@@ -243,6 +245,7 @@ void SAMAPP_Flash_program() {
     
     healperClearMessage();    
     EVE_sleep(2000);
+#endif
 }
 
 void SAMAPP_Flash() {

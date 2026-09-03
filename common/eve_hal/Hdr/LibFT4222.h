@@ -48,11 +48,13 @@
     typedef INT16  int16;
     typedef INT32  int32;
     typedef INT64  int64;
-
     #ifdef LIBFT4222_EXPORTS
         #define LIBFT4222_API __declspec(dllexport)
 	#elif defined(FT4222_STATIC)
 	    #define LIBFT4222_API  
+          #pragma comment(lib, "setupapi.lib")
+          #pragma comment(lib, "advapi32.lib")
+          #pragma comment(lib, "user32.lib")
 	#else
         #define LIBFT4222_API __declspec(dllimport)
     #endif
@@ -72,7 +74,7 @@
 
     // No function-name decorations needed.
     #define LIBFT4222_API
-
+	#define WINAPI
 #endif // _WIN32
 
 #ifdef _MSC_VER
@@ -325,73 +327,74 @@ extern "C" {
 
 
 // FT4222 General Functions
-LIBFT4222_API FT4222_STATUS FT4222_UnInitialize(FT_HANDLE ftHandle);
-LIBFT4222_API FT4222_STATUS FT4222_SetClock(FT_HANDLE ftHandle, FT4222_ClockRate clk);
-LIBFT4222_API FT4222_STATUS FT4222_GetClock(FT_HANDLE ftHandle, FT4222_ClockRate* clk);
-LIBFT4222_API FT4222_STATUS FT4222_SetWakeUpInterrupt(FT_HANDLE ftHandle, BOOL enable);
-LIBFT4222_API FT4222_STATUS FT4222_SetInterruptTrigger(FT_HANDLE ftHandle, GPIO_Trigger trigger);
-LIBFT4222_API FT4222_STATUS FT4222_SetSuspendOut(FT_HANDLE ftHandle, BOOL enable);
-LIBFT4222_API FT4222_STATUS FT4222_GetMaxTransferSize(FT_HANDLE ftHandle, uint16* pMaxSize);
-LIBFT4222_API FT4222_STATUS FT4222_SetEventNotification(FT_HANDLE ftHandle, DWORD mask, PVOID param);
-LIBFT4222_API FT4222_STATUS FT4222_GetVersion(FT_HANDLE ftHandle, FT4222_Version* pVersion);
-LIBFT4222_API FT4222_STATUS FT4222_ChipReset(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_UnInitialize(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SetClock(FT_HANDLE ftHandle, FT4222_ClockRate clk);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GetClock(FT_HANDLE ftHandle, FT4222_ClockRate* clk);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SetWakeUpInterrupt(FT_HANDLE ftHandle, BOOL enable);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SetInterruptTrigger(FT_HANDLE ftHandle, GPIO_Trigger trigger);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SetSuspendOut(FT_HANDLE ftHandle, BOOL enable);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GetMaxTransferSize(FT_HANDLE ftHandle, uint16* pMaxSize);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SetEventNotification(FT_HANDLE ftHandle, DWORD mask, PVOID param);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GetVersion(FT_HANDLE ftHandle, FT4222_Version* pVersion);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GetChipMode(FT_HANDLE ftHandle, uint8 *pChipMode);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_ChipReset(FT_HANDLE ftHandle);
 
 
 
 // FT4222 SPI Functions
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_Init(FT_HANDLE ftHandle, FT4222_SPIMode  ioLine, FT4222_SPIClock clock, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha, uint8 ssoMap);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SetMode(FT_HANDLE ftHandle, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SetCS(FT_HANDLE ftHandle, SPI_ChipSelect cs);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SetLines(FT_HANDLE ftHandle, FT4222_SPIMode spiMode);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SingleRead(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead, BOOL isEndTransaction);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SingleWrite(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
-LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_MultiReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint8 singleWriteBytes, uint16 multiWriteBytes, uint16 multiReadBytes, uint32* sizeOfRead);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_Init(FT_HANDLE ftHandle, FT4222_SPIMode  ioLine, FT4222_SPIClock clock, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha, uint8 ssoMap);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_SetMode(FT_HANDLE ftHandle, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_SetCS(FT_HANDLE ftHandle, SPI_ChipSelect cs);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_SetLines(FT_HANDLE ftHandle, FT4222_SPIMode spiMode);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_SingleRead(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead, BOOL isEndTransaction);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_SingleWrite(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_SingleReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPIMaster_MultiReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint8 singleWriteBytes, uint16 multiWriteBytes, uint16 multiReadBytes, uint32* sizeOfRead);
 
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_Init(FT_HANDLE ftHandle);
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_InitEx(FT_HANDLE ftHandle, SPI_SlaveProtocol protocolOpt);
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_SetMode(FT_HANDLE ftHandle, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha);
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_GetRxStatus(FT_HANDLE ftHandle, uint16* pRxSize);
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead);
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPISlave_Init(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPISlave_InitEx(FT_HANDLE ftHandle, SPI_SlaveProtocol protocolOpt);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPISlave_SetMode(FT_HANDLE ftHandle, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPISlave_GetRxStatus(FT_HANDLE ftHandle, uint16* pRxSize);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPISlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPISlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
 
-LIBFT4222_API FT4222_STATUS FT4222_SPI_Reset(FT_HANDLE ftHandle);
-LIBFT4222_API FT4222_STATUS FT4222_SPI_ResetTransaction(FT_HANDLE ftHandle, uint8 spiIdx);
-LIBFT4222_API FT4222_STATUS FT4222_SPI_SetDrivingStrength(FT_HANDLE ftHandle, SPI_DrivingStrength clkStrength, SPI_DrivingStrength ioStrength, SPI_DrivingStrength ssoStrength);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPI_Reset(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPI_ResetTransaction(FT_HANDLE ftHandle, uint8 spiIdx);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_SPI_SetDrivingStrength(FT_HANDLE ftHandle, SPI_DrivingStrength clkStrength, SPI_DrivingStrength ioStrength, SPI_DrivingStrength ssoStrength);
 
 
 
 // FT4222 I2C Functions
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Init(FT_HANDLE ftHandle, uint32 kbps);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Read(FT_HANDLE ftHandle, uint16 deviceAddress, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Write(FT_HANDLE ftHandle, uint16 deviceAddress, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_ReadEx(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 flag, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_WriteEx(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 flag, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Reset(FT_HANDLE ftHandle);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_GetStatus(FT_HANDLE ftHandle, uint8 *controllerStatus);
-LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_ResetBus(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_Init(FT_HANDLE ftHandle, uint32 kbps);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_Read(FT_HANDLE ftHandle, uint16 deviceAddress, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_Write(FT_HANDLE ftHandle, uint16 deviceAddress, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_ReadEx(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 flag, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_WriteEx(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 flag, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_Reset(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_GetStatus(FT_HANDLE ftHandle, uint8 *controllerStatus);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CMaster_ResetBus(FT_HANDLE ftHandle);
 
 
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Init(FT_HANDLE ftHandle);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Reset(FT_HANDLE ftHandle);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_GetAddress(FT_HANDLE ftHandle, uint8* addr);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_SetAddress(FT_HANDLE ftHandle, uint8 addr);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_GetRxStatus(FT_HANDLE ftHandle, uint16* pRxSize);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_SetClockStretch(FT_HANDLE ftHandle, BOOL enable);
-LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_SetRespWord(FT_HANDLE ftHandle, uint8 responseWord);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_Init(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_Reset(FT_HANDLE ftHandle);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_GetAddress(FT_HANDLE ftHandle, uint8* addr);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_SetAddress(FT_HANDLE ftHandle, uint8 addr);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_GetRxStatus(FT_HANDLE ftHandle, uint16* pRxSize);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_SetClockStretch(FT_HANDLE ftHandle, BOOL enable);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_I2CSlave_SetRespWord(FT_HANDLE ftHandle, uint8 responseWord);
 
 
 
 // FT4222 GPIO Functions
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_Init(FT_HANDLE ftHandle, GPIO_Dir gpioDir[4]);
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_Read(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL* value);
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_Write(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL bValue);
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_SetInputTrigger(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger trigger);
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_GetTriggerStatus(FT_HANDLE ftHandle, GPIO_Port portNum, uint16* queueSize);
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_ReadTriggerQueue(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger* events, uint16 readSize, uint16* sizeofRead);
-LIBFT4222_API FT4222_STATUS FT4222_GPIO_SetWaveFormMode(FT_HANDLE ftHandle, BOOL enable);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_Init(FT_HANDLE ftHandle, GPIO_Dir gpioDir[4]);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_Read(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL* value);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_Write(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL bValue);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_SetInputTrigger(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger trigger);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_GetTriggerStatus(FT_HANDLE ftHandle, GPIO_Port portNum, uint16* queueSize);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_ReadTriggerQueue(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger* events, uint16 readSize, uint16* sizeofRead);
+LIBFT4222_API FT4222_STATUS WINAPI FT4222_GPIO_SetWaveFormMode(FT_HANDLE ftHandle, BOOL enable);
 
 
  

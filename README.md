@@ -78,41 +78,35 @@ Note:
 
 ### Raspberry Pi Pico
 
-Requires the Pico toolchain https://github.com/ndabas/pico-setup-windows to be installed.
+Build with VS Code, CMake Tools, and the Raspberry Pi Pico extension.
 
-Pico-SDK version 1.3.0 is required
+The following steps build and flash a project for the Raspberry Pi Pico:
 
+1. Install VS Code, the CMake Tools extension, and the Raspberry Pi Pico extension.
 
-The following steps will build for Raspberry Pi Pico.
+2. Install or configure the Pico SDK and ARM toolchain. The project imports the SDK from `PICO_SDK_PATH` when that environment variable is set.
 
- 1. Install cmake 3.19.x, python, Visual Studio 2019 community (must select C++), GNU Arm Embedded Toolchain for window.
- 2. Launch the *Developer Command Prompt for VS*
-```sh
-set PICO_SDK_PATH=[path to pico-sdk]
-set PICO_TOOLCHAIN_PATH=[path to GNU Arm Embedded Toolchain\\10 2020-q4-major\\bin]
-cd EveApps
-mkdir build
-cd build
-cmake -G "NMake Makefiles" -DEVE_APPS_PLATFORM=EVE_PLATFORM_RP2040 -DEVE_APPS_GRAPHICS=[EVE graphics] ..
-nmake [Project name]
+3. Add the following configuration to VS Code's `settings.json`:
 
-# [EVE graphics] can be EVE or module name, such as BT817, BT815, VM800B35A_BK ...
-# [Project name] is the folder name of a subfolder inside DemoApps or SampleApp
-```
+    ```json
+    {
+      "cmake.configureArgs": [
+        "-DEVE_APPS_PLATFORM=EVE_PLATFORM_RP2040",
+        "-DEVE_APPS_GRAPHICS=EVE_GRAPHICS_FT813",
+        "-DEVE_APPS_DISPLAY=EVE_DISPLAY_WQVGA"
+      ],
+      "raspberry-pi-pico.cmakeAutoConfigure": false,
+      "raspberry-pi-pico.useCmakeTools": true
+    }
+    ```
 
-Example: 
-```
-$ cmake.exe -G "NMake Makefiles" -DEVE_APPS_PLATFORM=EVE_PLATFORM_RP2040 -DEVE_APPS_GRAPHICS=EVE_GRAPHICS_BT817 -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA ..
-$ nmake SampleApp_Widget
-```
+4. Open the Command Palette with `Ctrl+P`, run `CMake: Focus on Project Status View`, and choose any available project target. `AudioPlayback` is one example.
 
-Display resolution is selected via preprocessor macro `EVE_APPS_DISPLAY`, for example:   
-`cmake -G "NMake Makefiles"  -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA  xxx`   
-By default, WVGA is set
+5. Connect the RP2040 to the PC and connect the EVE module to the RP2040 according to the wiring table below. If required by the selected debug workflow, use Zadig to install the `WinUSB` driver for the RP2040 USB device.
 
-EVE Chip is selected via preprocessor macro `EVE_APPS_GRAPHICS`, for example:   
-`cmake -G "NMake Makefiles"  -DEVE_APPS_GRAPHICS=EVE_GRAPHICS_BT815 xxx`   
-By default, MULTI is set
+6. Build the selected project in CMake Tools. The build produces a `.uf2` file in the project's `deploy/<project>/executable` directory.
+
+7. Put the RP2040 into BOOTSEL mode, then flash the generated `.uf2` file using the Raspberry Pi Pico extension or by copying it to the mounted `RPI-RP2` drive.
 
 #### Connections
 
@@ -316,10 +310,20 @@ EveApps has created an online documentation (https://Bridgetek.github.io/EveApps
 To customize it according to your setup, kindly refer to Docs/Doxygen folder.
 
 ## Version
-This version is v1.7.0-rc1
+This version is v1.8.0-rc1
         
 ## Release log
 ```
+v1.8.0-rc1
+  - Remove legacy multi-target and ESD Core integration.
+  - Move FlashHelper into the EVE HAL library.
+  - Improve bitmap addressing, image-loading options, media FIFO handling, and coprocessor command processing.
+  - Update Visual Studio projects, sample applications, assets, and documentation.
+  - Fix display precision and other minor application issues.
+  - Add BT817A device support.
+  - Improve Raspberry Pi Pico SDK and VS Code build integration.
+  - Update FT4222/D2XX libraries and related HAL implementations.
+  - Simplify CMake configuration by using explicit platform and graphics targets.
 v1.7.0-rc1
   - Updated EveAppsConfig tool
   - Resolve the Flash blob inconsistency issue and update the README with a reminder

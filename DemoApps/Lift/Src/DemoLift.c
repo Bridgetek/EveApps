@@ -62,8 +62,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoLift();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -1308,11 +1307,7 @@ void LiftApp_Landscape() {
 	EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
 	Baddr0 = RAM_G;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\font.raw", RAM_G, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\font.raw", RAM_G, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\font.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(0));//handle 0 is used for all the characters
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr0));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(Bfmt, BSt, BHt));
@@ -1320,11 +1315,7 @@ void LiftApp_Landscape() {
 
 	Baddr1 = ((Baddr0 + BSt*BHt * 11 + 15)&~15);
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\arr.raw", Baddr1, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\arr.raw", Baddr1, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr1, TEST_DIR "\\arr.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(1));//bitmap handle 1 is used for arrow
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr1));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(BArrowfmt, BArrowSt, BArrowHt));
@@ -1332,67 +1323,42 @@ void LiftApp_Landscape() {
 
 	Baddr2 = Baddr1 + 80 * 85;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs6.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs6.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs6.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(2));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 60, 60));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 60, 55));
 	Baddr2 += 60 * 55;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs5.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs5.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs5.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(3));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 50, 46));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 50, 46));
 	Baddr2 += 50 * 46;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs4.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs4.raw", Baddr2, LOAD);
-#endif
-
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs4.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(4));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 40, 37));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 40, 37));
 	Baddr2 += 40 * 37;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs3.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs3.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs3.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(5));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 30, 27));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 30, 27));
 	Baddr2 += 30 * 27;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs2.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs2.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs2.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(6));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 20, 18));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 20, 18));
 	Baddr2 += 20 * 18;
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs1.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs1.raw", Baddr2, LOAD);
-#endif
 
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs1.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(7));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 10, 10));
@@ -1400,11 +1366,7 @@ void LiftApp_Landscape() {
 	EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 7, 0));
 	Baddr2 += 10 * 10;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\logo.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\logo.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\logo.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(11));//handle 11 is used for logo
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(ARGB4, 99 * 2, 30));
@@ -1862,11 +1824,7 @@ void LiftApp_Portrait() {
 
 	/* load the bitmap raw data */
 	Baddr0 = RAM_G;
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\font.raw", RAM_G, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\font.raw", RAM_G, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\font.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(0));//handle 0 is used for all the characters
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr0));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(Bfmt, BSt, BHt));
@@ -1874,11 +1832,7 @@ void LiftApp_Portrait() {
 
 	Baddr1 = ((Baddr0 + BSt*BHt * 11 + 15)&~15);
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\arr.raw", Baddr1, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\arr.raw", Baddr1, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr1, TEST_DIR "\\arr.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(1));//bitmap handle 1 is used for arrow
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr1));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(BArrowfmt, BArrowSt, BArrowHt));
@@ -1886,77 +1840,49 @@ void LiftApp_Portrait() {
 
 	Baddr2 = Baddr1 + 80 * 85;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs6.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs6.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs6.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(2));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 60, 55));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 60, 55));
 	Baddr2 += 60 * 55;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs5.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs5.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs5.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(3));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 50, 46));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 50, 46));
 	Baddr2 += 50 * 46;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs4.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs4.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs4.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(4));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 40, 37));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 40, 37));
 	Baddr2 += 40 * 37;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs3.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs3.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs3.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(5));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 30, 27));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 30, 27));
 	Baddr2 += 30 * 27;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs2.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs2.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs2.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(6));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 20, 18));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 20, 18));
 	Baddr2 += 20 * 18;
 
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs1.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\bs1.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\bs1.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(7));//bitmap handle 2 is used for background balls
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 10, 10));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 10, 10));
 
 	Baddr2 += 10 * 10;
-#if defined(FT9XX_PLATFORM) || defined(RP2040_PLATFORM)
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\logo.raw", Baddr2, LOAD);
-#else
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\logo.raw", Baddr2, LOAD);
-#endif
+	EVE_Util_loadRawFile(s_pHalContext, Baddr2, TEST_DIR "\\logo.raw");
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(11));//handle 11 is used for logo
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(Baddr2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(ARGB4, 99 * 2, 30));

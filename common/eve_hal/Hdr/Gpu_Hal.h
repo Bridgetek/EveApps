@@ -162,14 +162,6 @@ typedef struct Fifo_t
 	///@}
 } Fifo_t;
 
-/** @name Type of file to load from SDCard or Windows file system */
-///@{
-#define LOADIMAGE 1 /**< loadimage command takes destination address and options before the actual bitmap data */
-#define INFLATE 2 /**< inflate command takes destination address before the actual bitmap */
-#define LOAD 3 /**< load bitmaps directly */
-#define INFLATE2 4
-///@}
-
 /*******************************************************************************/
 /*******************************************************************************/
 /* The basic APIs Level 1 */
@@ -192,8 +184,6 @@ static inline eve_deprecated("Use `EVE_Hal_open`") bool Gpu_Hal_Open(EVE_HalCont
 ///@{
 #define Gpu_Hal_Close EVE_Hal_close
 #define Gpu_Hal_DeInit EVE_Hal_release
-
-#define Gpu_Hal_ESD_Idle EVE_Hal_idle
 
 #define Gpu_Hal_StartTransfer EVE_Hal_startTransfer
 #define Gpu_Hal_Transfer8 EVE_Hal_transfer8
@@ -538,22 +528,6 @@ static int32_t Gpu_Hal_Dec2Ascii(char8_t *pSrc, int32_t value)
 	*pdst++ = '\0';
 
 	return 0;
-}
-
-static void Gpu_Hal_LoadImageToMemory(Gpu_Hal_Context_t *phost, const char *fileName, int32_t destination, uint8_t type)
-{
-	if (type == LOADIMAGE)
-	{
-		EVE_Util_loadImageFile(phost, destination, fileName, NULL);
-	}
-	else if (type == INFLATE)
-	{
-		EVE_Util_loadInflateFile(phost, destination, fileName);
-	}
-	else if (type == LOAD)
-	{
-		EVE_Util_loadRawFile(phost, destination, fileName);
-	}
 }
 
 static void Gpu_Hal_ResetCmdFifo(Gpu_Hal_Context_t *phost)

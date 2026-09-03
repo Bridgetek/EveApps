@@ -31,7 +31,7 @@
 
 #include "EVE_Platform.h"
 
-EVE_HAL_EXPORT bool EVE_CoCmd_memCrc(EVE_HalContext *phost, uint32_t ptr, uint32_t num, uint32_t *result)
+bool EVE_CoCmd_memCrc(EVE_HalContext *phost, uint32_t ptr, uint32_t num, uint32_t *result)
 {
 	uint16_t resAddr;
 
@@ -57,7 +57,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_memCrc(EVE_HalContext *phost, uint32_t ptr, uint32
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_regRead(EVE_HalContext *phost, uint32_t ptr, uint32_t *result)
+bool EVE_CoCmd_regRead(EVE_HalContext *phost, uint32_t ptr, uint32_t *result)
 {
 	uint16_t resAddr;
 
@@ -82,7 +82,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_regRead(EVE_HalContext *phost, uint32_t ptr, uint3
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_inflate_progMem(EVE_HalContext *phost, uint32_t dst, eve_progmem_const uint8_t *src, uint32_t size)
+bool EVE_CoCmd_inflate_progMem(EVE_HalContext *phost, uint32_t dst, eve_progmem_const uint8_t *src, uint32_t size)
 {
 	if (!EVE_Cmd_waitFlush(phost))
 		return false; // Coprocessor must be ready
@@ -101,7 +101,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_inflate_progMem(EVE_HalContext *phost, uint32_t ds
  *  - cmd_videoframe
  *  - cmd_endlist
  */
-EVE_HAL_EXPORT bool EVE_CoCmd_getPtr(EVE_HalContext *phost, uint32_t *result)
+bool EVE_CoCmd_getPtr(EVE_HalContext *phost, uint32_t *result)
 {
 	uint16_t resAddr;
 
@@ -125,7 +125,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_getPtr(EVE_HalContext *phost, uint32_t *result)
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_loadImage_progMem(EVE_HalContext *phost, uint32_t dst, eve_progmem_const uint8_t *src, uint32_t size, uint32_t *format)
+bool EVE_CoCmd_loadImage_progMem(EVE_HalContext *phost, uint32_t dst, eve_progmem_const uint8_t *src, uint32_t size, uint32_t *format)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_LOADIMAGE, dst))
@@ -147,7 +147,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_loadImage_progMem(EVE_HalContext *phost, uint32_t 
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_getProps(EVE_HalContext *phost, uint32_t *ptr, uint32_t *w, uint32_t *h)
+bool EVE_CoCmd_getProps(EVE_HalContext *phost, uint32_t *ptr, uint32_t *w, uint32_t *h)
 {
 	uint16_t resAddr;
 
@@ -178,10 +178,8 @@ EVE_HAL_EXPORT bool EVE_CoCmd_getProps(EVE_HalContext *phost, uint32_t *ptr, uin
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT815) && defined(EVE_FLASH_AVAILABLE)
 
-EVE_HAL_EXPORT bool EVE_CoCmd_flashErase_flush(EVE_HalContext *phost)
+bool EVE_CoCmd_flashErase_flush(EVE_HalContext *phost)
 {
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_FLASHERASE, EVE_CHIPID >= EVE_BT815, false);
-
 	if (!EVE_Cmd_waitFlush(phost))
 		return false; // Coprocessor must be ready
 
@@ -190,10 +188,8 @@ EVE_HAL_EXPORT bool EVE_CoCmd_flashErase_flush(EVE_HalContext *phost)
 	return EVE_Cmd_waitFlush(phost);
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_flashRead_flush(EVE_HalContext *phost, uint32_t dest, uint32_t src, uint32_t num)
+bool EVE_CoCmd_flashRead_flush(EVE_HalContext *phost, uint32_t dest, uint32_t src, uint32_t num)
 {
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_FLASHREAD, EVE_CHIPID >= EVE_BT815, false);
-
 	if (!EVE_Cmd_waitFlush(phost))
 		return false; // Coprocessor must be ready
 
@@ -205,10 +201,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_flashRead_flush(EVE_HalContext *phost, uint32_t de
 /**
  * @brief Attach flash.
  */
-EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost)
+uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost)
 {
 	uint32_t flashStatus;
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_FLASHATTACH, EVE_CHIPID >= EVE_BT815, 0);
 	if (!EVE_Cmd_waitFlush(phost))
 		return EVE_Hal_rd32(phost, REG_FLASH_STATUS); // Coprocessor must be ready
 	flashStatus = EVE_Hal_rd32(phost, REG_FLASH_STATUS);
@@ -225,12 +220,10 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashAttach(EVE_HalContext *phost)
  * @param result
  * @return new FLASH_STATUS
  */
-EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashFast(EVE_HalContext *phost, uint32_t *result)
+uint32_t EVE_CoCmd_flashFast(EVE_HalContext *phost, uint32_t *result)
 {
 	uint16_t resAddr;
 	uint32_t flashStatus;
-
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_FLASHFAST, EVE_CHIPID >= EVE_BT815, 0);
 
 	if (!EVE_Cmd_waitFlush(phost))
 	{
@@ -267,7 +260,7 @@ EVE_HAL_EXPORT uint32_t EVE_CoCmd_flashFast(EVE_HalContext *phost, uint32_t *res
 	return EVE_Hal_rd32(phost, REG_FLASH_STATUS); // Return current status
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_loadImage_flash(EVE_HalContext *phost, uint32_t dst, uint32_t src, uint32_t *format)
+bool EVE_CoCmd_loadImage_flash(EVE_HalContext *phost, uint32_t dst, uint32_t src, uint32_t *format)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_FLASHSOURCE, src))
@@ -292,7 +285,7 @@ EVE_HAL_EXPORT bool EVE_CoCmd_loadImage_flash(EVE_HalContext *phost, uint32_t ds
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_inflate_flash(EVE_HalContext *phost, uint32_t dst, uint32_t src)
+bool EVE_CoCmd_inflate_flash(EVE_HalContext *phost, uint32_t dst, uint32_t src)
 {
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_FLASHSOURCE, src))
@@ -317,11 +310,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_inflate_flash(EVE_HalContext *phost, uint32_t dst,
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 
-EVE_HAL_EXPORT bool EVE_CoCmd_getImage(EVE_HalContext *phost, uint32_t *source, uint32_t *fmt, uint32_t *w, uint32_t *h, uint32_t *palette)
+bool EVE_CoCmd_getImage(EVE_HalContext *phost, uint32_t *source, uint32_t *fmt, uint32_t *w, uint32_t *h, uint32_t *palette)
 {
 	uint16_t resAddr;
-
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_GETIMAGE, EVE_CHIPID >= EVE_BT817, false);
 
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_GETIMAGE, 0))
@@ -352,11 +343,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_getImage(EVE_HalContext *phost, uint32_t *source, 
 	return true;
 }
 
-EVE_HAL_EXPORT bool EVE_CoCmd_fontCacheQuery(EVE_HalContext *phost, uint32_t *total, int32_t *used)
+bool EVE_CoCmd_fontCacheQuery(EVE_HalContext *phost, uint32_t *total, int32_t *used)
 {
 	uint16_t resAddr;
-
-	EVE_MULTI_TARGET_CHECK_RETURN(CMD_FONTCACHEQUERY, EVE_CHIPID >= EVE_BT817, false);
 
 #if EVE_CMD_HOOKS
 	if (phost->CoCmdHook && phost->CoCmdHook(phost, CMD_FONTCACHEQUERY, 0))

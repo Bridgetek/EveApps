@@ -115,9 +115,6 @@ void App_DrawRectangleF(EVE_HalContext *pHalContext, int32_t x, int32_t y, int32
 #endif
 	App_WrDl_Buffer(s_pHalContext, VERTEX2F(x0, y0));
 	App_WrDl_Buffer(s_pHalContext, VERTEX2F(x1, y1));
-#if FT_ESD_DL_END
-	App_WrDl_Buffer(s_pHalContext, END());
-#endif
 	App_WrDl_Buffer(s_pHalContext, RESTORE_CONTEXT());
 }
 
@@ -211,7 +208,7 @@ void Lift_DisplayPanel()
 		uint32_t Original_videoHeight = 480;
 		//display video frame decoded by CoProcessor
 		App_WrDl_Buffer(s_pHalContext, BITMAP_HANDLE(14));
-		App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE2(0, 0));
+		App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE_EX(0, 0));
 		App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(RGB565, videoWidth * 2L, Original_videoHeight));
 		App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT_H(((videoWidth * 2L) >> 10), ((Original_videoHeight) >> 9)));
 		App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, videoWidth, videoHeight));

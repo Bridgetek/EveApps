@@ -131,7 +131,7 @@ bool EVE_Util_loadSdCard(EVE_HalContext *phost)
 #endif
 }
 
-EVE_HAL_EXPORT bool EVE_Util_sdCardReady(EVE_HalContext *phost)
+bool EVE_Util_sdCardReady(EVE_HalContext *phost)
 {
 	/* no-op */
 #if EVE_ENABLE_FATFS
@@ -272,7 +272,7 @@ bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t address, const cha
  * @return true True if ok
  * @return false False if error
  */
-bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format)
+bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char *filename, uint32_t *format, uint32_t options)
 {
 #if EVE_ENABLE_FATFS
 	FRESULT fResult;
@@ -304,7 +304,7 @@ bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t address, const char 
 	{
 		EVE_Cmd_wr32(phost, CMD_LOADIMAGE);
 		EVE_Cmd_wr32(phost, address);
-		EVE_Cmd_wr32(phost, OPT_NODL);
+		EVE_Cmd_wr32(phost, options);
 		filesize = f_size(&InfSrc);
 		while (filesize > 0)
 		{

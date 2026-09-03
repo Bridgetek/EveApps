@@ -43,14 +43,6 @@ SAMAPP_Bitmap_header_t SAMAPP_Bitmap_RawData_Header[] =
 {
     /* format,width,height,stride,arrayoffset */
     { RGB565      ,    40,      40,    40 * 2,    0 },
-#ifdef FT81X_ENABLE
-    { PALETTED4444,    40,     40 ,    40    ,    0 },
-    { PALETTED8   ,    480,    272,    480   ,    0 },
-    { PALETTED8   ,    802,    520,    802   ,    0 },
-#else
-    { PALETTED    ,    40 ,    40 ,    40    ,    0 },
-    { PALETTED    ,    480,    272,    480   ,    0 },
-#endif
 };
 
 int main(int argc, char* argv[])
@@ -80,8 +72,7 @@ int main(int argc, char* argv[])
 
         EVE_Util_clearScreen(s_pHalContext);
 
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+        Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -129,29 +120,21 @@ void SAMAPP_Primitives_points()
     Draw_Text(s_pHalContext, "Example for: Points");
 
     /* Construct DL of points */
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 0, CLEAR_COLOR_RGB(128, 128, 128));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 4, CLEAR(1, 1, 1));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 8, COLOR_RGB(128, 0, 0));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 12, POINT_SIZE(5 * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 16, BEGIN(FTPOINTS));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 20,
-        VERTEX2F((s_pHalContext->Width / 5) * 16, (s_pHalContext->Height / 2) * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 24, COLOR_RGB(0, 128, 0));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 28, POINT_SIZE(15 * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 32,
-        VERTEX2F((s_pHalContext->Width * 2 / 5) * 16, (s_pHalContext->Height / 2) * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 36, COLOR_RGB(0, 0, 128));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 40, POINT_SIZE(25 * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 44,
-        VERTEX2F((s_pHalContext->Width * 3 / 5) * 16, (s_pHalContext->Height / 2) * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 48, COLOR_RGB(128, 128, 0));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 52, POINT_SIZE(35 * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 56,
-        VERTEX2F((s_pHalContext->Width * 4 / 5) * 16, (s_pHalContext->Height / 2) * 16));
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 60, DISPLAY()); // display the image
-
-                                                         /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 128, 128, 128 }, (uint8_t[]) { 128, 0, 0 });
+	EVE_CoDl_begin(s_pHalContext, POINTS);
+	EVE_CoDl_pointSize(s_pHalContext, 5 * 16);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 5), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 128, 0);
+	EVE_CoDl_pointSize(s_pHalContext, 15 * 16);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 2 / 5), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 128);
+	EVE_CoDl_pointSize(s_pHalContext, 25 * 16);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 3 / 5), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 128, 128, 0);
+	EVE_CoDl_pointSize(s_pHalContext, 35 * 16);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 4 / 5), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -165,39 +148,24 @@ void SAMAPP_Primitives_lines()
 
     int16_t LineHeight = 25;
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(128, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(5 * 16));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(LINES));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width / 4) * 16, ((s_pHalContext->Height - LineHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width / 4) * 16, ((s_pHalContext->Height + LineHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 128, 0));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(10 * 16));
+    Display_Start(s_pHalContext);
+	EVE_CoDl_begin(s_pHalContext, LINES);
+	EVE_CoDl_colorRgb(s_pHalContext, 128, 0, 0);
+    EVE_CoDl_lineWidth(s_pHalContext, 5 * 16);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 4), VP((s_pHalContext->Height - LineHeight) / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 4), VP((s_pHalContext->Height + LineHeight) / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 128, 0);
+	EVE_CoDl_lineWidth(s_pHalContext, 10 * 16);
     LineHeight = 40;
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width * 2 / 4) * 16,
-            ((s_pHalContext->Height - LineHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width * 2 / 4) * 16,
-            ((s_pHalContext->Height + LineHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(128, 128, 0));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(20 * 16));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 2 / 4), VP((s_pHalContext->Height - LineHeight) / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 2 / 4), VP((s_pHalContext->Height + LineHeight) / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 128, 128, 0);
+	EVE_CoDl_lineWidth(s_pHalContext, 20 * 16);
     LineHeight = 55;
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width * 3 / 4) * 16,
-            ((s_pHalContext->Height - LineHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width * 3 / 4) * 16,
-            ((s_pHalContext->Height + LineHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 3 / 4), VP((s_pHalContext->Height - LineHeight) / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 3 / 4), VP((s_pHalContext->Height + LineHeight) / 2));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -212,48 +180,29 @@ void SAMAPP_Primitives_rectangles()
     int16_t RectWidth;
     int16_t RectHeight;
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 128));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(1 * 16)); //LINE_WIDTH is used for corner curvature
-    App_WrDl_Buffer(s_pHalContext, BEGIN(RECTS));
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 0, 0, 128 });
+    EVE_CoDl_begin(s_pHalContext, RECTS);
+	EVE_CoDl_lineWidth(s_pHalContext, 1 * 16); //LINE_WIDTH is used for corner curvature
     RectWidth = 5;
     RectHeight = 25;
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F(((s_pHalContext->Width / 4) - (RectWidth / 2)) * 16,
-            ((s_pHalContext->Height - RectHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F(((s_pHalContext->Width / 4) + (RectWidth / 2)) * 16,
-            ((s_pHalContext->Height + RectHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 128, 0));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(5 * 16));
+    EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width / 4) - (RectWidth / 2)), VP((s_pHalContext->Height - RectHeight) / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width / 4) + (RectWidth / 2)), VP((s_pHalContext->Height + RectHeight) / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 128, 0);
+	EVE_CoDl_lineWidth(s_pHalContext, 5 * 16);
     RectWidth = 10;
     RectHeight = 40;
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F(((s_pHalContext->Width * 2 / 4) - (RectWidth / 2)) * 16,
-            ((s_pHalContext->Height - RectHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F(((s_pHalContext->Width * 2 / 4) + (RectWidth / 2)) * 16,
-            ((s_pHalContext->Height + RectHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(128, 128, 0));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(10 * 16));
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width * 2 / 4) - (RectWidth / 2)), VP((s_pHalContext->Height - RectHeight) / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width * 2 / 4) + (RectWidth / 2)), VP((s_pHalContext->Height + RectHeight) / 2));
+	EVE_CoDl_colorRgb(s_pHalContext, 128, 128, 0);
+	EVE_CoDl_lineWidth(s_pHalContext, 10 * 16);
     RectWidth = 20;
     RectHeight = 55;
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F(((s_pHalContext->Width * 3 / 4) - (RectWidth / 2)) * 16,
-            ((s_pHalContext->Height - RectHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F(((s_pHalContext->Width * 3 / 4) + (RectWidth / 2)) * 16,
-            ((s_pHalContext->Height + RectHeight) / 2) * 16));
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width * 3 / 4) - (RectWidth / 2)), VP((s_pHalContext->Height - RectHeight) / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width * 3 / 4) + (RectWidth / 2)), VP((s_pHalContext->Height + RectHeight) / 2));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
-
 /**
 * @brief Display image at different locations with various colors, -ve offsets, alpha blend
 *
@@ -271,244 +220,38 @@ void SAMAPP_Primitives_bitmap()
     Ftf_Write_File_nBytes_To_RAM_G(s_pHalContext, TEST_DIR "\\SAMAPP_Bitmap_RawData.bin", RAM_G,
         p_bmhdr->Stride * p_bmhdr->Height, p_bmhdr->Arrayoffset);
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext,
-        BITMAP_LAYOUT(p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext,
-        BITMAP_SIZE(NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS)); // start drawing bitmaps
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 255, 255 });
+	EVE_CoDl_begin(s_pHalContext, BITMAPS); // start drawing bitmaps
+#if defined(FT81X_ENABLE)
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, p_bmhdr->Format, p_bmhdr->Width, p_bmhdr->Height);
+#else
+	EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
+	EVE_CoDl_bitmapLayout(s_pHalContext, p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height);
+	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height);
+#endif
     BMoffsetx = ((s_pHalContext->Width / 4) - (p_bmhdr->Width / 2));
     BMoffsety = ((s_pHalContext->Height / 2) - (p_bmhdr->Height / 2));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(BMoffsetx, BMoffsety, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 64, 64)); // red at (200, 120)
+    EVE_CoDl_vertex2f(s_pHalContext, VP(BMoffsetx), VP(BMoffsety));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 64, 64); // red
     BMoffsetx = ((s_pHalContext->Width * 2 / 4) - (p_bmhdr->Width / 2));
     BMoffsety = ((s_pHalContext->Height / 2) - (p_bmhdr->Height / 2));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(BMoffsetx, BMoffsety, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(64, 180, 64)); // green at (216, 136)
+	EVE_CoDl_vertex2f(s_pHalContext, VP(BMoffsetx), VP(BMoffsety));
+	EVE_CoDl_colorRgb(s_pHalContext, 64, 180, 64); // green
     BMoffsetx += (p_bmhdr->Width / 2);
     BMoffsety += (p_bmhdr->Height / 2);
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(BMoffsetx, BMoffsety, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 64)); // transparent yellow at (232, 152)
-    App_WrDl_Buffer(s_pHalContext, COLOR_A(150));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(BMoffsetx), VP(BMoffsety));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 64); // transparent yellow
+	EVE_CoDl_colorA(s_pHalContext, 150);
     BMoffsetx += (p_bmhdr->Width / 2);
     BMoffsety += (p_bmhdr->Height / 2);
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(BMoffsetx, BMoffsety, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, COLOR_A(255));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-10 * 16, -10 * 16)); //for -ve coordinates use vertex2f instruction
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
+    EVE_CoDl_vertex2f(s_pHalContext, VP(BMoffsetx), VP(BMoffsety));
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+	EVE_CoDl_colorA(s_pHalContext, 255);
 
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(-10), VP(-10)); //for -ve coordinates use vertex2f instruction
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
-}
-
-/**
-* @brief Bitmap Palette background
-*
-*/
-void SAMAPP_Primitives_bitmapPaletteBackground()
-{
-#if defined(FT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
-    Draw_Text(s_pHalContext, "Example for: Bitmap Palette background");
-
-    const SAMAPP_Bitmap_header_t* p_bmhdr;
-
-    int32_t LutFileLen;
-    int32_t FileLen;
-
-    uchar8_t* pbuff;
-    uchar8_t* plutbuff;
-    int32_t ft800_memaddr = RAM_G;
-    int32_t pal_mem_addr;
-
-    FILE* pFile = fopen(TEST_DIR "\\background_paletted.raw", "rb");
-    if (!pFile)
-    {
-        return;
-    }
-    FILE* pLutFile = fopen(TEST_DIR "\\background_paletted_lut.raw", "rb");
-    if (!pLutFile)
-    {
-        fclose(pFile);
-        return;
-    }
-
-    fseek(pFile, 0, SEEK_END);
-    FileLen = ftell(pFile);
-    fseek(pFile, 0, SEEK_SET);
-
-    pbuff = (uchar8_t*)malloc(FileLen);
-
-    fread(pbuff, 1, FileLen, pFile);
-    fclose(pFile);
-
-    p_bmhdr = &SAMAPP_Bitmap_RawData_Header[2];
-
-    const int blockSize = 32 * 1024;
-    while (FileLen > blockSize)
-    {
-        EVE_Hal_wrProgMem(s_pHalContext, ft800_memaddr, pbuff, blockSize);
-        FileLen -= blockSize;
-        ft800_memaddr += blockSize;
-        pbuff += blockSize;
-    }
-    EVE_Hal_wrProgMem(s_pHalContext, ft800_memaddr, pbuff, FileLen);
-    ft800_memaddr += FileLen; //last chunk if any
-
-    fseek(pLutFile, 0, SEEK_END);
-    LutFileLen = ftell(pLutFile);
-    fseek(pLutFile, 0, SEEK_SET);
-
-    plutbuff = (uchar8_t*)malloc(LutFileLen);
-
-    fread(plutbuff, 1, LutFileLen, pLutFile);
-    fclose(pLutFile);
-
-#ifndef FT81X_ENABLE
-    pal_mem_addr = RAM_PAL;
-#else
-    pal_mem_addr = ft800_memaddr;
-#endif
-
-    EVE_Hal_wrProgMem(s_pHalContext, pal_mem_addr, plutbuff, LutFileLen);
-
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
-
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));// start drawing bitmaps
-#ifdef FT81X_ENABLE
-    App_WrDl_Buffer(s_pHalContext, BLEND_FUNC(ONE, ZERO));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
-
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 0, 1));
-    App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(ft800_memaddr + 3));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-
-    App_WrDl_Buffer(s_pHalContext, BLEND_FUNC(DST_ALPHA, ONE_MINUS_DST_ALPHA));
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(1, 0, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(ft800_memaddr + 2));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 1, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(ft800_memaddr + 1));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(0, 0));
-
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 1, 0));
-    App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(ft800_memaddr + 0));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-
-#else
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-#endif
-
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
-    SAMAPP_ENABLE_DELAY();
-#endif
-}
-
-/**
-* @brief Bitmap Palette sample
-*
-*/
-void SAMAPP_Primitives_bitmapPalette()
-{
-#if defined(FT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
-    Draw_Text(s_pHalContext, "Example for: Bitmap Palette ");
-
-    const SAMAPP_Bitmap_header_t* p_bmhdr;
-    int32_t BMoffsetx;
-    int32_t BMoffsety;
-    int32_t LutFileLen;
-    int32_t FileLen;
-    int32_t pal_mem_addr;
-
-    void* pbuff;
-    void* plutbuff;
-    /* Paletted4444 format */
-    FILE* pFile = fopen(TEST_DIR "\\lenaface40_index.raw", "rb");
-    if (!pFile)
-    {
-        return;
-    }
-    FILE* pLutFile = fopen(TEST_DIR "\\lenaface40_lut.raw", "rb");
-    if (!pLutFile)
-    {
-        fclose(pFile);
-        return;
-    }
-    if (!pFile || !pLutFile)
-    {
-        return;
-    }
-
-    fseek(pFile, 0, SEEK_END);
-    FileLen = ftell(pFile);
-    fseek(pFile, 0, SEEK_SET);
-
-    pbuff = malloc(FileLen);
-
-    fread(pbuff, 1, FileLen, pFile);
-    fclose(pFile);
-
-    p_bmhdr = &SAMAPP_Bitmap_RawData_Header[1];
-    EVE_Hal_wrProgMem(s_pHalContext, RAM_G, (uchar8_t*)pbuff, p_bmhdr->Stride * p_bmhdr->Height);
-
-    fseek(pLutFile, 0, SEEK_END);
-    LutFileLen = ftell(pLutFile);
-    fseek(pLutFile, 0, SEEK_SET);
-
-    plutbuff = malloc(LutFileLen);
-
-    fread(plutbuff, 1, LutFileLen, pLutFile);
-    fclose(pLutFile);
-#ifdef FT81X_ENABLE
-    pal_mem_addr = RAM_G + p_bmhdr->Stride * p_bmhdr->Height;
-#else
-    pal_mem_addr = RAM_PAL;
-#endif
-
-    EVE_Hal_wrProgMem(s_pHalContext, pal_mem_addr, (uchar8_t*)plutbuff, LutFileLen);
-
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
-#ifdef FT81X_ENABLE
-    App_WrDl_Buffer(s_pHalContext, PALETTE_SOURCE(pal_mem_addr));
-#endif
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS)); // start drawing bitmaps
-    BMoffsetx = ((s_pHalContext->Width / 4) - (p_bmhdr->Width / 2));
-    BMoffsety = ((s_pHalContext->Height / 2) - (p_bmhdr->Height / 2));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(BMoffsetx, BMoffsety, 0, 0));
-
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
-    SAMAPP_ENABLE_DELAY();
-#endif
 }
 
 /**
@@ -517,6 +260,7 @@ void SAMAPP_Primitives_bitmapPalette()
 */
 void SAMAPP_Primitives_barGraph()
 {
+#if EVE_SUPPORT_GEN > EVE1
 #define SAMAPP_BARGRAPH_ARRAY_SIZE (256)
     /* Write the data into RAM_G */
     uint8_t Y_Array[SAMAPP_BARGRAPH_ARRAY_SIZE];
@@ -534,7 +278,7 @@ void SAMAPP_Primitives_barGraph()
     widthaligh = ALIGN_TWO_POWER_N(s_pHalContext->Width, SAMAPP_BARGRAPH_ARRAY_SIZE);
     numchunks = widthaligh / SAMAPP_BARGRAPH_ARRAY_SIZE;
     String_size = SAMAPP_BARGRAPH_ARRAY_SIZE;
-    for (int j = 0; j < numchunks; j++)
+    for (uint32_t j = 0; j < numchunks; j++)
     {
         for (int i = 0; i < SAMAPP_BARGRAPH_ARRAY_SIZE; i++)
         {
@@ -543,34 +287,28 @@ void SAMAPP_Primitives_barGraph()
         EVE_Hal_wrMem(s_pHalContext, RAM_G + j * SAMAPP_BARGRAPH_ARRAY_SIZE, &Y_Array[0],
             String_size);
     }
-    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(255, 255, 255));
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(BARGRAPH, 256, 1));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(128, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 256, 256));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_HANDLE(0));
+
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 128, 0, 0 });
+	EVE_CoDl_scissorXY(s_pHalContext, 0, 0);
+	EVE_CoDl_scissorSize(s_pHalContext, 1024, 1024);
+	EVE_CoDl_begin(s_pHalContext, BITMAPS); // start drawing bitmaps
+	EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
+	EVE_CoDl_bitmapLayout(s_pHalContext, BARGRAPH, 256, 1);
+	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, 256, 256);
     /* Display text 8x8 at hoffset, voffset location */
-    for (int i = 0; i < numchunks; i++)
+    for (uint32_t i = 0; i < numchunks; i++)
     {
-        App_WrDl_Buffer(s_pHalContext, CELL(i));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+		EVE_CoDl_cell(s_pHalContext, i);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
         hoffset += SAMAPP_BARGRAPH_ARRAY_SIZE;
     }
-
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_end(s_pHalContext);
+    Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 
     /* drawing of sine wave with rising amplitude */
     String_size = SAMAPP_BARGRAPH_ARRAY_SIZE;
-    for (int j = 0; j < numchunks; j++)
+    for (uint32_t j = 0; j < numchunks; j++)
     {
         for (int i = 0; i < SAMAPP_BARGRAPH_ARRAY_SIZE; i++)
         {
@@ -586,34 +324,49 @@ void SAMAPP_Primitives_barGraph()
 
     SAMAPP_ENABLE_DELAY();
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(BARGRAPH, 256, 1));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 256, 256));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_HANDLE(0));
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 255, 255 });
+	EVE_CoDl_scissorXY(s_pHalContext, 0, 0);
+	EVE_CoDl_scissorSize(s_pHalContext, 1024, 1024);
+	EVE_CoDl_begin(s_pHalContext, BITMAPS); // start drawing bitmaps
+	EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
+	EVE_CoDl_bitmapLayout(s_pHalContext, BARGRAPH, 256, 1);
+	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, 256, 256);
 
     /* Display bargraph at hoffset, voffset location */
     voffset = (s_pHalContext->Height - 256) / 2; //centre of the screen
     hoffset = 0;
-    for (int i = 0; i < numchunks; i++)
+    for (uint32_t i = 0; i < numchunks; i++)
     {
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0xff, 0, 0));
-        App_WrDl_Buffer(s_pHalContext, CELL(i));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+        EVE_CoDl_colorRgb(s_pHalContext, 0xff, 0, 0);
+		EVE_CoDl_cell(s_pHalContext, i);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
 
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, (voffset + 4) * 16));
+        EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+        EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset + 4));
         hoffset += SAMAPP_BARGRAPH_ARRAY_SIZE;
     }
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
+
+#if EVE_SUPPORT_GEN > EVE2
+	EVE_Util_loadRawFile(s_pHalContext, RAM_G, TEST_DIR "\\bargraph_1000x256_8000_bytes.raw");
+	Display_Start(s_pHalContext);
+	EVE_CoDl_colorRgb(s_pHalContext, 29, 222, 58);
+	EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, BARGRAPH, 1000, 256);
+	EVE_CoDl_begin(s_pHalContext, BITMAPS);
+	EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(-16), 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(16), 0);
+
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+	EVE_CoDl_vertex2f(s_pHalContext, 0, VP(16));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
+	SAMAPP_ENABLE_DELAY();
+#endif
+	EVE_CoDl_scissorSize(s_pHalContext, 2048, 2048);
+#endif
 }
 
 /**
@@ -624,22 +377,13 @@ void SAMAPP_Primitives_lineStrips()
 {
     Draw_Text(s_pHalContext, "Example for: Linestrips");
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(5, 45, 10));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 168, 64));
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(LINE_STRIP));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(16 * 16, 16 * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width * 2 / 3) * 16, (s_pHalContext->Height * 2 / 3) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width - 80) * 16, (s_pHalContext->Height - 20) * 16));
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 5, 45, 10 }, (uint8_t[]) { 255, 168, 64 });
+    EVE_CoDl_begin(s_pHalContext, LINE_STRIP);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(16), VP(16));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 2 / 3), VP(s_pHalContext->Height * 2 / 3));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width - 80), VP(s_pHalContext->Height - 20));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -651,22 +395,13 @@ void SAMAPP_Primitives_edgeStrips()
 {
     Draw_Text(s_pHalContext, "Example for: Edgestrips");
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(5, 45, 10));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 168, 64));
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(EDGE_STRIP_R));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(16 * 16, 16 * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width * 2 / 3) * 16, (s_pHalContext->Height * 2 / 3) * 16));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2F((s_pHalContext->Width - 80) * 16, (s_pHalContext->Height - 20) * 16));
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 5, 45, 10 }, (uint8_t[]) { 255, 168, 64 });
+	EVE_CoDl_begin(s_pHalContext, EDGE_STRIP_R);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(16), VP(16));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 2 / 3), VP(s_pHalContext->Height * 2 / 3));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width - 80), VP(s_pHalContext->Height - 20));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -678,18 +413,14 @@ void SAMAPP_Primitives_scissor()
 {
     Draw_Text(s_pHalContext, "Example for: Scissor");
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // Clear to black
-    App_WrDl_Buffer(s_pHalContext, SCISSOR_XY(40, 20)); // Scissor rectangle top left at (40, 20)
-    App_WrDl_Buffer(s_pHalContext, SCISSOR_SIZE(40, 40)); // Scissor rectangle is 40 x 40 pixels
-    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(255, 255, 0)); // Clear to yellow
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_saveContext(s_pHalContext);
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 255, 255 });
+	EVE_CoDl_scissorXY(s_pHalContext, 40, 20); // Scissor rectangle top left
+	EVE_CoDl_scissorSize(s_pHalContext, 40, 40); // Scissor rectangle is 400 x 400 pixels
+	EVE_CoDl_clearColorRgb(s_pHalContext, 255, 255, 0); // Clear to yellow
+	EVE_CoDl_clear(s_pHalContext, 1, 1, 1);
+	Display_End(s_pHalContext);
+	EVE_CoDl_restoreContext(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -701,29 +432,20 @@ void SAMAPP_Primitives_stencil()
 {
     Draw_Text(s_pHalContext, "Example for: Stencil");
 
-    int16_t PointSize = 50;
+    int16_t PointSize = s_pHalContext->Height / 7;
     int16_t DispBtwPoints = 60;
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // Clear to black
-    App_WrDl_Buffer(s_pHalContext, SCISSOR_XY(40, 20)); // Scissor rectangle top left at (40, 20)
-    App_WrDl_Buffer(s_pHalContext, STENCIL_OP(INCR, INCR));
-    App_WrDl_Buffer(s_pHalContext, POINT_SIZE(PointSize * 16));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(FTPOINTS));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II(((s_pHalContext->Width - DispBtwPoints) / 2), (s_pHalContext->Height / 2), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II(((s_pHalContext->Width + DispBtwPoints) / 2), (s_pHalContext->Height / 2), 0, 0));
-    App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(EQUAL, 2, 255));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(128, 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 2), (s_pHalContext->Height / 2), 0, 0));
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 0, 0, 128 });
+	EVE_CoDl_stencilOp(s_pHalContext, INCR, INCR);
+	EVE_CoDl_pointSize(s_pHalContext, PointSize * 16);
+	EVE_CoDl_begin(s_pHalContext, POINTS);
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width - DispBtwPoints) / 2), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP((s_pHalContext->Width + DispBtwPoints) / 2), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_stencilFunc(s_pHalContext, EQUAL, 2, 255);
+	EVE_CoDl_colorRgb(s_pHalContext, 128, 0, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -735,52 +457,35 @@ void SAMAPP_Primitives_polygon()
 {
     Draw_Text(s_pHalContext, "Example for: Polygons");
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, STENCIL_OP(INCR, INCR));
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 0, 0)); //mask all the colors
-    App_WrDl_Buffer(s_pHalContext, BEGIN(EDGE_STRIP_L));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 2), (s_pHalContext->Height / 4), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width * 4 / 5), (s_pHalContext->Height * 4 / 5), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 4), (s_pHalContext->Height / 2), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 2), (s_pHalContext->Height / 4), 0, 0));
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, COLOR_MASK(1, 1, 1, 1)); //enable all the colors
-    App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(EQUAL, 1, 255));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(EDGE_STRIP_L));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(s_pHalContext->Width * 16, 0));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(s_pHalContext->Width * 16, s_pHalContext->Height * 16));
-    App_WrDl_Buffer(s_pHalContext, END());
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 0, 0 });
+	EVE_CoDl_stencilOp(s_pHalContext, INCR, INCR);
+	EVE_CoDl_colorMask(s_pHalContext, 0, 0, 0, 0); //mask all the colors
+	EVE_CoDl_begin(s_pHalContext, EDGE_STRIP_L);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2), VP(s_pHalContext->Height / 4));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 4 / 5), VP(s_pHalContext->Height * 4 / 5));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 4), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2), VP(s_pHalContext->Height / 4));
+	EVE_CoDl_end(s_pHalContext);
+	EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 1); //enable all the colors
+	EVE_CoDl_stencilFunc(s_pHalContext, EQUAL, 1, 255);
+	EVE_CoDl_begin(s_pHalContext, EDGE_STRIP_L);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width), 0);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width), VP(s_pHalContext->Height));
+	EVE_CoDl_end(s_pHalContext);
 
-    /* Draw lines at the borders to make sure anti aliazing is also done */
-    App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(ALWAYS, 0, 255));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(1 * 16));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(LINES));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 2), (s_pHalContext->Height / 4), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width * 4 / 5), (s_pHalContext->Height * 4 / 5), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width * 4 / 5), (s_pHalContext->Height * 4 / 5), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 4), (s_pHalContext->Height / 2), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 4), (s_pHalContext->Height / 2), 0, 0));
-    App_WrDl_Buffer(s_pHalContext,
-        VERTEX2II((s_pHalContext->Width / 2), (s_pHalContext->Height / 4), 0, 0));
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	/* Draw lines at the borders to make sure anti aliazing is also done */
+	EVE_CoDl_stencilFunc(s_pHalContext, ALWAYS, 0, 255);
+	EVE_CoDl_lineWidth(s_pHalContext, 1 * 16);
+	EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
+	EVE_CoDl_begin(s_pHalContext, LINES);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2), VP(s_pHalContext->Height / 4));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 4 / 5), VP(s_pHalContext->Height * 4 / 5));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width * 4 / 5), VP(s_pHalContext->Height * 4 / 5));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 4), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 4), VP(s_pHalContext->Height / 2));
+	EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width / 2), VP(s_pHalContext->Height / 4));
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -790,105 +495,123 @@ void SAMAPP_Primitives_polygon()
 */
 void SAMAPP_Primitives_cube()
 {
-    uint32_t points[6 * 5], x, y, i, z;
+	Draw_Text(s_pHalContext, "Example for: Cube");
+    uint32_t points[6 * 5][2], x, y, i, z;
     int16_t xoffset, yoffset, CubeEdgeSz;
 
     // color vertices
-    uint16_t colors[6][3] = { 255,0,0,
-        255,0,150,
-        0,255,0,
-        110,120,110,
-        0,0,255,
-        128,128,0
-    };
+	uint8_t colors[6][3] = { 255, 0, 0,
+		255, 128, 0,
+		255, 255, 0,
+		0, 255, 0,
+		0, 0, 255,
+		128, 0, 255 };
 
     // Cube dimention is of 100*100*100
     CubeEdgeSz = 100;
     xoffset = (s_pHalContext->Width / 2 - CubeEdgeSz); 
     yoffset = ((s_pHalContext->Height - CubeEdgeSz) / 2);
-
-    // xy plane(front)
-    points[0] = VERTEX2F(xoffset * 16, yoffset * 16);
-    points[1] = VERTEX2F((xoffset + CubeEdgeSz) * 16, yoffset * 16);
-    points[2] = VERTEX2F((xoffset + CubeEdgeSz) * 16, (yoffset + CubeEdgeSz) * 16);
-    points[3] = VERTEX2F(xoffset * 16, (yoffset + CubeEdgeSz) * 16);
-    points[4] = points[0];
-
-    //yz plane (left)
-    x = (xoffset + (CubeEdgeSz / 2));            //     xoff+w/2
-    y = (yoffset - (CubeEdgeSz / 2));            //     yoff-h/2
-
-    points[5] = points[0];
-    points[6] = VERTEX2F(x * 16, y * 16);
-    points[7] = VERTEX2F(x * 16, (y + CubeEdgeSz) * 16);
-    points[8] = points[3];
-    points[9] = points[5];
-
-    //xz plane(top)
-    points[10] = points[0];
-    points[11] = points[1];
-    points[12] = VERTEX2F((x + CubeEdgeSz) * 16, (y) * 16);
-    points[13] = points[6];
-    points[14] = points[10];
-
-    //xz plane(bottom)
-    points[15] = points[3];
-    points[16] = points[2];
-    points[17] = VERTEX2F((x + CubeEdgeSz) * 16, (y + CubeEdgeSz) * 16);
-    points[18] = points[7];
-    points[19] = points[15];
-
-    //yz plane (right)
-    points[20] = points[2];
-    points[21] = points[17];
-    points[22] = points[12];
-    points[23] = points[1];
-    points[24] = points[20];
+	x = (xoffset + (CubeEdgeSz / 2)); //     xoff+w/2
+	y = (yoffset - (CubeEdgeSz / 2)); //     yoff-h/2
 
     //yz plane (back)
-    points[25] = points[6];
-    points[26] = points[7];
-    points[27] = points[17];
-    points[28] = points[12];
-    points[29] = points[25];
+	points[0][0] = x;
+	points[0][1] = y;
+	points[1][0] = x;
+	points[1][1] = y + CubeEdgeSz;
+	points[2][0] = x + CubeEdgeSz;
+	points[2][1] = y + CubeEdgeSz;
+	points[3][0] = x + CubeEdgeSz;
+	points[3][1] = y;
+	points[4][0] = x;
+	points[4][1] = y;
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(16));
-    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(255, 255, 255));
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
+	//yz plane (left)
+	points[5][0] = xoffset;
+	points[5][1] = yoffset;
+	points[6][0] = x;
+	points[6][1] = y;
+	points[7][0] = x;
+	points[7][1] = y + CubeEdgeSz;
+	points[8][0] = xoffset;
+	points[8][1] = yoffset + CubeEdgeSz;
+	points[9][0] = xoffset;
+	points[9][1] = yoffset;
 
-    // Draw a cube
-    App_WrDl_Buffer(s_pHalContext, STENCIL_OP(INCR, INCR));
-    App_WrDl_Buffer(s_pHalContext, COLOR_A(192));
+	//xz plane(top)
+	points[10][0] = xoffset;
+	points[10][1] = yoffset;
+	points[11][0] = xoffset + CubeEdgeSz;
+	points[11][1] = yoffset;
+	points[12][0] = x + CubeEdgeSz;
+	points[12][1] = y;
+	points[13][0] = x;
+	points[13][1] = y;
+	points[14][0] = xoffset;
+	points[14][1] = yoffset;
+
+	//xz plane(bottom)
+	points[15][0] = xoffset;
+	points[15][1] = yoffset + CubeEdgeSz;
+	points[16][0] = xoffset + CubeEdgeSz;
+	points[16][1] = yoffset + CubeEdgeSz;
+	points[17][0] = x + CubeEdgeSz;
+	points[17][1] = y + CubeEdgeSz;
+	points[18][0] = x;
+	points[18][1] = y + CubeEdgeSz;
+	points[19][0] = xoffset;
+	points[19][1] = yoffset + CubeEdgeSz;
+
+	//yz plane (right)
+	points[20][0] = xoffset + CubeEdgeSz;
+	points[20][1] = yoffset + CubeEdgeSz;
+	points[21][0] = x + CubeEdgeSz;
+	points[21][1] = y + CubeEdgeSz;
+	points[22][0] = x + CubeEdgeSz;
+	points[22][1] = y;
+	points[23][0] = xoffset + CubeEdgeSz;
+	points[23][1] = yoffset;
+	points[24][0] = xoffset + CubeEdgeSz;
+	points[24][1] = yoffset + CubeEdgeSz;
+
+	// xy plane(front)
+	points[25][0] = xoffset;
+	points[25][1] = yoffset;
+	points[26][0] = xoffset + CubeEdgeSz;
+	points[26][1] = yoffset;
+	points[27][0] = xoffset + CubeEdgeSz;
+	points[27][1] = yoffset + CubeEdgeSz;
+	points[28][0] = xoffset;
+	points[28][1] = yoffset + CubeEdgeSz;
+	points[29][0] = xoffset;
+	points[29][1] = yoffset;
+
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 255, 255 });
+
+	// Draw a cube
+	EVE_CoDl_stencilOp(s_pHalContext, INCR, INCR);
+	EVE_CoDl_colorA(s_pHalContext, 192);
     for (z = 0; z < 6; z++)
     {
-        App_WrDl_Buffer(s_pHalContext, CLEAR(0, 1, 1));//clear stencil buffer
-        App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 0, 0));//mask all the colors and draw one surface
-        App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(ALWAYS, 0, 255));//stencil function to increment all the values
-        App_WrDl_Buffer(s_pHalContext, BEGIN(EDGE_STRIP_L));
-        for (i = 0; i < 5; i++)
-        {
-            App_WrDl_Buffer(s_pHalContext, points[z * 5 + i]);
-        }
-        App_WrDl_Buffer(s_pHalContext, END());
-        /* set the color and draw a strip */
-        App_WrDl_Buffer(s_pHalContext, COLOR_MASK(1, 1, 1, 1));
-        App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(EQUAL, 1, 255));
-        //App_WrDl_Buffer(s_pHalContext,STENCIL_FUNC(EQUAL,(z+1),255));
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(colors[z][0], colors[z][1], colors[z][2]));
-        App_WrDl_Buffer(s_pHalContext, BEGIN(RECTS));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2II(xoffset, 0, 0, 0));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2II(xoffset + CubeEdgeSz * 2, yoffset + CubeEdgeSz * 2, 0, 0));
-        App_WrDl_Buffer(s_pHalContext, END());
+		EVE_CoDl_clear(s_pHalContext, 0, 1, 1); //clear stencil buffer
+		EVE_CoDl_colorMask(s_pHalContext, 0, 0, 0, 0); //mask all the colors and draw one surface
+		EVE_CoDl_stencilFunc(s_pHalContext, ALWAYS, 0, 255); //stencil function to increment all the values
+		EVE_CoDl_begin(s_pHalContext, EDGE_STRIP_L);
+		for (i = 0; i < 5; i++)
+		{
+			EVE_CoDl_vertex2f(s_pHalContext, VP(points[z * 5 + i][0]), VP(points[z * 5 + i][1]));
+		}
+		EVE_CoDl_end(s_pHalContext);
+		/* set the color and draw a strip */
+		EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 1);
+		EVE_CoDl_stencilFunc(s_pHalContext, EQUAL, 1, 255);
+		EVE_CoDl_colorRgb(s_pHalContext, colors[z][0], colors[z][1], colors[z][2]);
+		EVE_CoDl_begin(s_pHalContext, RECTS);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(xoffset), 0);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(xoffset + CubeEdgeSz * 2), VP(yoffset + CubeEdgeSz * 2));
+		EVE_CoDl_end(s_pHalContext);
     }
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -901,15 +624,15 @@ void SAMAPP_Primitives_ballStencil()
     Draw_Text(s_pHalContext, "Example for: Display a ball");
 
     int32_t xball = (s_pHalContext->Width / 2);
-    int32_t yball = 120;
-    int32_t rball = (s_pHalContext->Width / 8);
+	int32_t yball = (s_pHalContext->Height / 2);
+    int32_t rball = 100;
     int32_t numpoints = 6;
     int32_t numlines = 8;
     int32_t asize;
     int32_t aradius;
-    int32_t gridsize = 20;
+    int32_t gridsize = 50;
     int32_t asmooth;
-    int32_t loopflag = 1;
+    int32_t loopflag = 100;
     int32_t dispr = (s_pHalContext->Width - 10);
     int32_t displ = 10;
     int32_t dispa = 10;
@@ -922,7 +645,6 @@ void SAMAPP_Primitives_ballStencil()
     /* write the play sound */
     EVE_Hal_wr16(s_pHalContext, REG_SOUND, 0x50);
     EVE_Hal_wr8(s_pHalContext, REG_VOL_SOUND, 100);
-    loopflag = 100;
     while (loopflag-- > 0)
     {
         if (((xball + rball + 2) >= dispr) || ((xball - rball - 2) <= displ))
@@ -952,30 +674,28 @@ void SAMAPP_Primitives_ballStencil()
             yball -= 8;
         }
 
-        App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(128, 128, 0));
-        App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-        App_WrDl_Buffer(s_pHalContext, STENCIL_OP(INCR, INCR));
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+        Display_StartColor(s_pHalContext, (uint8_t[]) { 128, 128, 0 }, (uint8_t[]) { 0, 0, 0 });
         /* draw grid */
-        App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(16));
-        App_WrDl_Buffer(s_pHalContext, BEGIN(LINES));
+        EVE_CoDl_lineWidth(s_pHalContext, 1 * 16);
+        EVE_CoDl_begin(s_pHalContext, LINES);
         for (int i = 0; i <= ((dispr - displ) / gridsize); i++)
         {
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F((displ + i * gridsize) * 16, dispa * 16));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F((displ + i * gridsize) * 16, dispb * 16));
+            EVE_CoDl_vertex2f(s_pHalContext, VP(displ + i * gridsize), VP(dispa));
+            EVE_CoDl_vertex2f(s_pHalContext, VP(displ + i * gridsize), VP(dispb));
         }
         for (int i = 0; i <= ((dispb - dispa) / gridsize); i++)
         {
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(displ * 16, (dispa + i * gridsize) * 16));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(dispr * 16, (dispa + i * gridsize) * 16));
+            EVE_CoDl_vertex2f(s_pHalContext, VP(displ), VP(dispa + i * gridsize));
+            EVE_CoDl_vertex2f(s_pHalContext, VP(dispr), VP(dispa + i * gridsize));
         }
-        App_WrDl_Buffer(s_pHalContext, END());
-        App_WrDl_Buffer(s_pHalContext, COLOR_MASK(0, 0, 0, 0)); //mask all the colors
-        App_WrDl_Buffer(s_pHalContext, POINT_SIZE(rball * 16));
-        App_WrDl_Buffer(s_pHalContext, BEGIN(FTPOINTS));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F(xball * 16, yball * 16));
-        App_WrDl_Buffer(s_pHalContext, STENCIL_OP(INCR, ZERO));
-        App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(GEQUAL, 1, 255));
+        EVE_CoDl_end(s_pHalContext);
+
+        EVE_CoDl_colorMask(s_pHalContext, 0, 0, 0, 0); //mask all the colors
+		EVE_CoDl_pointSize(s_pHalContext, rball * 16);
+		EVE_CoDl_begin(s_pHalContext, POINTS);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(xball), VP(yball));
+		EVE_CoDl_stencilOp(s_pHalContext, INCR, ZERO);
+		EVE_CoDl_stencilFunc(s_pHalContext, GEQUAL, 1, 255);
         /* one side points */
 
         for (int i = 1; i <= numpoints; i++)
@@ -990,62 +710,54 @@ void SAMAPP_Primitives_ballStencil()
                 int32_t tempsmooth;
                 tempsmooth = asmooth - rball;
                 aradius = (rball * rball + tempsmooth * tempsmooth) / (2 * tempsmooth);
-                App_WrDl_Buffer(s_pHalContext, POINT_SIZE(aradius * 16));
-                App_WrDl_Buffer(s_pHalContext,
-                    VERTEX2F((xball - aradius + tempsmooth) * 16, yball * 16));
+				EVE_CoDl_pointSize(s_pHalContext, aradius * 16);
+				EVE_CoDl_vertex2f(s_pHalContext, VP(xball - aradius + tempsmooth), VP(yball));
             }
             else
             {
                 int32_t tempsmooth;
                 tempsmooth = rball - asmooth;
                 aradius = (rball * rball + tempsmooth * tempsmooth) / (2 * tempsmooth);
-                App_WrDl_Buffer(s_pHalContext, POINT_SIZE(aradius * 16));
-                App_WrDl_Buffer(s_pHalContext,
-                    VERTEX2F((xball + aradius - tempsmooth) * 16, yball * 16));
+				EVE_CoDl_pointSize(s_pHalContext, aradius * 16);
+				EVE_CoDl_vertex2f(s_pHalContext, VP(xball + aradius - tempsmooth), VP(yball));
             }
         }
+        EVE_CoDl_end(s_pHalContext);
 
-        App_WrDl_Buffer(s_pHalContext, END());
-        App_WrDl_Buffer(s_pHalContext, BEGIN(LINES));
+		EVE_CoDl_begin(s_pHalContext, LINES);
         /* draw lines - line should be at least radius diameter */
         for (int i = 1; i <= numlines; i++)
         {
             asize = (i * rball * 2 / numlines);
             asmooth = (int16_t) helperSmoothLerp(((float) (1.0 * asize / (2 * rball))), 0,
                 (float) (2 * rball));
-            App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(asmooth * 16));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F((xball - rball) * 16, (yball - rball) * 16));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F((xball + rball) * 16, (yball - rball) * 16));
+			EVE_CoDl_lineWidth(s_pHalContext, asmooth * 16);
+			EVE_CoDl_vertex2f(s_pHalContext, VP(xball - rball), VP(yball - rball));
+			EVE_CoDl_vertex2f(s_pHalContext, VP(xball + rball), VP(yball - rball));
         }
-        App_WrDl_Buffer(s_pHalContext, END());
+		EVE_CoDl_end(s_pHalContext);
 
-        App_WrDl_Buffer(s_pHalContext, COLOR_MASK(1, 1, 1, 1)); // enable all the colors
-        App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(ALWAYS, 1, 255));
-        App_WrDl_Buffer(s_pHalContext, STENCIL_OP(KEEP, KEEP));
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
-        App_WrDl_Buffer(s_pHalContext, POINT_SIZE(rball * 16));
-        App_WrDl_Buffer(s_pHalContext, BEGIN(FTPOINTS));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F((xball - 1) * 16, (yball - 1) * 16));
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0)); //shadow
-        App_WrDl_Buffer(s_pHalContext, COLOR_A(160));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F((xball + 16) * 16, (yball + 8) * 16));
-        App_WrDl_Buffer(s_pHalContext, COLOR_A(255));
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F(xball * 16, yball * 16));
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 0, 0));
-        App_WrDl_Buffer(s_pHalContext, STENCIL_FUNC(GEQUAL, 1, 1));
-        App_WrDl_Buffer(s_pHalContext, STENCIL_OP(KEEP, KEEP));
-        App_WrDl_Buffer(s_pHalContext, VERTEX2F(xball * 16, yball * 16));
+        EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 1); // enable all the colors
+		EVE_CoDl_stencilFunc(s_pHalContext, ALWAYS, 1, 255);
+		EVE_CoDl_stencilOp(s_pHalContext, KEEP, KEEP);
+		EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+		EVE_CoDl_pointSize(s_pHalContext, rball * 16);
+		EVE_CoDl_begin(s_pHalContext, POINTS);
 
-        App_WrDl_Buffer(s_pHalContext, END());
+        EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0); //shadow
+		EVE_CoDl_colorA(s_pHalContext, 160);
+        EVE_CoDl_vertex2f(s_pHalContext, VP(xball + 16), VP(yball + 16));
 
-        App_WrDl_Buffer(s_pHalContext, DISPLAY());
+        EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 255);
+		EVE_CoDl_colorA(s_pHalContext, 255);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(xball), VP(yball));
 
-        /* Download the DL into DL RAM */
-        App_Flush_DL_Buffer(s_pHalContext);
-
-        /* Do a swap */
-        GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+        EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
+		EVE_CoDl_stencilFunc(s_pHalContext, GEQUAL, 1, 1);
+		EVE_CoDl_stencilOp(s_pHalContext, KEEP, KEEP);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(xball), VP(yball));
+		EVE_CoDl_end(s_pHalContext);
+		Display_End(s_pHalContext);
 
         EVE_sleep(30);
     }
@@ -1065,31 +777,38 @@ void SAMAPP_Primitives_string()
     voffset = (int16_t) ((s_pHalContext->Height - 49) / 2); //the max height of inbuilt font handle 31
     hoffset = (int16_t) ((s_pHalContext->Width - 4 * 60) / 2);
 
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 0, CLEAR(1, 1, 1)); // clear screen
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 4, BEGIN(BITMAPS)); // start drawing bitmaps
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 0, 0, 0 }); // clear screen
+    EVE_CoDl_begin(s_pHalContext, BITMAPS); // start drawing bitmaps
 
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 8, VERTEX2II(hoffset, voffset, 31, 'B')); // ascii B in font 31
+	EVE_CoDl_bitmapHandle(s_pHalContext, 31);
+	EVE_CoDl_cell(s_pHalContext, 'B');
+    EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii B in font 31
     hoffset += 24;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 12, VERTEX2II(hoffset, voffset, 31, 'R')); // ascii R
+	EVE_CoDl_cell(s_pHalContext, 'R');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii R
     hoffset += 26;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 16, VERTEX2II(hoffset, voffset, 31, 'I')); // ascii I
+	EVE_CoDl_cell(s_pHalContext, 'I');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii I
     hoffset += 10;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 20, VERTEX2II(hoffset, voffset, 31, 'D')); // ascii D
+	EVE_CoDl_cell(s_pHalContext, 'D');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii D
     hoffset += 24;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 24, VERTEX2II(hoffset, voffset, 31, 'G')); // ascii G
+	EVE_CoDl_cell(s_pHalContext, 'G');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii G
     hoffset += 24;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 28, VERTEX2II(hoffset, voffset, 31, 'E')); // ascii E
+	EVE_CoDl_cell(s_pHalContext, 'E');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii E
     hoffset += 24;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 32, VERTEX2II(hoffset, voffset, 31, 'T')); // ascii T
+	EVE_CoDl_cell(s_pHalContext, 'T');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii T
     hoffset += 24;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 36, VERTEX2II(hoffset, voffset, 31, 'E')); // ascii E
+	EVE_CoDl_cell(s_pHalContext, 'E');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii E
     hoffset += 24;
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 40, VERTEX2II(hoffset, voffset, 31, 'K')); // ascii K
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 44, END());
-    EVE_Hal_wr32(s_pHalContext, RAM_DL + 48, DISPLAY()); // display the image
-
-                                                         /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+	EVE_CoDl_cell(s_pHalContext, 'K');
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset)); // ascii K
+	EVE_CoDl_end(s_pHalContext);
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -1116,20 +835,17 @@ void SAMAPP_Primitives_additiveBlendPoints()
     while (flagloop-- > 0)
     {
         /* Download the DL into DL RAM */
-        App_Flush_DL_Buffer(s_pHalContext);
-
-        App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-        App_WrDl_Buffer(s_pHalContext, COLOR_RGB(20, 91, 20)); // green color for additive blending
-        App_WrDl_Buffer(s_pHalContext, BLEND_FUNC(SRC_ALPHA, ONE)); //input is source alpha and destination is whole color
-        App_WrDl_Buffer(s_pHalContext, POINT_SIZE(PointSz * 16));
-        App_WrDl_Buffer(s_pHalContext, BEGIN(FTPOINTS));
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 20, 91, 20 });
+		EVE_CoDl_blendFunc(s_pHalContext, SRC_ALPHA, DST_ALPHA); //input is source alpha and destination is whole color
+		EVE_CoDl_pointSize(s_pHalContext, PointSz * 16);
+		EVE_CoDl_begin(s_pHalContext, POINTS);
 
         /* First 100 random values */
         for (int i = 0; i < 100; i++)
         {
             hoffset = random(s_pHalContext->Width);
             voffset = random(s_pHalContext->Height);
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+			EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
         }
 
         /* next 480 are sine values of two cycles */
@@ -1142,27 +858,18 @@ void SAMAPP_Primitives_additiveBlendPoints()
                 + ((int32_t) (s_pHalContext->Height / 2)
                     * Math_Qsin((uint16_t) (65536 * i / (s_pHalContext->Width / 6)) / 65536));
 
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+            EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
             for (int j = 0; j < 4; j++)
             {
                 hdiff = random(PointSz * 6) - (PointSz * 3);
                 vdiff = random(PointSz * 6) - (PointSz * 3);
-                App_WrDl_Buffer(s_pHalContext,
-                    VERTEX2F((hoffset + hdiff) * 16, (voffset + vdiff) * 16));
+				EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset + hdiff), VP(voffset + vdiff));
             }
         }
 
-        App_WrDl_Buffer(s_pHalContext, END());
-        App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-        /* Download the DL into DL RAM */
-        App_Flush_DL_Buffer(s_pHalContext);
-
-        /* Do a swap */
-        GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
-
+        EVE_CoDl_end(s_pHalContext);
+		Display_End(s_pHalContext);
         EVE_sleep(10);
-
     }
 }
 
@@ -1188,33 +895,27 @@ void SAMAPP_Primitives_text8x8()
     abcdefgh
     */
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(TEXT8X8, 1 * 8, 1)); //L1 format, each input data element is in 1 byte size
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, REPEAT, 8 * 8, 8 * 2)); //output is 8x8 format - draw 8 characters in horizontal repeated in 2 line
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 0, 0, 0 });
+    EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
+    EVE_CoDl_bitmapLayout(s_pHalContext, TEXT8X8, 1 * 8, 1); //L1 format, each input data element is in 1 byte size
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, REPEAT, 8 * 8, 8 * 2); //output is 8x8 format - draw 8 characters in horizontal repeated in 2 line
 
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
     /* Display text 8x8 at hoffset, voffset location */
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
 
     /*
     abcdabcdabcdabcd
     efghefghefghefgh
     */
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(TEXT8X8, 1 * 4, 2)); //L1 format and each datatype is 1 byte size
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, REPEAT, BORDER, 8 * 16, 8 * 2)); //each character is 8x8 in size -  so draw 32 characters in horizontal and 32 characters in vertical
+	EVE_CoDl_bitmapLayout(s_pHalContext, TEXT8X8, 1 * 4, 2); //L1 format and each datatype is 1 byte size
+	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, REPEAT, BORDER, 8 * 16, 8 * 2); //each character is 8x8 in size -  so draw 32 characters in horizontal and 32 characters in vertical
     hoffset = s_pHalContext->Width / 2;
     voffset = s_pHalContext->Height / 2;
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
-    App_WrDl_Buffer(s_pHalContext, END());
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
+    EVE_CoDl_end(s_pHalContext);
 
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -1240,36 +941,30 @@ void SAMAPP_Primitives_textVGA()
     String_size = 160 * 2;
     EVE_Hal_wrMem(s_pHalContext, RAM_G, (uint8_t*) Text_Array, String_size);
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
+    Display_Start(s_pHalContext); // clear screen
+    EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
 
     /* mandatory for textvga as background color is also one of the parameter in textvga format */
-    App_WrDl_Buffer(s_pHalContext, BLEND_FUNC(ONE, ZERO));
+    EVE_CoDl_blendFunc(s_pHalContext, ONE, ZERO);
 
     //draw 8x8
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(TEXTVGA, 2 * 4, 8)); //L1 format, but each input data element is of 2 bytes in size
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 8 * 8, 8 * 8)); //output is 8x8 format - draw 8 characters in horizontal and 8 vertical
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
-    App_WrDl_Buffer(s_pHalContext, END());
+    EVE_CoDl_bitmapLayout(s_pHalContext, TEXTVGA, 2 * 4, 8); //L1 format, but each input data element is of 2 bytes in size
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, 8 * 8, 8 * 8); //output is 8x8 format - draw 8 characters in horizontal and 8 vertical
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
+    EVE_CoDl_end(s_pHalContext);
 
     //draw textvga
-    App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT(TEXTVGA, 2 * 16, 8)); //L1 format but each datatype is 16bit size
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, REPEAT, 8 * 32, 8 * 32)); //8 pixels per character and 32 rows/colomns
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
+	EVE_CoDl_bitmapLayout(s_pHalContext, TEXTVGA, 2 * 16, 8); //L1 format but each datatype is 16bit size
+	EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, REPEAT, 8 * 32, 8 * 32); //8 pixels per character and 32 rows/colomns
+	EVE_CoDl_begin(s_pHalContext, BITMAPS);
     hoffset = s_pHalContext->Width / 2;
     voffset = s_pHalContext->Height / 2;
     /* Display textvga at hoffset, voffset location */
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
-    App_WrDl_Buffer(s_pHalContext, END());
+	EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
+	EVE_CoDl_end(s_pHalContext);
 
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -1281,21 +976,13 @@ void SAMAPP_Primitives_additiveBlendText()
 {
     Draw_Text(s_pHalContext, "Example for: Additive blending");
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(50, 30, 31, 0x47));
-    App_WrDl_Buffer(s_pHalContext, COLOR_A(128));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(58, 38, 31, 0x47));
-    App_WrDl_Buffer(s_pHalContext, COLOR_A(64));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(66, 46, 31, 0x47));
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 0, 0, 0 });
+	EVE_CoCmd_text(s_pHalContext, 50, 30, 31, 0, "Bridgetek");
+	EVE_CoDl_colorA(s_pHalContext, 128);
+	EVE_CoCmd_text(s_pHalContext, 58, 38, 31, 0, "Bridgetek");
+	EVE_CoDl_colorA(s_pHalContext, 64);
+	EVE_CoCmd_text(s_pHalContext, 66, 46, 31, 0, "Bridgetek");
+	Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -1318,7 +1005,7 @@ void SAMAPP_Primitives_macroUsage()
     yoffset = s_pHalContext->Height / 2;
 
     /* First write a valid macro instruction into macro0 */
-    EVE_Hal_wr32(s_pHalContext, REG_MACRO_0, VERTEX2F(xoffset * 16, yoffset * 16));
+    EVE_Hal_wr32(s_pHalContext, REG_MACRO_0, VERTEX2F(VP(xoffset), VP(yoffset)));
     /* update lena face as bitmap 0 */
 
     p_bmhdr = &SAMAPP_Bitmap_RawData_Header[0];
@@ -1327,30 +1014,22 @@ void SAMAPP_Primitives_macroUsage()
     Ftf_Write_File_nBytes_To_RAM_G(s_pHalContext, TEST_DIR "\\SAMAPP_Bitmap_RawData.bin", RAM_G,
         p_bmhdr->Stride * p_bmhdr->Height, p_bmhdr->Arrayoffset);
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-    App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE(RAM_G));
-    App_WrDl_Buffer(s_pHalContext,
-        BITMAP_LAYOUT(p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext,
-        BITMAP_SIZE(NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS)); // start drawing bitmaps
-    App_WrDl_Buffer(s_pHalContext, MACRO(0)); // draw the image at (100,120)
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    Display_Start(s_pHalContext);	
+	EVE_CoDl_begin(s_pHalContext, BITMAPS); // start drawing bitmaps
+    EVE_CoDl_bitmapSource(s_pHalContext, RAM_G);
+    EVE_CoDl_bitmapLayout(s_pHalContext, p_bmhdr->Format, p_bmhdr->Stride, p_bmhdr->Height);
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, p_bmhdr->Width, p_bmhdr->Height);
+    EVE_CoDl_macro(s_pHalContext, 0); // draw the image at (100,120)
+    EVE_CoDl_end(s_pHalContext);
+    Display_End(s_pHalContext);
     flagloop = 300;
     while (flagloop-- > 0)
     {
-        if (((xoffset + p_bmhdr->Width) >= s_pHalContext->Width) || (xoffset <= 0))
+        if (((uint32_t)(xoffset + p_bmhdr->Width) >= s_pHalContext->Width) || (xoffset <= 0))
         {
             xflag ^= 1;
         }
-        if (((yoffset + p_bmhdr->Height) >= s_pHalContext->Height) || (yoffset <= 0))
+		if (((uint32_t)(yoffset + p_bmhdr->Height) >= s_pHalContext->Height) || (yoffset <= 0))
         {
             yflag ^= 1;
         }
@@ -1371,7 +1050,7 @@ void SAMAPP_Primitives_macroUsage()
             yoffset--;
         }
         /*  update just the macro */
-        EVE_Hal_wr32(s_pHalContext, REG_MACRO_0, VERTEX2F(xoffset * 16, yoffset * 16));
+        EVE_Hal_wr32(s_pHalContext, REG_MACRO_0, VERTEX2F(VP(xoffset), VP(yoffset)));
         EVE_sleep(10);
     }
 }
@@ -1388,28 +1067,23 @@ void SAMAPP_Primitives_calibratesub() {
     uint16_t clb_y = 20;
     uint16_t clb_w = (uint16_t)(s_pHalContext->Width / 2);
     uint16_t clb_h = (uint16_t)(s_pHalContext->Height / 2);
-    uint16_t format = RGB565;
-    uint16_t w = 800;
-    uint16_t h = 480;
-    uint8_t type = LOADIMAGE;
 
     Display_Start(s_pHalContext);
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\Mountain_800x480_RGB565_Converted.png", RAM_G, type);
-    EVE_CoCmd_setBitmap(s_pHalContext, RAM_G, format, w, h);
+    EVE_Util_loadImageFile(s_pHalContext, RAM_G, TEST_DIR "\\Mountain_800x480_RGB565_Converted.png", NULL, OPT_RGB565);
     //Start drawing bitmap
-    EVE_Cmd_wr32(s_pHalContext, SAVE_CONTEXT());
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 0, 0, 0));
-    EVE_Cmd_wr32(s_pHalContext, END());
+    EVE_CoDl_saveContext(s_pHalContext);
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+    EVE_CoDl_vertex2f(s_pHalContext, 0, 0);
+    EVE_CoDl_end(s_pHalContext);
 
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 255, 255));
+    EVE_CoDl_colorRgb(s_pHalContext, 0, 255, 255);
     EVE_CoCmd_text(s_pHalContext, clb_x + 260, clb_y + clb_h / 2, 30, 0,
         "Please touch on screen");
 
     EVE_CoCmd_fgColor(s_pHalContext, 0xb90007);
     EVE_CoCmd_calibrateSub(s_pHalContext, clb_x, clb_y, clb_w, clb_h);
 
-    EVE_Cmd_wr32(s_pHalContext, RESTORE_CONTEXT());
+    EVE_CoDl_restoreContext(s_pHalContext);
     EVE_Cmd_waitFlush(s_pHalContext);
 #endif
 }
@@ -1426,110 +1100,6 @@ void SAMAPP_Primitives_testcard() {
     EVE_Cmd_waitFlush(s_pHalContext);
     EVE_sleep(2000);
 #endif
-}
-
-/**
-* @brief API to demonstrate CMD_GRADIENTA with transparency
-*
-*/
-void SAMAPP_Primitives_gradientA()
-{
-#if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
-    Draw_Text(s_pHalContext, "Example for: CMD_GRADIENTA with transparency");
-
-    /*************************************************************************/
-    /* Below code demonstrates the usage of gradient function. Gradient func */
-    /* can be used to construct three effects - horizontal, vertical and     */
-    /* diagonal effects.                                                      */
-    /*************************************************************************/
-    /*GradientA */
-    int16_t wScissor;
-    int16_t hScissor;
-    int16_t xOffset;
-    int16_t yOffset;
-
-    wScissor = (int16_t) ((s_pHalContext->Width - 4 * 10) / 3);
-    hScissor = (int16_t) ((s_pHalContext->Height - 3 * 20) / 2);
-    xOffset = 10;
-    yOffset = 20;
-    /* Draw gradient  */
-
-    EVE_CoCmd_dlStart(s_pHalContext);
-    EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(64, 64, 64));
-    EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(wScissor, hScissor));
-    /* Horizontal gradient effect */
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, yOffset)); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, yOffset, 0x80808080, (xOffset + wScissor), yOffset,
-        0xffffff00);
-    /* Vertical gradient effect */
-    xOffset += wScissor + 10;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, yOffset)); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, yOffset, 0x80ff0000, xOffset, (yOffset + hScissor),
-        0xff00ff00);
-    /* diagonal gradient effect */
-    xOffset += wScissor + 10;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, yOffset)); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, yOffset, 0x80800000, (xOffset + wScissor),
-        (yOffset + hScissor), 0xffffffff);
-    /* Diagonal gradient with text info */
-    xOffset = 10;
-    yOffset += hScissor + 20;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(wScissor, 30));
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, (yOffset + hScissor / 2 - 15))); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, (yOffset + hScissor / 2 - 15), 0x00606060,
-        (xOffset + wScissor), (yOffset + hScissor / 2 + 15), 0xff404080);
-    EVE_CoCmd_text(s_pHalContext, (xOffset + wScissor / 2), (yOffset + hScissor / 2), 28,
-        OPT_CENTER, "GradientA"); //text info
-
-                                  /* Draw horizontal, vertical and diagonal with alpha */
-    xOffset += wScissor + 10;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(wScissor, hScissor));
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, yOffset)); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, yOffset, 0x80808080, (xOffset + wScissor), yOffset,
-        0xffffff00);
-    wScissor -= 30;
-    hScissor -= 30;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(wScissor, hScissor));
-    xOffset += 15;
-    yOffset += 15;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, yOffset)); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, yOffset, 0x80800000, xOffset, (yOffset + hScissor),
-        0xffffffff);
-    wScissor -= 30;
-    hScissor -= 30;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(wScissor, hScissor));
-    xOffset += 15;
-    yOffset += 15;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(xOffset, yOffset)); //clip the display
-    EVE_CoCmd_gradientA(s_pHalContext, xOffset, yOffset, 0x80606060, (xOffset + wScissor),
-        (yOffset + hScissor), 0xFF404080);
-
-    /* Display the text wrt gradient */
-    wScissor = (int16_t) ((s_pHalContext->Width - 4 * 10) / 3);
-    hScissor = (int16_t) ((s_pHalContext->Height - 3 * 20) / 2);
-    xOffset = 10 + wScissor / 2;
-    yOffset = 20 + hScissor + 5;
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_XY(0, 0)); //set to default values
-#ifdef FT81X_ENABLE
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(2048, 2048));
-#else
-    EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(512, 512));
-#endif
-    EVE_CoCmd_text(s_pHalContext, xOffset, yOffset, 26, OPT_CENTER, "Horizontal grad"); //text info
-    xOffset += wScissor + 10;
-    EVE_CoCmd_text(s_pHalContext, xOffset, yOffset, 26, OPT_CENTER, "Vertical grad"); //text info
-    xOffset += wScissor + 10;
-    EVE_CoCmd_text(s_pHalContext, xOffset, yOffset, 26, OPT_CENTER, "Diagonal grad"); //text info
-
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-
-    /* Wait till coprocessor completes the operation */
-    EVE_Cmd_waitFlush(s_pHalContext);
-    EVE_sleep(2000);
-#endif // defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
 }
 
 /**
@@ -1565,7 +1135,7 @@ void SAMAPP_Primitives_appendComand()
         SAMAPP_Bitmap_RawData_Header[0].Stride, SAMAPP_Bitmap_RawData_Header[0].Height);
     AppendCmds[6] = BITMAP_SIZE(BILINEAR, BORDER, BORDER, SAMAPP_Bitmap_RawData_Header[0].Width,
         SAMAPP_Bitmap_RawData_Header[0].Height);
-    AppendCmds[7] = VERTEX2F(xoffset * 16, yoffset * 16);
+    AppendCmds[7] = VERTEX2F(VP(xoffset), VP(yoffset));
     AppendCmds[8] = END();
 
     /* Download the bitmap data*/
@@ -1601,55 +1171,51 @@ void SAMAPP_Primitives_appendComand()
 void SAMAPP_Primitives_simpleMap()
 {
     Draw_Text(s_pHalContext, "Example for: A simple map");
+	EVE_CoCmd_dlStart(s_pHalContext);
+    EVE_CoDl_clearColorRgb(s_pHalContext, 236, 232, 224); //light gray
+    EVE_CoDl_clear(s_pHalContext, 1, 1, 1);
+    EVE_CoDl_colorRgb(s_pHalContext, 170, 157, 136); //medium gray
+    EVE_CoDl_lineWidth(s_pHalContext, 63);
+    EVE_CoDl_call(s_pHalContext, 18); //draw the streets
+    EVE_CoDl_colorRgb(s_pHalContext, 250, 250, 250); //white
+    EVE_CoDl_lineWidth(s_pHalContext, 48);
+    EVE_CoDl_call(s_pHalContext, 18); //draw the streets
+    EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
+    EVE_CoDl_begin(s_pHalContext, BITMAPS);
+	EVE_CoDl_vertex2ii(s_pHalContext, 240, 91, 27, 77); //draw "Main st." at (240,91)
+	EVE_CoDl_vertex2ii(s_pHalContext, 252, 91, 27, 97);
+	EVE_CoDl_vertex2ii(s_pHalContext, 260, 91, 27, 105);
+	EVE_CoDl_vertex2ii(s_pHalContext, 263, 91, 27, 110);
+	EVE_CoDl_vertex2ii(s_pHalContext, 275, 91, 27, 115);
+	EVE_CoDl_vertex2ii(s_pHalContext, 282, 91, 27, 116);
+	EVE_CoDl_vertex2ii(s_pHalContext, 286, 91, 27, 46);
+    EVE_CoDl_end(s_pHalContext);
+    EVE_CoDl_display(s_pHalContext);
+    EVE_CoDl_begin(s_pHalContext, LINES);
+    EVE_CoDl_vertex2f(s_pHalContext, -160, -20);
+	EVE_CoDl_vertex2f(s_pHalContext, 320, 4160);
+	EVE_CoDl_vertex2f(s_pHalContext, 800, -20);
+	EVE_CoDl_vertex2f(s_pHalContext, 1280, 4160);
+	EVE_CoDl_vertex2f(s_pHalContext, 1920, -20);
+	EVE_CoDl_vertex2f(s_pHalContext, 2400, 4160);
+	EVE_CoDl_vertex2f(s_pHalContext, 2560, -20);
+	EVE_CoDl_vertex2f(s_pHalContext, 3040, 4160);
+	EVE_CoDl_vertex2f(s_pHalContext, 3200, -20);
+	EVE_CoDl_vertex2f(s_pHalContext, 3680, 4160);
+	EVE_CoDl_vertex2f(s_pHalContext, 2880, -20);
+	EVE_CoDl_vertex2f(s_pHalContext, 3360, 4160);
+	EVE_CoDl_vertex2f(s_pHalContext, -20, 0);
+	EVE_CoDl_vertex2f(s_pHalContext, 5440, -480);
+	EVE_CoDl_vertex2f(s_pHalContext, -20, 960);
+	EVE_CoDl_vertex2f(s_pHalContext, 5440, 480);
+	EVE_CoDl_vertex2f(s_pHalContext, -20, 1920);
+	EVE_CoDl_vertex2f(s_pHalContext, 5440, 1440);
+	EVE_CoDl_vertex2f(s_pHalContext, -20, 2880);
+	EVE_CoDl_vertex2f(s_pHalContext, 5440, 2400);
+	EVE_CoDl_end(s_pHalContext);
+    EVE_CoDl_return(s_pHalContext);
 
-    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(236, 232, 224)); //light gray
-    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(170, 157, 136)); //medium gray
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(63));
-    App_WrDl_Buffer(s_pHalContext, CALL(19)); //draw the streets
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(250, 250, 250)); //white
-    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(48));
-    App_WrDl_Buffer(s_pHalContext, CALL(19)); //draw the streets
-    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
-    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(240, 91, 27, 77)); //draw "Main st." at (240,91)
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(252, 91, 27, 97));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(260, 91, 27, 105));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(263, 91, 27, 110));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(275, 91, 27, 115));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(282, 91, 27, 116));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2II(286, 91, 27, 46));
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, DISPLAY());
-    App_WrDl_Buffer(s_pHalContext, BEGIN(LINES));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-160, -20));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(320, 4160));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(800, -20));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(1280, 4160));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(1920, -20));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(2400, 4160));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(2560, -20));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3040, 4160));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3200, -20));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3680, 4160));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(2880, -20));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3360, 4160));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 0));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, -480));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 960));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, 480));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 1920));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, 1440));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 2880));
-    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, 2400));
-    App_WrDl_Buffer(s_pHalContext, END());
-    App_WrDl_Buffer(s_pHalContext, RETURN());
-
-    /* Download the DL into DL RAM */
-    App_Flush_DL_Buffer(s_pHalContext);
-
-    /* Do a swap */
-    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    Display_End(s_pHalContext);
     SAMAPP_ENABLE_DELAY();
 }
 
@@ -1659,8 +1225,6 @@ void SAMAPP_Primitives()
     SAMAPP_Primitives_lines();
     SAMAPP_Primitives_rectangles();
     SAMAPP_Primitives_bitmap();
-    SAMAPP_Primitives_bitmapPaletteBackground();
-    SAMAPP_Primitives_bitmapPalette();
     SAMAPP_Primitives_barGraph();
     SAMAPP_Primitives_lineStrips();
     SAMAPP_Primitives_edgeStrips();
@@ -1677,7 +1241,6 @@ void SAMAPP_Primitives()
     SAMAPP_Primitives_macroUsage();
     SAMAPP_Primitives_calibratesub();
     SAMAPP_Primitives_testcard();
-    SAMAPP_Primitives_gradientA();
     SAMAPP_Primitives_appendComand();
     SAMAPP_Primitives_simpleMap();
 }

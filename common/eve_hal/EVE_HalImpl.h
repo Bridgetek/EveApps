@@ -73,14 +73,14 @@ void EVE_HalImpl_idle(EVE_HalContext *phost);
 /** @name TRANSFER */
 ///@{
 
-EVE_HAL_EXPORT void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t addr);
-EVE_HAL_EXPORT void EVE_Hal_endTransfer(EVE_HalContext *phost);
+void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t addr);
+void EVE_Hal_endTransfer(EVE_HalContext *phost);
 
-EVE_HAL_EXPORT uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value);
-EVE_HAL_EXPORT uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value);
-EVE_HAL_EXPORT uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value);
+uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value);
+uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value);
+uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value);
 
-EVE_HAL_EXPORT void EVE_Hal_flush(EVE_HalContext *phost);
+void EVE_Hal_flush(EVE_HalContext *phost);
 ///@}
 
 /*********
@@ -95,8 +95,8 @@ void EVE_Mcu_release();
 
 void EVE_Millis_initialize();
 void EVE_Millis_release();
-EVE_HAL_EXPORT uint32_t EVE_millis();
-EVE_HAL_EXPORT uint64_t EVE_millis64();
+uint32_t EVE_millis();
+uint64_t EVE_millis64();
 
 bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost);
 ///@}

@@ -38,6 +38,8 @@
 #define SAMAPP_INFO_START      Display_StartColor(s_pHalContext, (uint8_t[]) { 0x77, 0x77, 0x77 }, (uint8_t[]) { 255, 255, 255 })
 #define SAMAPP_INFO_END        Display_End(s_pHalContext);
 #define SAMAPP_DELAY_NEXT      EVE_sleep(2000);
+#define UNICODE_HANDLE1 (1)
+#define UNICODE_HANDLE (30)
 
 static EVE_HalContext s_halContext;
 static EVE_HalContext* s_pHalContext;
@@ -72,8 +74,7 @@ int main(int argc, char* argv[])
 
         EVE_Util_clearScreen(s_pHalContext);
 
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+        Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -92,7 +93,7 @@ int main(int argc, char* argv[])
 */
 void helperLoadXfont(uint8_t isReindex)
 {
-#if defined (BT81X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE3
     static uint32_t unicodeHandle = 0;
     static uint32_t XFONT_ADDR = RAM_G;
     static uint32_t GLYPH_ADDR = 20480; // glyph offset from 20kb
@@ -117,7 +118,7 @@ void helperLoadXfont(uint8_t isReindex)
     if (!FlashHelper_SwitchFullMode(s_pHalContext))
     {
         APP_ERR("Cannot switch flash full mode");
-        return 0;
+        return;
     }
     EVE_CoCmd_flashRead(s_pHalContext, XFONT_ADDR, xfont[0], xfont[1]);
     EVE_Cmd_waitFlush(s_pHalContext);
@@ -159,6 +160,7 @@ void SAMAPP_Font_romFonts()
     const uchar8_t Display_string2[] = "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_";
     const uchar8_t Display_string3[] = "`abcdefghijklmnopqrstuvwxyz{|}  ";
     Gpu_Fonts_t Display_fontstruct;
+	uint32_t fontSize = 31;
 
     Draw_Text(s_pHalContext, "Example for: ROM fonts 16 to 34");
 
@@ -172,7 +174,10 @@ void SAMAPP_Font_romFonts()
 
     // FT81X and BT81X has rom font 16-34, 32-34 accessible via Cmd_romFont
     // FT80X has rom font 16-31
-    for (int romFont = 16; romFont <= 34; romFont++)
+#if defined(FT81X_ENABLE)
+	fontSize = 34;
+#endif
+	for (uint32_t romFont = 16; romFont <= fontSize; romFont++)
     {
         /* Read the font table from hardware */
         EVE_Hal_rdMem(s_pHalContext, (uint8_t*) &Display_fontstruct,
@@ -182,71 +187,44 @@ void SAMAPP_Font_romFonts()
             Display_fontstruct.FontLineStride, Display_fontstruct.FontWidthInPixels,
             Display_fontstruct.PointerToFontGraphicsData);
         uint32_t font = romFont % 32;
-#if defined(FT81X_ENABLE)
-        /* Display hello world by offsetting wrt char size */
-        if (romFont > 31)
-        {
-            font = 20;
-            EVE_CoCmd_dlStart(s_pHalContext);
-
-            //this is a co-processor command and it needs to get pushed to the display list first.
-            EVE_CoCmd_romFont(s_pHalContext, font, romFont);
-
-            /* Wait till coprocessor completes the operation */
-            EVE_Cmd_waitFlush(s_pHalContext);
-
-            //update the display list pointer for display list commands
-            App_Set_DlBuffer_Index(EVE_Hal_rd16(s_pHalContext, REG_CMD_DL));
-        }
-#endif
-
-       App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1)); // clear screen
-       App_WrDl_Buffer(s_pHalContext, COLOR_RGB(255, 255, 255)); // clear screen
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 0, 0, 0 }, (uint8_t[]) { 255, 255, 255 });
+        EVE_CoCmd_romFont(s_pHalContext, font, romFont);
+		EVE_Cmd_waitFlush(s_pHalContext);
 
         /* Display string at the center of display */
-        App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
+        EVE_CoDl_begin(s_pHalContext, BITMAPS);
         hoffset = 20;
         voffset = 0;
 
         //FT81X devices support larger rom fonts fonts in font handle 32, 33, 34
-#if defined(FT81X_ENABLE)
         /* Display hello world by offsetting wrt char size */
-        App_WrDl_Buffer(s_pHalContext, BITMAP_HANDLE(font));
-#else
-        /* Display hello world by offsetting wrt char size */
-        App_WrDl_Buffer(s_pHalContext, BITMAP_HANDLE((i + 16)));
-#endif
+        EVE_CoDl_bitmapHandle(s_pHalContext, font);
         for (j = 0; j < stringlen1; j++)
         {
-            App_WrDl_Buffer(s_pHalContext, CELL(Display_string1[j]));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+            EVE_CoDl_cell(s_pHalContext, Display_string1[j]);
+            EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
             hoffset += Display_fontstruct.FontWidth[Display_string1[j]];
         }
         hoffset = 20;
         voffset += Display_fontstruct.FontHeightInPixels + 3;
         for (j = 0; j < stringlen2; j++)
         {
-            App_WrDl_Buffer(s_pHalContext, CELL(Display_string2[j]));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+            EVE_CoDl_cell(s_pHalContext, Display_string2[j]);
+            EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
             hoffset += Display_fontstruct.FontWidth[Display_string2[j]];
         }
         hoffset = 20;
         voffset += Display_fontstruct.FontHeightInPixels + 3;
         for (j = 0; j < stringlen3; j++)
         {
-            App_WrDl_Buffer(s_pHalContext, CELL(Display_string3[j]));
-            App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset * 16, voffset * 16));
+            EVE_CoDl_cell(s_pHalContext, Display_string3[j]);
+            EVE_CoDl_vertex2f(s_pHalContext, VP(hoffset), VP(voffset));
             hoffset += Display_fontstruct.FontWidth[Display_string3[j]];
         }
 
-        App_WrDl_Buffer(s_pHalContext, END());
+        EVE_CoDl_end(s_pHalContext);
 
-        /* Download the DL into DL RAM */
-        App_WrDl_Buffer(s_pHalContext, DISPLAY());
-        App_Flush_DL_Buffer(s_pHalContext);
-
-        /* Do a swap */
-        GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+        Display_End(s_pHalContext);
         EVE_sleep(1000);
     }
 }
@@ -256,7 +234,6 @@ void SAMAPP_Font_romFonts()
 */
 void SAMAPP_Font_font_Cache() {
 #if EVE_SUPPORT_GEN == EVE4
-#define UNICODE_HANDLE1   (1)
     const uint32_t xfontOnRamG = RAM_G;
     const uint32_t glyphOnRamG = 4096;
     const uint32_t startOfCache = 800 * 1024;
@@ -329,7 +306,7 @@ void SAMAPP_Font_font_Cache() {
     EVE_Cmd_waitFlush(s_pHalContext);
     
     char strDuration[100];
-    sprintf(strDuration,
+    sprintf_s(strDuration, 100,
         "Duration No FontCache: %u ms\n"
         "Duration With FontCache: %u ms\n"
         "Different: %d ms (%d%%)",
@@ -350,7 +327,6 @@ void SAMAPP_Font_fontCacheQuery() {
 
     Draw_Text(s_pHalContext, "Example for: CMD_FONTCACHEQUERY");
 
-#define UNICODE_HANDLE   (1)
     const uint32_t xfontOnRamG = RAM_G;
     const uint32_t glyphOnRamG = 4096;
     const uint32_t startOfCache = 800 * 1024;
@@ -375,10 +351,8 @@ void SAMAPP_Font_fontCacheQuery() {
 
     /// Prepare font handle and cahe font
     SAMAPP_INFO_START;
-    EVE_CoCmd_setFont2(s_pHalContext, UNICODE_HANDLE, xfontOnRamG, 0);
-    EVE_CoCmd_fontCache(s_pHalContext, UNICODE_HANDLE, startOfCache, cacheSize);
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
+    EVE_CoCmd_setFont2(s_pHalContext, UNICODE_HANDLE1, xfontOnRamG, 0);
+    EVE_CoCmd_fontCache(s_pHalContext, UNICODE_HANDLE1, startOfCache, cacheSize);
     SAMAPP_INFO_END;
 
     /// Query
@@ -402,12 +376,12 @@ void SAMAPP_Font_fontCacheQuery() {
         for (int k = 0; k < j; k++)
         {
             memcpy(text, str, k+1);
-            EVE_CoCmd_text(s_pHalContext, (uint16_t)x, (uint16_t)y, UNICODE_HANDLE, 0, text);
+            EVE_CoCmd_text(s_pHalContext, (uint16_t)x, (uint16_t)y, UNICODE_HANDLE1, 0, text);
             y += 30;
         }
         /// get fontcachequery data
         EVE_CoCmd_fontCacheQuery(s_pHalContext, &totalAfter, &usedAfter);
-        sprintf(s, "Font cache used: total = %u, used = %d", totalAfter, usedAfter);
+        sprintf_s(s, 1000, "Font cache used: total = %u, used = %d", totalAfter, usedAfter);
         EVE_CoCmd_text(s_pHalContext, s_pHalContext->Width/2, 10, 30, OPT_CENTER, s);
         SAMAPP_INFO_END;
         EVE_sleep(500);
@@ -422,11 +396,10 @@ void SAMAPP_Font_fontCacheQuery() {
 */
 void SAMAPP_Font_extendedFormat()
 {
-#if defined (BT81X_ENABLE)
+#if EVE_SUPPORT_GEN >= EVE3
 
     Draw_Text(s_pHalContext, "Example for: Unicode font");
 
-#define UNICODE_HANDLE 30
     uint32_t fontAddr = RAM_G;
     //Load glyph file into BT815's flash
     //Load xfont file into graphics RAM
@@ -441,9 +414,7 @@ void SAMAPP_Font_extendedFormat()
     EVE_CoCmd_text(s_pHalContext, 0, 0, UNICODE_HANDLE, 0, u8"BRT的EVE技术是一个革命性的概念，");
     EVE_CoCmd_text(s_pHalContext, 0, 30, UNICODE_HANDLE, 0, u8"利用面向对象的方法创建高质量的人机界面（HMI） 同时支持显示，");
     EVE_CoCmd_text(s_pHalContext, 0, 60, UNICODE_HANDLE, 0, u8"音频和触摸功能。");
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-    EVE_Cmd_waitFlush(s_pHalContext);
+	SAMAPP_INFO_END;
     SAMAPP_DELAY_NEXT;
 #endif // BT81X
 }
@@ -453,9 +424,7 @@ void SAMAPP_Font_extendedFormat()
 */
 void SAMAPP_Font_resetFont()
 {
-#if defined (BT81X_ENABLE)
-#define UNICODE_HANDLE 30
-
+#if EVE_SUPPORT_GEN >= EVE3
     SAMAPP_INFO_START;
     EVE_CoCmd_resetFonts(s_pHalContext);
     SAMAPP_INFO_END;
@@ -496,8 +465,6 @@ void SAMAPP_Font_fromJPEG()
 {
     uint8_t FontIdxTable[148];
     uint32_t fontaddr = (128 + 5 * 4);
-    uint16_t blocklen = 128 + 5 * 4; //header size
-    uint8_t pbuff[8192];
 
     Draw_Text(s_pHalContext, "Example for: Custom font from a JPEG file");
 
@@ -522,50 +489,16 @@ void SAMAPP_Font_fromJPEG()
 
     /* download the jpeg image and decode */
     /* Characters from 32 to 128 are present and each character is 16*16 dimention */
-
-    /******************* Decode jpg output into location 0 and output color format as RGB565 *********************/
-    //EVE_CoCmd_flashSource(s_pHalContext, 254400);
-    //EVE_CoCmd_loadImage(s_pHalContext, 9216, OPT_MONO | OPT_FLASH );
-
-    if (!FlashHelper_SwitchFullMode(s_pHalContext))
-    {
-        APP_ERR("Cannot switch flash full mode");
-        return 0;
-    }
-
-    if (1) {
-        uint32_t fileSize = FileIO_File_Open(TEST_DIR "\\font16.jpg", FILEIO_E_FOPEN_READ);
-
-        if (fileSize <= 0)
-        {
-            printf("Error in opening file %s \n", "font16.jpg");
-            return;
-        }
-
-        /******************* Decode jpg output into location 0 and output color format as RGB565 *********************/
-        EVE_Cmd_wr32(s_pHalContext, CMD_LOADIMAGE);
-        EVE_Cmd_wr32(s_pHalContext, (9216));//destination address of jpg decode
-        EVE_Cmd_wr32(s_pHalContext, OPT_MONO);//output format of the bitmap
-
-        while (fileSize > 0)
-        {
-            /* download the data into the command buffer by 2kb one shot */
-            uint16_t blocklen = fileSize > 8192 ? 8192 : fileSize;
-            /* copy the data into pbuff and then transfter it to command buffer */
-            fileSize -= FileIO_File_Read(pbuff, blocklen);
-            /* copy data continuously into command memory */
-            EVE_Cmd_wrMem(s_pHalContext, pbuff, blocklen); //alignment is already taken care by this api
-        }
-        FileIO_File_Close();
-    }
+    /******************* Decode jpg output into location 0 and output color format as MONO *********************/
+    EVE_Util_loadImageFile(s_pHalContext, 9216, TEST_DIR "\\font16.jpg", NULL, OPT_MONO);
 
     SAMAPP_INFO_START;
     EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 20, 27, OPT_CENTER,
         "SetFont - format L8");
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(7));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(1024));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 16, 16));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 16, 16));
+    EVE_CoDl_bitmapHandle(s_pHalContext, 7);
+    EVE_CoDl_bitmapSource(s_pHalContext, 1024);
+    EVE_CoDl_bitmapLayout(s_pHalContext, L8, 16, 16);
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, 16, 16);
 
     EVE_CoCmd_setFont(s_pHalContext, 7, 0);
 
@@ -585,59 +518,21 @@ void SAMAPP_Font_fromJPEG()
 */
 void SAMAPP_Font_fromConvertedTTF()
 {
-    uint8_t pbuff[8192];
-
     Draw_Text(s_pHalContext, "Example for: Custom font from a converted font file");
-
-    uint32_t fontaddr = RAM_G;//header size
-    int32_t fileLen = 0;
-    uint16_t blocklen = 128 + 5 * 4;//header size
-
-    fileLen = FileIO_File_Open(TEST_DIR "\\Roboto_BoldCondensed_12.bin", FILEIO_E_FOPEN_READ);
-    if (0 >= fileLen) {
-        printf("Error in opening file %s \n", "Roboto_BoldCondensed_12.bin");
-        return;
-    }
-
-    //first 148 bytes in the file is the header and later is the raw data for ascii 32 to 128 index charaters
-    FileIO_File_Read(pbuff, blocklen);
-    {
-        uint32_t* ptemp = (uint32_t*)&pbuff[128 + 4 * 4], i;
-        *ptemp = 1024;//download the font data at location 1024+32*8*25
-        for (i = 0; i < 32; i++)
-        {
-            pbuff[i] = 16;
-        }
-    }
-    /* Modify the font data location */
-    EVE_Hal_wrMem(s_pHalContext, fontaddr, (uint8_t*)pbuff, blocklen);
-
-    /* Next download the data at location 32*8*25 - skip the first 32 characters */
-    /* each character is 8x25 bytes */
-    fontaddr += (1024 + 32 * 8 * 25);//make sure space is left at the starting of the buffer for first 32 characters - TBD manager this buffer so that this buffer can be utilized by other module
-    fileLen -= blocklen;
-    while (fileLen > 0)
-    {
-        /* download the data into the command buffer by 8kb one shot */
-        blocklen = fileLen > 8192 ? 8192 : fileLen;
-
-        /* copy the data into pbuff and then transfter it to command buffer */
-        FileIO_File_Read(pbuff, blocklen);
-
-        /* copy data continuously into command memory */
-        EVE_Hal_wrMem(s_pHalContext, fontaddr, pbuff, blocklen);
-        fileLen -= blocklen;
-        fontaddr += blocklen;
-    }
-    FileIO_File_Close();
+	uint8_t head_sz = 128 + 5 * 4;
+	uint8_t head[148];
+	uint32_t fontaddr = (1024 + 32 * 8 * 25) - head_sz;
+	EVE_Util_loadRawFile(s_pHalContext, fontaddr, TEST_DIR "\\Roboto_BoldCondensed_12.bin");
+	EVE_Hal_rdMem(s_pHalContext, head, fontaddr, head_sz);
+	EVE_Hal_wrMem(s_pHalContext, RAM_G, head, head_sz);
 
     SAMAPP_INFO_START;
     EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 20, 27, OPT_CENTER,
         "SetFont - format L4");
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(6)); //give index table 6
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(1024)); //make the address to 0
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L4, 8, 25)); //stride is 8 and height is 25
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 16, 25)); //width is 16 and height is 25
+    EVE_CoDl_bitmapHandle(s_pHalContext, 6); //give index table 6
+    EVE_CoDl_bitmapSource(s_pHalContext, 1024); //make the address to 0
+    EVE_CoDl_bitmapLayout(s_pHalContext, L4, 8, 25); //stride is 8 and height is 25
+    EVE_CoDl_bitmapSize(s_pHalContext, NEAREST, BORDER, BORDER, 16, 25); //width is 16 and height is 25
     
     EVE_CoCmd_setFont(s_pHalContext, 6, 0);
     EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 80, 6, OPT_CENTER,
@@ -657,7 +552,7 @@ void SAMAPP_Font_fromConvertedTTF()
 */
 void SAMAPP_Font_fontInRAMG()
 {
-#if defined(FT81X_ENABLE) // FT81X only
+#if EVE_SUPPORT_GEN >= EVE3
 #define FONTFILE_RAM_G_ADDRESS  1000
 #define CUSTOM_RAM_FONT_HANDLE  0
 
@@ -665,7 +560,7 @@ void SAMAPP_Font_fontInRAMG()
     if (!FlashHelper_SwitchFullMode(s_pHalContext))
     {
         APP_ERR("Cannot switch flash full mode");
-        return 0;
+        return;
     }
     // load Tuffy_Bold.raw in BT81X_Flash.bin
     EVE_CoCmd_flashRead(s_pHalContext, FONTFILE_RAM_G_ADDRESS, 5143616, 6656);
@@ -688,6 +583,7 @@ void SAMAPP_Font_fontInRAMG()
 */
 void SAMAPP_Font_indexer()
 {
+#if defined(BT81X_ENABLE)
     Draw_Text(s_pHalContext, "Example for: Code point ordinal/UTF-8");
 
     SAMAPP_INFO_START;
@@ -703,6 +599,7 @@ void SAMAPP_Font_indexer()
     helperLoadXfont(1);
     SAMAPP_INFO_END;
     SAMAPP_DELAY_NEXT;
+#endif
 }
 
 void SAMAPP_Font() {

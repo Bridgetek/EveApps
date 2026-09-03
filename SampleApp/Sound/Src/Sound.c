@@ -65,8 +65,7 @@ int main(int argc, char* argv[])
 
 		EVE_Util_clearScreen(s_pHalContext);
 
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -87,8 +86,7 @@ PROGMEM prog_uchar8_t SAMAPP_Snd_TagArray[58] = { 0x63, 0x1, 0x2, 0x3, 0x4, 0x5,
 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x60,
 0x61 };
 
-void helperHighLightBtn(int32_t tagvalsnd, const prog_uchar8_t* pTagArray, int32_t wbutton,
-    int32_t hbutton, const char8_t* StringArray, const prog_uchar8_t* pString)
+void helperHighLightBtn(int32_t tagvalsnd, const prog_uchar8_t* pTagArray, int32_t wbutton, int32_t hbutton)
 {
 
     int32_t numbtnrow = 7;
@@ -98,55 +96,24 @@ void helperHighLightBtn(int32_t tagvalsnd, const prog_uchar8_t* pTagArray, int32
     {
         for (int j = 0; j < numbtncol; j++)
         {
-            EVE_Cmd_wr32(s_pHalContext, TAG(pgm_read_byte(pTagArray)));
+            EVE_CoDl_tag(s_pHalContext, pgm_read_byte(pTagArray));
             if (tagvalsnd == pgm_read_byte(pTagArray))
             {
                 /* red color for highlight effect */
-                EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x80, 0x00, 0x00));
-                EVE_Cmd_wr32(s_pHalContext, BEGIN(RECTS));
-                EVE_Cmd_wr32(s_pHalContext, TAG(pgm_read_byte(pTagArray)));
-                EVE_Cmd_wr32(s_pHalContext,
-                    VERTEX2F((j * wbutton + 2) * 16, (hbutton * i + 2) * 16));
-                EVE_Cmd_wr32(s_pHalContext,
-                    VERTEX2F(((j * wbutton) + wbutton - 2) * 16,
-                        ((hbutton * i) + hbutton - 2) * 16));
-                EVE_Cmd_wr32(s_pHalContext, END());
-                /* reset the color to make sure font doesnt get impacted */
-                EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
+                EVE_CoDl_colorRgb(s_pHalContext, 0x80, 0x00, 0x00);
+				EVE_CoDl_colorA(s_pHalContext, 0x55);
+                EVE_CoDl_begin(s_pHalContext, RECTS);
+                EVE_CoDl_vertex2f(s_pHalContext, VP(j * wbutton + 2), VP(hbutton * i + 2));
+                EVE_CoDl_vertex2f(s_pHalContext, VP((j * wbutton) + wbutton - 2), VP((hbutton * i) + hbutton - 2));
+                EVE_CoDl_end(s_pHalContext);
             }
-
-            /* to make sure that highlight rectangle as well as font to take the same tag values */
-#ifdef ARDUINO_PLATFORM
-            strcpy_P(StringArray, (const prog_char8_t*)pString);
-#endif
-#if defined(FT900_PLATFORM) || defined(FT93X_PLATFORM)
-            {
-                /* Copy data from flash to RAM */
-                int32_t idx = 0;
-                int32_t slen;
-                char8_t* pstring, tempchar;
-                pstring = StringArray;
-                do
-                {
-                    tempchar = pgm_read_byte_near(&pString[idx]);
-                    *pstring++ = tempchar;
-                    idx++;
-                } while (tempchar);
-            }
-#endif
-#if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
-            strcpy(StringArray, pString);
-#endif
-            EVE_CoCmd_text(s_pHalContext, (int16_t) ((wbutton / 2) + j * wbutton),
-                (int16_t) ((hbutton / 2) + hbutton * i), 26, OPT_CENTER, StringArray);
-
-            pString += (strlen(StringArray) + 1);
             pTagArray++;
         }
     }
+	EVE_CoDl_colorA(s_pHalContext, 255);
 }
 
-void helperDrawBtn(const prog_uchar8_t* pTagArray, int32_t wbutton, int32_t hbutton)
+void helperDrawBtn(const prog_uchar8_t *pTagArray, int32_t wbutton, int32_t hbutton, char *StringArray, char *pString)
 {
     int32_t numbtnrow = 7;
     int32_t numbtncol = 8;
@@ -155,10 +122,36 @@ void helperDrawBtn(const prog_uchar8_t* pTagArray, int32_t wbutton, int32_t hbut
     {
         for (int j = 0; j < numbtncol; j++)
         {
-            EVE_Cmd_wr32(s_pHalContext, TAG(pgm_read_byte(pTagArray)));
-            EVE_Cmd_wr32(s_pHalContext, VERTEX2F((j * wbutton + 2) * 16, (hbutton * i + 2) * 16));
-            EVE_Cmd_wr32(s_pHalContext,
-                VERTEX2F(((j * wbutton) + wbutton - 2) * 16, ((hbutton * i) + hbutton - 2) * 16));
+            EVE_CoDl_tag(s_pHalContext, pgm_read_byte(pTagArray));
+			EVE_CoDl_colorRgb(s_pHalContext, 0x80, 0x80, 0x00);
+			EVE_CoDl_begin(s_pHalContext, RECTS);
+            EVE_CoDl_vertex2f(s_pHalContext, VP(j * wbutton + 2), VP(hbutton * i + 2));
+            EVE_CoDl_vertex2f(s_pHalContext, VP((j * wbutton) + wbutton - 2), VP((hbutton * i) + hbutton - 2));
+			EVE_CoDl_end(s_pHalContext);
+
+#if defined(FT900_PLATFORM) || defined(FT93X_PLATFORM)
+			{
+				/* Copy data from flash to RAM */
+				int32_t idx = 0;
+				int32_t slen;
+				char8_t *pstring, tempchar;
+				pstring = StringArray;
+				do
+				{
+					tempchar = pgm_read_byte_near(&pString[idx]);
+					*pstring++ = tempchar;
+					idx++;
+				} while (tempchar);
+			}
+#endif
+#if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
+			strcpy_s(StringArray, 8, pString);
+#endif
+			EVE_CoDl_colorRgb(s_pHalContext, 0, 0, 0);
+			EVE_CoCmd_text(s_pHalContext, (int16_t)((wbutton / 2) + j * wbutton),
+			    (int16_t)((hbutton / 2) + hbutton * i), 26, OPT_CENTER, StringArray);
+
+			pString += (strlen(StringArray) + 1);
             pTagArray++;
         }
     }
@@ -240,53 +233,36 @@ void SAMAPP_Sound_builtin()
         }
         /* start a new display list for construction of screen */
 
-        EVE_CoCmd_dlStart(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(64, 64, 64));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        /* line width for the rectangle */
-        EVE_Cmd_wr32(s_pHalContext, LINE_WIDTH(1 * 16));
-
+        Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 255, 255 });
         /* custom keys for sound input */
         pTagArray = SAMAPP_Snd_TagArray;
+		pString = SAMAPP_Snd_Array;
         /* First draw all the rectangles followed by the font */
-        /* yellow color for background color */
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x80, 0x80, 0x00));
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(RECTS));
+		helperDrawBtn(pTagArray, wbutton, hbutton, StringArray, pString);
 
-        helperDrawBtn(pTagArray, wbutton, hbutton);
-
-        EVE_Cmd_wr32(s_pHalContext, END());
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
         /* draw the highlight rectangle and text info */
         pTagArray = SAMAPP_Snd_TagArray;
-        pString = SAMAPP_Snd_Array;
-
-        helperHighLightBtn(tagvalsnd, pTagArray, wbutton, hbutton, StringArray, pString);
+        helperHighLightBtn(tagvalsnd, pTagArray, wbutton, hbutton);
 
         /* Draw vertical slider bar for frequency control */
         StringArray[0] = '\0';
-        strcat(StringArray, "Pt ");
+        strcat_s(StringArray, 8, "Pt ");
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) (currfreq + 21));
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(0));
-        EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width - 20), 10, 26, OPT_CENTER,
-            StringArray);
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(1));
-        EVE_Cmd_wr32(s_pHalContext, TAG(100));
+        EVE_CoDl_tagMask(s_pHalContext, 0);
+        EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width - 20), 10, 26, OPT_CENTER, StringArray);
+		EVE_CoDl_tagMask(s_pHalContext, 1);
+        EVE_CoDl_tag(s_pHalContext, 100);
         EVE_CoCmd_slider(s_pHalContext, (int16_t) (s_pHalContext->Width - 15), 20, 8,
             (int16_t) (s_pHalContext->Height - 40), 0, (int16_t) currfreq, 88);
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
         prevtag = tagval;
-
         prevcurrfreq = currfreq;
         /* Wait till coprocessor completes the operation */
-        EVE_Cmd_waitFlush(s_pHalContext);
+		Display_End(s_pHalContext);
         EVE_sleep(10);
     }
 
-    EVE_Hal_wr16(s_pHalContext, REG_SOUND, 0);
-    EVE_Hal_wr8(s_pHalContext, REG_PLAY, 1);
+    Play_Sound(s_pHalContext, 0, 0, 0);
 }
 
 /**
@@ -299,8 +275,8 @@ void SAMAPP_Sound_musicStreaming()
     uint32_t chunksize = 16 * 1024;
     uint32_t totalbufflen = 64 * 1024;
     uint32_t currreadlen = 0;
-    const uint8_t* pBuff = NULL;
-    const uint8_t* music_playing = 0;
+    uint8_t* pBuff = NULL;
+    uint8_t music_playing = 0;
     uint32_t wrptr = RAM_G;
     uint32_t rdptr;
     uint32_t freebuffspace;
@@ -403,8 +379,7 @@ void SAMAPP_Sound_fromEABConvertedRaw()
 {
     Draw_Text(s_pHalContext, "Example for: Play sound from EAB converted audio");
 
-    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\Devil_Ride_30_11025hz.raw", 0, LOAD);
-    EVE_Cmd_waitFlush(s_pHalContext);
+    EVE_Util_loadRawFile(s_pHalContext, 0, TEST_DIR "\\Devil_Ride_30_11025hz.raw");
 
     EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
     EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, 0); //Audio playback start address

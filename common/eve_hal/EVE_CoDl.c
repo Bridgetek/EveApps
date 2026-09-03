@@ -35,9 +35,9 @@
 #include <stdio.h> /* memset */
 #endif
 
-EVE_HAL_EXPORT void EVE_CoDlImpl_resetDlState(EVE_HalContext *phost)
+void EVE_CoDlImpl_resetDlState(EVE_HalContext *phost)
 {
-#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 	phost->DlStateIndex = 0;
 #if defined(_MSC_VER) && (_MSC_VER < 1800)
 	/* Designated initializers not supported in older Visual Studio versions */
@@ -66,7 +66,7 @@ EVE_HAL_EXPORT void EVE_CoDlImpl_resetDlState(EVE_HalContext *phost)
 		.ColorA = 0xFF,
 		.Handle = 0x3F, /* Invalid value */
 #endif
-#if (EVE_DL_OPTIMIZE) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 		    .VertexFormat = 4,
 #elif (EVE_DL_CACHE_SCISSOR)
 		0
@@ -80,7 +80,7 @@ EVE_HAL_EXPORT void EVE_CoDlImpl_resetDlState(EVE_HalContext *phost)
 #endif
 }
 
-EVE_HAL_EXPORT void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost)
+void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost)
 {
 #if (EVE_DL_OPTIMIZE)
 	phost->CoFgColor = 0x003870;
@@ -96,9 +96,9 @@ EVE_HAL_EXPORT void EVE_CoDlImpl_resetCoState(EVE_HalContext *phost)
 #endif
 }
 
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 
-EVE_HAL_EXPORT void EVE_CoDlImpl_vertex2ii_translate(EVE_HalContext *phost, uint16_t x, uint16_t y, uint8_t handle, uint8_t cell)
+void EVE_CoDlImpl_vertex2ii_translate(EVE_HalContext *phost, uint16_t x, uint16_t y, uint8_t handle, uint8_t cell)
 {
 	int16_t xf = (x << 4) + EVE_DL_STATE.VertexTranslateX;
 	int16_t yf = (y << 4) + EVE_DL_STATE.VertexTranslateY;

@@ -33,33 +33,6 @@
 #include "EVE_Platform.h"
 #if defined(FT4222_PLATFORM)
 
-#if defined(EVE_MULTI_PLATFORM_TARGET)
-#define EVE_HalImpl_initialize EVE_HalImpl_FT4222_initialize
-#define EVE_HalImpl_release EVE_HalImpl_FT4222_release
-#define EVE_Hal_list EVE_Hal_FT4222_list
-#define EVE_Hal_info EVE_Hal_FT4222_info
-#define EVE_Hal_isDevice EVE_Hal_FT4222_isDevice
-#define EVE_HalImpl_defaults EVE_HalImpl_FT4222_defaults
-#define EVE_HalImpl_open EVE_HalImpl_FT4222_open
-#define EVE_HalImpl_close EVE_HalImpl_FT4222_close
-#define EVE_HalImpl_idle EVE_HalImpl_FT4222_idle
-#define EVE_Hal_flush EVE_Hal_FT4222_flush
-#define EVE_Hal_startTransfer EVE_Hal_FT4222_startTransfer
-#define EVE_Hal_endTransfer EVE_Hal_FT4222_endTransfer
-#define EVE_Hal_transfer8 EVE_Hal_FT4222_transfer8
-#define EVE_Hal_transfer16 EVE_Hal_FT4222_transfer16
-#define EVE_Hal_transfer32 EVE_Hal_FT4222_transfer32
-#define EVE_Hal_transferMem EVE_Hal_FT4222_transferMem
-#define EVE_Hal_transferProgMem EVE_Hal_FT4222_transferProgMem
-#define EVE_Hal_transferString EVE_Hal_FT4222_transferString
-#define EVE_Hal_hostCommand EVE_Hal_FT4222_hostCommand
-#define EVE_Hal_hostCommandExt3 EVE_Hal_FT4222_hostCommandExt3
-#define EVE_Hal_powerCycle EVE_Hal_FT4222_powerCycle
-#define EVE_UtilImpl_bootupDisplayGpio EVE_UtilImpl_FT4222_bootupDisplayGpio
-#define EVE_Hal_setSPI EVE_Hal_FT4222_setSPI
-#define EVE_Hal_restoreSPI EVE_Hal_FT4222_restoreSPI
-#endif
-
 #define FT4222_TRANSFER_SIZE_MAX (0xFFFF)
 #define FT4222_WRITE_HEADER_SIZE (3)
 #define FT4222_WRITE_SIZE_MAX (FT4222_TRANSFER_SIZE_MAX - FT4222_WRITE_HEADER_SIZE)
@@ -79,42 +52,7 @@ DWORD s_NumDevsD2XX;
  */
 void EVE_HalImpl_initialize()
 {
-#if 0
-	FT_DEVICE_LIST_INFO_NODE devList;
-	FT_STATUS status;
-	uint32_t numdevs;
-
-	status = FT_CreateDeviceInfoList(&numdevs);
-	if (FT_OK == status)
-	{
-		eve_printf_debug("Number of D2xx devices connected = %d\n", numdevs);
-		// TODO: g_HalPlatform.TotalDevices = numdevs;
-
-		for (int i = 0; i < numdevs; ++i)
-		{
-			FT_GetDeviceInfoDetail(0, &devList.Flags, &devList.Type, &devList.ID,
-				&devList.LocId,
-				devList.SerialNumber,
-				devList.Description,
-				&devList.ftHandle);
-			
-			eve_printf_debug("Information on channel number %d:\n", i);
-			/* print the dev info */
-			eve_printf_debug(" Flags=0x%x\n", devList.Flags);
-			eve_printf_debug(" Type=0x%x\n", devList.Type);
-			eve_printf_debug(" ID=0x%x\n", devList.ID);
-			eve_printf_debug(" LocId=0x%x\n", devList.LocId);
-			eve_printf_debug(" SerialNumber=%s\n", devList.SerialNumber);
-			eve_printf_debug(" Description=%s\n", devList.Description);
-			eve_printf_debug(" ftHandle=0x%p\n", devList.ftHandle); /* is 0 unless open */
-		}
-	}
-	else
-	{
-		eve_printf_debug("FT_CreateDeviceInfoList failed");
-		return;
-	}
-#endif
+	/* no-op */
 }
 
 /**
@@ -363,10 +301,6 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 
 	phost->SpiHandle = phost->GpioHandle = NULL;
 
-#ifdef EVE_MULTI_GRAPHICS_TARGET
-	phost->GpuDefs = &EVE_GpuDefs_FT80X;
-#endif
-
 	memset(&devInfoA, 0, sizeof(devInfoA));
 	status = FT_GetDeviceInfoDetail(deviceIdxA,
 	    &devInfoA.Flags, &devInfoA.Type, &devInfoA.ID, &devInfoA.LocId,
@@ -602,7 +536,7 @@ static bool flush(EVE_HalContext *phost);
  */
 static inline uint32_t incrementRamGAddr(EVE_HalContext *phost, uint32_t addr, uint32_t inc)
 {
-	if (!EVE_Hal_supportCmdB(phost) || (addr != REG_CMDB_WRITE))
+	if (!(EVE_CHIPID >= EVE_FT810) || (addr != REG_CMDB_WRITE))
 	{
 		bool wrapCmdAddr = (addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE));
 		addr += inc;
@@ -707,7 +641,7 @@ static inline bool rdBuffer(EVE_HalContext *phost, uint8_t *buffer, uint32_t siz
 			size -= sizeTransferred;
 		}
 
-		if (!EVE_Hal_supportCmdB(phost) || (addr != REG_CMDB_WRITE))
+		if (!(EVE_CHIPID >= EVE_FT810) || (addr != REG_CMDB_WRITE))
 		{
 			bool wrapCmdAddr = (addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE));
 			addr += sizeTransferred;
@@ -860,10 +794,10 @@ void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t ad
 {
 	eve_assert(phost->Status == EVE_STATUS_OPENED);
 
-	if (!EVE_Hal_supportCmdB(phost) && addr == REG_CMD_WRITE && rw == EVE_TRANSFER_WRITE)
+	if (!(EVE_CHIPID >= EVE_FT810) && addr == REG_CMD_WRITE && rw == EVE_TRANSFER_WRITE)
 	{
 		/* Bypass fifo write pointer write */
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if !defined(EVE_SUPPORT_CMDB)
 		phost->SpiWpWriting = true;
 #else
 		eve_assert(false);
@@ -898,18 +832,15 @@ void EVE_Hal_endTransfer(EVE_HalContext *phost)
 
 	/* Transfers to FIFO and DL are kept open */
 	addr = phost->SpiRamGAddr;
-	if (addr != (EVE_Hal_supportCmdB(phost) ? REG_CMDB_WRITE : REG_CMD_WRITE)
+	if (addr != ((EVE_CHIPID >= EVE_FT810)) ? REG_CMDB_WRITE : REG_CMD_WRITE
 	    && !((addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE)))
 	    && !((addr >= RAM_DL) && (addr < (RAM_CMD + EVE_DL_SIZE))))
 	{
 		flush(phost);
 	}
 
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
-	{
-		phost->SpiWpWriting = false;
-	}
+#if !defined(EVE_SUPPORT_CMDB)
+	phost->SpiWpWriting = false;
 #endif
 
 	if (phost->Status != EVE_STATUS_ERROR)
@@ -931,20 +862,17 @@ static bool flush(EVE_HalContext *phost)
 		res = wrBuffer(phost, NULL, 0);
 	}
 	eve_assert(!phost->SpiWrBufIndex);
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
+#if !defined(EVE_SUPPORT_CMDB)
+	if (phost->SpiWpWritten)
 	{
-		if (phost->SpiWpWritten)
-		{
-			phost->SpiWpWritten = false;
-			phost->SpiRamGAddr = REG_CMD_WRITE;
-			phost->SpiWrBufIndex = 2;
-			phost->SpiWrBuf[FT4222_WRITE_HEADER_SIZE + 0] = phost->SpiWpWrite & 0xFF;
-			phost->SpiWrBuf[FT4222_WRITE_HEADER_SIZE + 1] = phost->SpiWpWrite >> 8;
-			res = wrBuffer(phost, NULL, 0);
-		}
-		eve_assert(!phost->SpiWrBufIndex);
+		phost->SpiWpWritten = false;
+		phost->SpiRamGAddr = REG_CMD_WRITE;
+		phost->SpiWrBufIndex = 2;
+		phost->SpiWrBuf[FT4222_WRITE_HEADER_SIZE + 0] = phost->SpiWpWrite & 0xFF;
+		phost->SpiWrBuf[FT4222_WRITE_HEADER_SIZE + 1] = phost->SpiWpWrite >> 8;
+		res = wrBuffer(phost, NULL, 0);
 	}
+	eve_assert(!phost->SpiWrBufIndex);
 #endif
 	return res;
 }
@@ -970,11 +898,8 @@ void EVE_Hal_flush(EVE_HalContext *phost)
 uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value)
 {
 #if defined(EVE_BUFFER_WRITES)
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
-	{
-		eve_assert(!phost->SpiWpWriting);
-	}
+#if !defined(EVE_SUPPORT_CMDB)
+	eve_assert(!phost->SpiWpWriting);
 #endif
 #endif
 	if (phost->Status == EVE_STATUS_READING)
@@ -1000,15 +925,12 @@ uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value)
 {
 	uint8_t buffer[2];
 #if defined(EVE_BUFFER_WRITES)
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
+#if !defined(EVE_SUPPORT_CMDB)
+	if (phost->SpiWpWriting)
 	{
-		if (phost->SpiWpWriting)
-		{
-			phost->SpiWpWrite = value;
-			phost->SpiWpWritten = true;
-			return 0;
-		}
+		phost->SpiWpWrite = value;
+		phost->SpiWpWritten = true;
+		return 0;
 	}
 #endif
 #endif
@@ -1038,11 +960,8 @@ uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value)
 {
 	uint8_t buffer[4];
 #if defined(EVE_BUFFER_WRITES)
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
-	{
-		eve_assert(!phost->SpiWpWriting);
-	}
+#if !defined(EVE_SUPPORT_CMDB)
+	eve_assert(!phost->SpiWpWriting);
 #endif
 #endif
 	if (phost->Status == EVE_STATUS_READING)
@@ -1078,11 +997,8 @@ void EVE_Hal_transferMem(EVE_HalContext *phost, uint8_t *result, const uint8_t *
 		return;
 
 #if defined(EVE_BUFFER_WRITES)
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
-	{
-		eve_assert(!phost->SpiWpWriting);
-	}
+#if !defined(EVE_SUPPORT_CMDB)
+	eve_assert(!phost->SpiWpWriting);
 #endif
 #endif
 
@@ -1115,11 +1031,8 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 		return;
 
 #if defined(EVE_BUFFER_WRITES)
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
-	{
-		eve_assert(!phost->SpiWpWriting);
-	}
+#if !defined(EVE_SUPPORT_CMDB)
+	eve_assert(!phost->SpiWpWriting);
 #endif
 #endif
 
@@ -1161,11 +1074,8 @@ uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t
 	}
 
 #if defined(EVE_BUFFER_WRITES)
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
-	if (!EVE_Hal_supportCmdB(phost))
-	{
-		eve_assert(!phost->SpiWpWriting);
-	}
+#if !defined(EVE_SUPPORT_CMDB)
+	eve_assert(!phost->SpiWpWriting);
 #endif
 #endif
 	eve_assert(size <= EVE_CMD_STRING_MAX);

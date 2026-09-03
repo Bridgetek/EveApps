@@ -64,8 +64,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoRefrigerator();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -138,7 +137,7 @@ void DemoLoadRawFromFile(char8_t *pFileName, uint32_t DstAddr)
 	FILE *pFile;
 	strcat(fileName, pFileName);
 
-	Gpu_Hal_LoadImageToMemory(s_pHalContext, fileName, DstAddr, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, DstAddr, fileName);
 }
 
 struct

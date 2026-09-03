@@ -64,8 +64,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoRunningBar();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -151,7 +150,7 @@ void setupBitmapHandles() {
 		uint16_t iw = 296;
 		uint16_t ih = 1;
 		uint16_t format = L8;
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\indicator_field_296x1_L8.raw", ram_image_addr, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, ram_image_addr, TEST_DIR "\\indicator_field_296x1_L8.raw");
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(INDICATOR_FIELD_HANDLE));
 		EVE_CoCmd_setBitmap(s_pHalContext, ram_image_addr, format, iw, ih);
 		ram_image_addr += iw * ih;
@@ -159,7 +158,7 @@ void setupBitmapHandles() {
 		/*paletted8*/
 		paletted8_source = ram_image_addr;
 
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\indicator_field_NewPaletted8.raw", ram_image_addr, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, ram_image_addr, TEST_DIR "\\indicator_field_NewPaletted8.raw");
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(PALETTED8, iw, ih));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT_H(0, 0));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, REPEAT, iw, 57));
@@ -170,7 +169,7 @@ void setupBitmapHandles() {
 	{
 		uint16_t iw = 310;
 		uint16_t ih = 57;
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\indicator_bar_310x57_L4.raw", ram_image_addr, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, ram_image_addr, TEST_DIR "\\indicator_bar_310x57_L4.raw");
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(INDICATOR_BAR_HANDLE));
 		EVE_CoCmd_setBitmap(s_pHalContext, ram_image_addr, L4, iw, ih);
 
@@ -180,7 +179,7 @@ void setupBitmapHandles() {
 	{
 		uint16_t iw = 304;
 		uint16_t ih = 53;
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\indicator_frame_304x53_L4.raw", ram_image_addr, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, ram_image_addr, TEST_DIR "\\indicator_frame_304x53_L4.raw");
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(INDICATOR_FRAME_HANDLE));
 		EVE_CoCmd_setBitmap(s_pHalContext, ram_image_addr, L4, iw, ih);
 		ram_image_addr += (iw * ih) / 2;

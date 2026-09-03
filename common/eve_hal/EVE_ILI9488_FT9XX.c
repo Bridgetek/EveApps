@@ -153,13 +153,7 @@ uint32_t ILI9488_SPI_ReadRDDID(uint8_t cmd)
 	usleep(1);
 	spi_open(SPIM, ILI9488_SEL);
 	spi_writen(SPIM, &cmd, 1);
-#if 0
-	//extra clock cycle for dummy
-	ILI9488_CLK_LOW;
-	usleep(1);
-	ILI9488_CLK_HIGH;
-	usleep(1);
-#endif
+
 	ILI9488_DCX_HIGH;
 	// NOTE: for little-endian, this is fine
 	spi_readn(SPIM, &readword, 3);
@@ -185,13 +179,6 @@ uint32_t ILI9488_SPI_ReadRDDST(uint8_t cmd)
 	usleep(1);
 	spi_open(SPIM, ILI9488_SEL);
 	spi_writen(SPIM, &cmd, 1);
-#if 0
-	//extra clock cycle for dummy
-	ILI9488_CLK_LOW;
-	usleep(1);
-	ILI9488_CLK_HIGH;
-	usleep(1);
-#endif
 
 	ILI9488_DCX_HIGH;
 	spi_readn(SPIM, &readword, 4);

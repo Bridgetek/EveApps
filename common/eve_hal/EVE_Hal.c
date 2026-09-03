@@ -49,7 +49,7 @@ EVE_HalPlatform g_HalPlatform;
  *
  * @return EVE_HalPlatform* Poniter to EVE_HalPlatform struct
  */
-EVE_HAL_EXPORT EVE_HalPlatform *EVE_Hal_initialize()
+EVE_HalPlatform *EVE_Hal_initialize()
 {
 	EVE_Mcu_initialize();
 	EVE_Millis_initialize();
@@ -61,7 +61,7 @@ EVE_HAL_EXPORT EVE_HalPlatform *EVE_Hal_initialize()
  * @brief Close Eve_Hal framework
  *
  */
-EVE_HAL_EXPORT void EVE_Hal_release()
+void EVE_Hal_release()
 {
 	eve_assert_ex(g_HalPlatform.OpenedDevices == 0, "HAL context still open\n");
 	EVE_HalImpl_release();
@@ -75,7 +75,7 @@ EVE_HAL_EXPORT void EVE_Hal_release()
  *
  * @param parameters Pointer to EVE_HalParameters
  */
-EVE_HAL_EXPORT void EVE_Hal_defaults(EVE_HalParameters *parameters)
+void EVE_Hal_defaults(EVE_HalParameters *parameters)
 {
 	EVE_Hal_defaultsEx(parameters, -1);
 }
@@ -86,7 +86,7 @@ EVE_HAL_EXPORT void EVE_Hal_defaults(EVE_HalParameters *parameters)
  * @param parameters Pointer to EVE_HalParameters
  * @param deviceIdx
  */
-EVE_HAL_EXPORT void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t deviceIdx)
+void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t deviceIdx)
 {
 	memset(parameters, 0, sizeof(EVE_HalParameters));
 	eve_assert_do(EVE_HalImpl_defaults(parameters, deviceIdx));
@@ -100,7 +100,7 @@ EVE_HAL_EXPORT void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t dev
  * @return true True if ok
  * @return false False if error
  */
-EVE_HAL_EXPORT bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters *parameters)
+bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters *parameters)
 {
 	memset(phost, 0, sizeof(EVE_HalContext));
 	phost->UserContext = parameters->UserContext;
@@ -113,7 +113,7 @@ EVE_HAL_EXPORT bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters 
  *
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_Hal_close(EVE_HalContext *phost)
+void EVE_Hal_close(EVE_HalContext *phost)
 {
 	if (phost->Status == EVE_STATUS_CLOSED)
 	{
@@ -133,7 +133,7 @@ EVE_HAL_EXPORT void EVE_Hal_close(EVE_HalContext *phost)
  *
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost)
+void EVE_Hal_idle(EVE_HalContext *phost)
 {
 	EVE_HalImpl_idle(phost);
 }
@@ -154,7 +154,7 @@ EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost)
  * @param addr Address to be read
  * @return uint8_t Data from Coprocessor
  */
-EVE_HAL_EXPORT uint8_t EVE_Hal_rd8(EVE_HalContext *phost, uint32_t addr)
+uint8_t EVE_Hal_rd8(EVE_HalContext *phost, uint32_t addr)
 {
 	uint8_t value;
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_READ, addr);
@@ -170,7 +170,7 @@ EVE_HAL_EXPORT uint8_t EVE_Hal_rd8(EVE_HalContext *phost, uint32_t addr)
  * @param addr Address to be read
  * @return uint16_t Data from Coprocessor
  */
-EVE_HAL_EXPORT uint16_t EVE_Hal_rd16(EVE_HalContext *phost, uint32_t addr)
+uint16_t EVE_Hal_rd16(EVE_HalContext *phost, uint32_t addr)
 {
 	uint16_t value;
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_READ, addr);
@@ -186,7 +186,7 @@ EVE_HAL_EXPORT uint16_t EVE_Hal_rd16(EVE_HalContext *phost, uint32_t addr)
  * @param addr Address to be read
  * @return uint16_t Data from Coprocessor
  */
-EVE_HAL_EXPORT uint32_t EVE_Hal_rd32(EVE_HalContext *phost, uint32_t addr)
+uint32_t EVE_Hal_rd32(EVE_HalContext *phost, uint32_t addr)
 {
 	uint32_t value;
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_READ, addr);
@@ -203,7 +203,7 @@ EVE_HAL_EXPORT uint32_t EVE_Hal_rd32(EVE_HalContext *phost, uint32_t addr)
  * @param addr Address to bbe read
  * @param size Size to be read
  */
-EVE_HAL_EXPORT void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32_t addr, uint32_t size)
+void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32_t addr, uint32_t size)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_READ, addr);
 	EVE_Hal_transferMem(phost, result, NULL, size);
@@ -217,7 +217,7 @@ EVE_HAL_EXPORT void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32
  * @param addr Address to be write
  * @param v Value to write
  */
-EVE_HAL_EXPORT void EVE_Hal_wr8(EVE_HalContext *phost, uint32_t addr, uint8_t v)
+void EVE_Hal_wr8(EVE_HalContext *phost, uint32_t addr, uint8_t v)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, addr);
 	EVE_Hal_transfer8(phost, v);
@@ -231,7 +231,7 @@ EVE_HAL_EXPORT void EVE_Hal_wr8(EVE_HalContext *phost, uint32_t addr, uint8_t v)
  * @param addr Address to be write
  * @param v Value to write
  */
-EVE_HAL_EXPORT void EVE_Hal_wr16(EVE_HalContext *phost, uint32_t addr, uint16_t v)
+void EVE_Hal_wr16(EVE_HalContext *phost, uint32_t addr, uint16_t v)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, addr);
 	EVE_Hal_transfer16(phost, v);
@@ -245,7 +245,7 @@ EVE_HAL_EXPORT void EVE_Hal_wr16(EVE_HalContext *phost, uint32_t addr, uint16_t 
  * @param addr Address to be write
  * @param v Value to write
  */
-EVE_HAL_EXPORT void EVE_Hal_wr32(EVE_HalContext *phost, uint32_t addr, uint32_t v)
+void EVE_Hal_wr32(EVE_HalContext *phost, uint32_t addr, uint32_t v)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, addr);
 	EVE_Hal_transfer32(phost, v);
@@ -260,7 +260,7 @@ EVE_HAL_EXPORT void EVE_Hal_wr32(EVE_HalContext *phost, uint32_t addr, uint32_t 
  * @param buffer Data to be write
  * @param size Size of buffer
  */
-EVE_HAL_EXPORT void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const uint8_t *buffer, uint32_t size)
+void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const uint8_t *buffer, uint32_t size)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, addr);
 	EVE_Hal_transferMem(phost, NULL, buffer, size);
@@ -275,7 +275,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const ui
  * @param buffer Data to be write
  * @param size Size of buffer
  */
-EVE_HAL_EXPORT void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_progmem_const uint8_t *buffer, uint32_t size)
+void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_progmem_const uint8_t *buffer, uint32_t size)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, addr);
 	EVE_Hal_transferProgMem(phost, NULL, buffer, size);
@@ -292,7 +292,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_
  * @param size Size of the string
  * @param padMask Padding mask
  */
-EVE_HAL_EXPORT void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const char *str, uint32_t index, uint32_t size, uint32_t padMask)
+void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const char *str, uint32_t index, uint32_t size, uint32_t padMask)
 {
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, addr);
 	EVE_Hal_transferString(phost, str, index, size, padMask);
@@ -314,7 +314,7 @@ EVE_HAL_EXPORT void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const
  * @param lowFreq Low frequency target to trim
  * @return int32_t frequency after trim
  */
-EVE_HAL_EXPORT int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t lowFreq)
+int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t lowFreq)
 {
 	uint32_t f;
 
@@ -344,7 +344,7 @@ EVE_HAL_EXPORT int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t low
  * @param phost Pointer to Hal context
  * @param pllsource Clock source
  */
-EVE_HAL_EXPORT void EVE_Host_clockSelect(EVE_HalContext *phost, EVE_PLL_SOURCE_T pllsource)
+void EVE_Host_clockSelect(EVE_HalContext *phost, EVE_PLL_SOURCE_T pllsource)
 {
 	EVE_Hal_hostCommand(phost, (uint8_t)pllsource);
 }
@@ -355,7 +355,7 @@ EVE_HAL_EXPORT void EVE_Host_clockSelect(EVE_HalContext *phost, EVE_PLL_SOURCE_T
  * @param phost Pointer to Hal context
  * @param freq Frequency to set
  */
-EVE_HAL_EXPORT void EVE_Host_pllFreqSelect(EVE_HalContext *phost, EVE_PLL_FREQ_T freq)
+void EVE_Host_pllFreqSelect(EVE_HalContext *phost, EVE_PLL_FREQ_T freq)
 {
 	EVE_Hal_hostCommand(phost, (uint8_t)freq);
 }
@@ -366,7 +366,7 @@ EVE_HAL_EXPORT void EVE_Host_pllFreqSelect(EVE_HalContext *phost, EVE_PLL_FREQ_T
  * @param phost Pointer to Hal context
  * @param pwrmode Power mode
  */
-EVE_HAL_EXPORT void EVE_Host_powerModeSwitch(EVE_HalContext *phost, EVE_POWER_MODE_T pwrmode)
+void EVE_Host_powerModeSwitch(EVE_HalContext *phost, EVE_POWER_MODE_T pwrmode)
 {
 	EVE_Hal_hostCommand(phost, (uint8_t)pwrmode);
 }
@@ -376,7 +376,7 @@ EVE_HAL_EXPORT void EVE_Host_powerModeSwitch(EVE_HalContext *phost, EVE_POWER_MO
  *
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_Host_coreReset(EVE_HalContext *phost)
+void EVE_Host_coreReset(EVE_HalContext *phost)
 {
 	EVE_Hal_hostCommand(phost, EVE_CORE_RESET);
 }
@@ -387,7 +387,7 @@ EVE_HAL_EXPORT void EVE_Host_coreReset(EVE_HalContext *phost)
  * @param phost Pointer to Hal context
  * @param freq Frequency to set
  */
-EVE_HAL_EXPORT void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FREQ_T freq)
+void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FREQ_T freq)
 {
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	if (EVE_CHIPID >= EVE_FT810)
@@ -438,7 +438,7 @@ EVE_HAL_EXPORT void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FRE
  * @param phost Pointer to Hal context
  * @param val Component number
  */
-EVE_HAL_EXPORT void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t val)
+void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t val)
 {
 	EVE_Hal_hostCommandExt3(phost, (uint32_t)0x49 | (val << 8));
 }
@@ -450,7 +450,7 @@ EVE_HAL_EXPORT void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t v
  * @param strength Drive strength
  * @param group Pin group to set
  */
-EVE_HAL_EXPORT void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPIO_DRIVE_STRENGTH_T strength, EVE_81X_GPIO_GROUP_T group)
+void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPIO_DRIVE_STRENGTH_T strength, EVE_81X_GPIO_GROUP_T group)
 {
 	EVE_Hal_hostCommandExt3(phost, (uint32_t)0x70 | (group << 8) | (strength << 8));
 }
@@ -460,7 +460,7 @@ EVE_HAL_EXPORT void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPI
  *
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_Host_resetActive(EVE_HalContext *phost)
+void EVE_Host_resetActive(EVE_HalContext *phost)
 {
 	EVE_Hal_hostCommandExt3(phost, EVE_81X_RESET_ACTIVE);
 }
@@ -470,7 +470,7 @@ EVE_HAL_EXPORT void EVE_Host_resetActive(EVE_HalContext *phost)
  *
  * @param phost Pointer to Hal context
  */
-EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost)
+void EVE_Host_resetRemoval(EVE_HalContext *phost)
 {
 	EVE_Hal_hostCommandExt3(phost, EVE_81X_RESET_REMOVAL);
 }

@@ -63,8 +63,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoInstrument();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -110,8 +109,7 @@ void sin_lut() {
 			0xB8, 0x72, 0x86, 0x20, 0x4A, 0x02, 0x02, 0x71, 0xAA, 0x0E, 0x0E,
 			0x37, 0x89, 0x10, 0x10, 0x6C, 0x61 };
 
-	Gpu_Hal_LoadImageToMemory(s_pHalContext,
-			TEST_DIR "/sample1px_214x1_PALETTED565_lut.raw", 0, LOAD);
+	EVE_Util_loadRawFile(s_pHalContext, 0, TEST_DIR "/sample1px_214x1_PALETTED565_lut.raw");
 
 	Display_Start(s_pHalContext);
 	EVE_CoCmd_setBitmap(s_pHalContext, adr, PALETTED565, w, h);

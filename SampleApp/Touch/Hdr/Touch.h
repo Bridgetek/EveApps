@@ -12,6 +12,13 @@
 
 #define GET_CALIBRATION                     1
 
+//main windows
+#define NO_OF_TOUCH (5)
+// buffers
+#define APPBUFFERSIZE (65536L)
+#define APPBUFFERSIZEMINUSONE (APPBUFFERSIZE - 1)
+#define OFFSCREEN (-16384)
+
 #define NAMEARRAYSZ 500
 typedef struct SAMAPP_Logo_Img {
 	//prog_uchar8_t name[14];
@@ -31,59 +38,45 @@ typedef struct SAMAPP_Squares {
 
 //bouncing squares
 #define NO_OF_RECTS (5)
-typedef struct SAMAPP_BouncingSquares {
-	int16_t BRy[5], BRx[5], My[5];
-	uint8_t E[5];
-	uint8_t RectNo[5];
-	int16_t Count;
-}SAMAPP_BouncingSquares_t;
+typedef struct SAMAPP_BouncingSquares
+{
+	int16_t Ty[NO_OF_RECTS]; /**< Y-coordinate for touch point */
+	int16_t My[NO_OF_RECTS]; /**< Y-coordinate for moving rectangle */
+	uint8_t Decrease[NO_OF_RECTS]; /**< flag for decrease/increase */
+	uint8_t RectTouched[NO_OF_RECTS]; /**< Touch flag */
+} SAMAPP_BouncingSquares;
 
 //Bouncing Circle macros
 #define NO_OF_CIRCLE                        (5)
-//bouncing circles structures
-typedef struct SAMAPP_TouchNo {
-	uint8_t F[NO_OF_CIRCLE];
-}SAMAPP_TouchNo_t;
-typedef struct SAMAPP_BouncingCircles {
-	float Tsq1[NO_OF_CIRCLE];
-	float C1X[NO_OF_CIRCLE];
-	float C1Y[NO_OF_CIRCLE];
-	float TouchX[NO_OF_CIRCLE];
-	float TouchY[NO_OF_CIRCLE];
-	SAMAPP_TouchNo_t TN[NO_OF_CIRCLE];
-}SAMAPP_BouncingCircles_t;
+
+typedef struct SAMAPP_BouncingCircles
+{
+	float R[NO_OF_CIRCLE]; /**< circle radius */
+	float CX[NO_OF_CIRCLE]; /**< X-coordinate for small circle (touch point) */
+	float CY[NO_OF_CIRCLE]; /**< Y-coordinate for small circle (touch point) */
+	uint8_t TN[NO_OF_CIRCLE]; /**< touch number */
+} SAMAPP_BouncingCircles;
 
 //bouncing pints structures
 #define NBLOBS                              (64)
 typedef struct SAMAPP_Blobs {
 	int16_t x;
 	int16_t y;
-}SAMAPP_Blobs_t;
+}SAMAPP_Blobs;
 typedef struct SAMAPP_BlobsInst {
-	SAMAPP_Blobs_t blobs[NBLOBS];
+	SAMAPP_Blobs blobs[NBLOBS];
 	uint8_t CurrIdx;
-}SAMAPP_BlobsInst_t;
-
+}SAMAPP_BlobsInst;
 
 //moving points structures
 #define NO_OF_POINTS (64)
 typedef struct SAMAPP_MovingPoints {
-	uint8_t Prevtouch;
-	int16_t SmallX[6], SmallY;
-	uint8_t Flag;
-	int32_t val[5];
-	int16_t X[(NO_OF_POINTS) * 4], Y[(NO_OF_POINTS) * 4];
-	uint8_t t[((NO_OF_POINTS) * 4)];
-}SAMAPP_MovingPoints_t;
-
-//main windows                              
-#define ImW                                 (66)
-#define ImH                                 (66)
-#define NO_OF_TOUCH                         (5)
-// buffers
-#define APPBUFFERSIZE                       (65536L)
-#define APPBUFFERSIZEMINUSONE               (APPBUFFERSIZE - 1)
-#define OFFSCREEN                           (-16384)
-#define APP_BLOBS_NUMTOUCH                  (5)
+	uint16_t StopX[NO_OF_TOUCH]; /**< The x-coordinate of the moving points is no longer updating */
+	uint16_t StopY; /**< The y-coordinate of the moving points is no longer updating */
+	uint32_t val[NO_OF_TOUCH]; /**< Touch location value */
+	uint16_t X[(NO_OF_POINTS) * (NO_OF_TOUCH)]; /**< The x-coordinate of the moving points */
+	uint16_t Y[(NO_OF_POINTS) * (NO_OF_TOUCH)]; /**< The y-coordinate of the moving points */
+	uint8_t t[(NO_OF_POINTS) * (NO_OF_TOUCH)]; /**< point number */
+}SAMAPP_MovingPoints;
 
 #endif /* APP_H_ */

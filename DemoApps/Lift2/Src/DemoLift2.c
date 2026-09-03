@@ -64,8 +64,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoLift2();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -172,7 +171,7 @@ void DemoLift2_InitialVideoSetupFlash(EVE_HalContext *pHalContext, LiftBitmap_t 
 int32_t AppLift2_LoadAssetsFromFlash(EVE_HalContext *pHalContext, LiftBitmap_t *pbitmap, uint8_t bitmaphandle)
 {
 	App_WrDl_Buffer(s_pHalContext, BITMAP_HANDLE(bitmaphandle)); //handle 0 is used for all the characters
-	App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE2(LOAD_FROM_FLASH, pbitmap->addr));
+	App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE_EX(LOAD_FROM_FLASH, pbitmap->addr));
 	App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT((pbitmap->format) & 0xff, pbitmap->layoutstride, pbitmap->layoutheight));
 	App_WrDl_Buffer(s_pHalContext, BITMAP_LAYOUT_H(((pbitmap->layoutstride * 1L) >> 10), ((pbitmap->layoutheight) >> 9)));
 	App_WrDl_Buffer(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, pbitmap->displaywidth + 20, pbitmap->displayheight + 20));
@@ -226,7 +225,7 @@ int32_t AppLift2_FontString(EVE_HalContext *pHalContext, wchar_t *pstring, AppxF
 		uint8_t charwidth = 0;
 		uint32_t charaddr = 0;
 		AppxFontChar32(pappxfont, *pstring++, &charaddr, &charwidth);
-		App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE2(LOAD_FROM_FLASH, charaddr));
+		App_WrDl_Buffer(s_pHalContext, BITMAP_SOURCE_EX(LOAD_FROM_FLASH, charaddr));
 		App_WrDl_Buffer(s_pHalContext, VERTEX2F(hoffset, voffset));
 		hoffset += charwidth * 16;
 	}

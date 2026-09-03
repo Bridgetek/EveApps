@@ -38,20 +38,6 @@
 #ifndef EVE_GPU_DEFS__H
 #define EVE_GPU_DEFS__H
 
-#ifndef ESD_ENUM
-#define ESD_ENUM(name, ...)
-#define ESD_END()
-#endif
-
-#if !defined(EVE_MULTI_GRAPHICS_TARGET) \
-    && !defined(FT_80X_ENABLE)          \
-    && !defined(FT_81X_ENABLE)          \
-    && !defined(BT_88X_ENABLE)          \
-    && !defined(BT_81X_ENABLE)          \
-    && !defined(BT_81XA_ENABLE)
-#define EVE_MULTI_GRAPHICS_TARGET
-#endif
-
 /* Definitions used for FT800 coprocessor command buffer */
 #define EVE_DL_SIZE (8 * 1024UL) /**< 8kB Display List buffer size */
 #define EVE_DL_COUNT (2 * 1024UL)
@@ -78,46 +64,13 @@
 #define ROM_CHIPID 786432UL
 #define RAM_ERR_REPORT 0x309800UL
 
-#if defined(EVE_MULTI_GRAPHICS_TARGET)
-
-#define EVE_HAL_REG_ID (phost->GpuDefs->RegId)
-#define EVE_HAL_REG_CPURESET (phost->GpuDefs->RegCpuReset)
-#define EVE_HAL_REG_J1_INT (phost->GpuDefs->RegJ1Int)
-#define EVE_HAL_REG_CMD_READ (phost->GpuDefs->RegCmdRead)
-#define EVE_HAL_REG_TOUCH_TRANSFORM_A (phost->GpuDefs->RegTouchTransformA)
-#define EVE_HAL_REG_CRC (phost->GpuDefs->RegCrc)
-#define EVE_HAL_REG_TRIM (phost->GpuDefs->RegTrim)
-#define EVE_HAL_REG_TOUCH_DIRECT_XY (phost->GpuDefs->RegTouchDirectXY)
-#define EVE_HAL_REG_DATESTAMP (phost->GpuDefs->RegDatestamp)
-#define EVE_HAL_REG_CMDB_SPACE (phost->GpuDefs->RegCmdBSpace)
-#define EVE_HAL_REG_TRACKER (phost->GpuDefs->RegTracker)
-
-#define RAM_DL (phost->GpuDefs->RamDl)
-#define ROMFONT_TABLEADDRESS (phost->GpuDefs->RomFontTableAddress)
-
-#define RAM_G_SIZE (phost->GpuDefs->RamGSize)
-#define LOW_FREQ_BOUND (phost->GpuDefs->LowFreqBound)
-
-#define BITMAP_ADDR_MASK (phost->GpuDefs->BitmapAddrMask)
-#define SCISSOR_XY_SHIFT (phost->GpuDefs->ScissorSizeShift - 1)
-#define SCISSOR_XY_MASK (((1UL << phost->GpuDefs->ScissorSizeShift) - 1UL) >> 1)
-#define SCISSOR_SIZE_SHIFT (phost->GpuDefs->ScissorSizeShift)
-#define SCISSOR_SIZE_MASK ((1UL << phost->GpuDefs->ScissorSizeShift) - 1UL)
-
-#else
-
 #if defined(FT_81X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
-
 #define RAM_G_SIZE (1024 * 1024L)
-
 #elif defined(FT_80X_ENABLE) || defined(BT_88X_ENABLE)
-
 #define RAM_G_SIZE (256 * 1024L)
-
 #endif
 
 #if defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
-
 #define EVE_HAL_REG_ID 3153920UL
 #define EVE_HAL_REG_CPURESET 3153952UL
 #define EVE_HAL_REG_J1_INT 3154084UL
@@ -144,11 +97,11 @@
 
 #if defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
 
-#define BITMAP_ADDR_MASK 16777215UL
+#define BITMAP_ADDR_MASK 8388607UL /* 0x7FFFFF */
 
 #elif defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE)
 
-#define BITMAP_ADDR_MASK 4194303UL
+#define BITMAP_ADDR_MASK 4194303UL /* 0x3FFFFF */
 
 #elif defined(FT_80X_ENABLE)
 
@@ -177,7 +130,6 @@
 
 #endif
 
-#endif
 
 #define RAM_PAL (RAM_DL + 8192UL)
 #define RAM_TOP (RAM_DL + 16384UL)
@@ -349,7 +301,7 @@
 #define REG_FULLBUSYBITS (REG_CMDB_SPACE + 128UL)
 #define REG_SHA1KEY (REG_CMDB_SPACE + 144UL)
 
-#if defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(BT_81XA_ENABLE)
 #define REG_UNDERRUN (REG_CMDB_SPACE + 152UL)
 #define REG_AH_HCYCLE_MAX (REG_CMDB_SPACE + 156UL)
 #define REG_PCLK_FREQ (REG_CMDB_SPACE + 160UL)
@@ -465,14 +417,14 @@
 
 /** @name Commands for FT801 */
 ///@{
-#if defined(FT_80X_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(FT_80X_ENABLE)
 #define CMD_CSKETCH          4294967093UL
 #endif
 ///@}
 
 /** @name Commands for FT810 */
 ///@{
-#if defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
 #define CMD_SETROTATE        4294967094UL
 #define CMD_SNAPSHOT2        4294967095UL
 #define CMD_SETBASE          4294967096UL
@@ -490,7 +442,7 @@
 
 /** @name Commands for BT815 */
 ///@{
-#if defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
 #define CMD_FLASHERASE       4294967108UL
 #define CMD_FLASHWRITE       4294967109UL
 #define CMD_FLASHREAD        4294967110UL
@@ -519,9 +471,9 @@
 #endif
 ///@}
 
-/** @name Commands for BT817 */
+/** @name Commands for BT817/BT817A */
 ///@{
-#if defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(BT_81XA_ENABLE)
 #define CMD_CALIBRATESUB     4294967136UL
 #define CMD_TESTCARD         4294967137UL
 #define CMD_HSF              4294967138UL
@@ -553,8 +505,15 @@
 
 #define VERTEX2F(x, y) ((1UL << 30) | (((x)&32767UL) << 15) | (((y)&32767UL) << 0))
 #define VERTEX2II(x, y, handle, cell) ((2UL << 30) | (((x)&511UL) << 21) | (((y)&511UL) << 12) | (((handle)&31UL) << 7) | (((cell)&127UL) << 0))
-#define BITMAP_SOURCE(addr) ((1UL << 24) | ((addr) < 0 ? (((addr) & (BITMAP_ADDR_MASK >> 1))) : ((addr)&BITMAP_ADDR_MASK)))
-#define BITMAP_SOURCE2(flash_or_ram, addr) ((1UL << 24) | ((flash_or_ram) << 23) | (((addr) & (BITMAP_ADDR_MASK >> 1)) << 0))
+#if defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
+#define EVE_BITMAP_SOURCE_MEMORY(flash_or_ram) (((flash_or_ram)&1UL) << 23)
+#else
+#define EVE_BITMAP_SOURCE_MEMORY(flash_or_ram) 0UL
+#endif
+#define BITMAP_SOURCE_EX(flash_or_ram, addr) ((1UL << 24) | EVE_BITMAP_SOURCE_MEMORY(flash_or_ram) | ((addr)&BITMAP_ADDR_MASK))
+/* A negative RAM_G offset has bit 23 set by sign extension, but is not a flash address. */
+#define EVE_BITMAP_SOURCE_IS_FLASH(addr) ((((addr)&(1UL << 31)) == 0) && (((addr)&(1UL << 23)) != 0))
+#define BITMAP_SOURCE(addr) BITMAP_SOURCE_EX(EVE_BITMAP_SOURCE_IS_FLASH(addr), addr)
 #define CLEAR_COLOR_RGB(red, green, blue) ((2UL << 24) | (((red)&255UL) << 16) | (((green)&255UL) << 8) | (((blue)&255UL) << 0))
 #define TAG(s) ((3UL << 24) | (((s)&255UL) << 0))
 #define COLOR_RGB(red, green, blue) ((4UL << 24) | (((red)&255UL) << 16) | (((green)&255UL) << 8) | (((blue)&255UL) << 0))
@@ -624,7 +583,8 @@
 #define DLSWAP_LINE 1UL
 #define DLSWAP_FRAME 2UL
 
-ESD_ENUM(Ft_CoPro_Opt, Type = uint16_t, Include = "EVE_Hal.h", Flags)
+#define OPT_3D 0UL
+#define OPT_RGB565 0UL
 #define OPT_MONO 1UL
 #define OPT_NODL 2UL
 #define OPT_NOTEAR 4UL
@@ -648,7 +608,6 @@ ESD_ENUM(Ft_CoPro_Opt, Type = uint16_t, Include = "EVE_Hal.h", Flags)
 #define OPT_NOHANDS 49152UL
 #define OPT_NOTICKS 8192UL
 #define OPT_RIGHTX 2048UL
-ESD_END()
 
 ///@}
 #define ANIM_ONCE 0UL

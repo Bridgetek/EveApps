@@ -35,6 +35,8 @@
 #include "Animation.h"
 
 #define SAMAPP_DELAY EVE_sleep(2000)
+#define ANIM_ADDR_BAT (19584) // start address of .object part in battery.ramg.anim.bin
+#define ANIM_ADDR_ABS (8609600) // offset of abstract.anim.object
 
 static EVE_HalContext s_halContext;
 static EVE_HalContext* s_pHalContext;
@@ -68,8 +70,7 @@ int main(int argc, char* argv[])
 
         EVE_Util_clearScreen(s_pHalContext);
 
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+        Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -85,8 +86,6 @@ int main(int argc, char* argv[])
 */
 void SAMAPP_Animation_RAM_G() {
 #if EVE_SUPPORT_GEN == EVE4
-#define ANIM_ADDR     (19584) // start address of .object part in battery.ramg.anim.bin
-
     uint32_t cmd;
     uint32_t waitmask = -1;
     uint32_t play = 1024 * 512;
@@ -106,7 +105,7 @@ void SAMAPP_Animation_RAM_G() {
 
     /// Check Cmd_RunAnim with play control
     EVE_CoCmd_memZero(s_pHalContext, play, 1);
-    EVE_CoCmd_animStartRam(s_pHalContext, ch, ANIM_ADDR, ANIM_LOOP);
+	EVE_CoCmd_animStartRam(s_pHalContext, ch, ANIM_ADDR_BAT, ANIM_LOOP);
     EVE_CoCmd_animXY(s_pHalContext, ch, xAnim, yAnim);
 
     EVE_Cmd_waitFlush(s_pHalContext);
@@ -131,9 +130,6 @@ void SAMAPP_Animation_RAM_G() {
 void SAMAPP_Animation_flash()
 {
 #if EVE_SUPPORT_GEN == EVE4
-#define ANIM_ADDR     (8609600) // offset of abstract.anim.object
-#define FRAME_COUNT   (40)
-
     uint32_t waitmask = -1;
     uint32_t play = 1024 * 512;
     const int16_t xAnim = 350;
@@ -148,7 +144,7 @@ void SAMAPP_Animation_flash()
     }
 
     EVE_CoCmd_memZero(s_pHalContext, play, 1);
-    EVE_CoCmd_animStart(s_pHalContext, ch, ANIM_ADDR, ANIM_ONCE);
+	EVE_CoCmd_animStart(s_pHalContext, ch, ANIM_ADDR_ABS, ANIM_ONCE);
     EVE_CoCmd_animXY(s_pHalContext, ch, xAnim, yAnim);
     EVE_Cmd_waitFlush(s_pHalContext);
     EVE_CoCmd_runAnim(s_pHalContext, waitmask, play);
@@ -165,8 +161,6 @@ void SAMAPP_Animation_flash()
 void SAMAPP_Animation_control()
 {
 #if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X only
-#define ANIM_ADDR 8609600 //address of abstract.anim.object
-#define FRAME_COUNT 40
     uint8_t txtAnim_ONCE[] = "Playing Animation by ANIM_ONCE";
     uint8_t txtAnim_LOOP[] = "Playing Animation by ANIM_LOOP";
     uint8_t txtAnim_HOLD[] = "Playing Animation by ANIM_HOLD";
@@ -246,7 +240,7 @@ void SAMAPP_Animation_control()
             isPlaying = 1;
             countStop = 0;
 
-            EVE_CoCmd_animStart(s_pHalContext, channel, ANIM_ADDR, prAnimLoop);
+            EVE_CoCmd_animStart(s_pHalContext, channel, ANIM_ADDR_ABS, prAnimLoop);
             EVE_CoCmd_animXY(s_pHalContext, channel, xAnim, yAnim);
 
             // change AnimLoop attribute for the next user button press
@@ -290,7 +284,6 @@ void SAMAPP_Animation_animeAtive()
     //  battery.ramg.anim.bin : 8937216 : 19712
 
 #if EVE_SUPPORT_GEN == EVE4
-#define ANIM_ADDR     (19584) // start address of .object part in battery.ramg.anim.bin
 
     char str[1000];
     Draw_Text_Format(s_pHalContext, "Example for: REG_ANIM_ACTIVE usage");
@@ -306,7 +299,7 @@ void SAMAPP_Animation_animeAtive()
     const int16_t xAnim = (uint16_t)(s_pHalContext->Width / 2);
     const int16_t yAnim = (uint16_t)(s_pHalContext->Height/ 2);;
 
-    EVE_CoCmd_animStartRam(s_pHalContext, channel, ANIM_ADDR, ANIM_ONCE);
+    EVE_CoCmd_animStartRam(s_pHalContext, channel, ANIM_ADDR_BAT, ANIM_ONCE);
     EVE_CoCmd_animXY(s_pHalContext, channel, xAnim, yAnim);
     const int MAX_LOOP = 100;
     for (int i = 0; i < MAX_LOOP; i++) {
@@ -341,8 +334,6 @@ void SAMAPP_Animation_animeAtive()
 */
 void SAMAPP_Animation_animFrame() {
 #if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X only
-#define ANIM_ADDR 8609600 //address of abstract.anim.object
-#define FRAME_COUNT   40
     uint32_t prAnimLoop = ANIM_ONCE;
 
     Draw_Text(s_pHalContext, "Example for: ANIMATION from Flash by AnimFrame");
@@ -356,15 +347,15 @@ void SAMAPP_Animation_animFrame() {
     const int16_t xAnim = 400;
     const int16_t yAnim = 240;
 
-    EVE_CoCmd_animStart(s_pHalContext, channel, ANIM_ADDR, prAnimLoop);
+    EVE_CoCmd_animStart(s_pHalContext, channel, ANIM_ADDR_ABS, prAnimLoop);
     EVE_CoCmd_animXY(s_pHalContext, channel, xAnim, yAnim);
 
-    for (uint16_t frame = 0; frame < FRAME_COUNT; frame++) {
+    for (uint16_t frame = 0; frame < 40; frame++) {
         EVE_CoCmd_dlStart(s_pHalContext);
         EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0, 0, 0));
         EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
 
-        EVE_CoCmd_animFrame(s_pHalContext, xAnim, yAnim, ANIM_ADDR, frame);
+        EVE_CoCmd_animFrame(s_pHalContext, xAnim, yAnim, ANIM_ADDR_ABS, frame);
 
         EVE_Cmd_wr32(s_pHalContext, DISPLAY());
         EVE_CoCmd_swap(s_pHalContext);
@@ -382,9 +373,6 @@ void SAMAPP_Animation_animFrame() {
 void SAMAPP_Animation_animFrameRam()
 {
 #if EVE_SUPPORT_GEN == EVE4
-#define ANIM_ADDR     (19584) // start address of .object part in battery.ramg.anim.bin
-#define FRAME_COUNT   4
-
     Draw_Text(s_pHalContext, "Example for: ANIMATION from RAMG by Cmd_animFrameRam");
     if (!FlashHelper_SwitchFullMode(s_pHalContext))
     {
@@ -392,14 +380,14 @@ void SAMAPP_Animation_animFrameRam()
         return;
     }
 
-    for (uint16_t frame = 0; frame < FRAME_COUNT; frame++)
+    for (uint16_t frame = 0; frame < 4; frame++)
     {
         EVE_CoCmd_dlStart(s_pHalContext);
         EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0, 0, 0));
         EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
 
         EVE_CoCmd_animFrameRam(s_pHalContext, (uint16_t) (s_pHalContext->Width / 2),
-            (uint16_t) (s_pHalContext->Height / 2), ANIM_ADDR, frame);
+		    (uint16_t)(s_pHalContext->Height / 2), ANIM_ADDR_BAT, frame);
 
         EVE_Cmd_wr32(s_pHalContext, DISPLAY());
         EVE_CoCmd_swap(s_pHalContext);

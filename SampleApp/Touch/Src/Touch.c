@@ -39,7 +39,7 @@
 static EVE_HalContext s_halContext;
 static EVE_HalContext* s_pHalContext;
 void SAMAPP_Touch();
-static int32_t Volume;
+static int8_t Volume;
 
 int main(int argc, char* argv[])
 {
@@ -68,8 +68,7 @@ int main(int argc, char* argv[])
 
         EVE_Util_clearScreen(s_pHalContext);
 
-        EVE_Hal_close(s_pHalContext);
-        EVE_Hal_release();
+        Gpu_Release(s_pHalContext);
 
         /* Init HW Hal for next loop*/
         Gpu_Init(s_pHalContext);
@@ -81,187 +80,60 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-SAMAPP_Logo_Img_t Main_Icons[1] = {
-    { TEST_DIR "\\tile3.bin", ImH, RGB565, NEAREST, ImW, ImH, ImW * 2, 0L }, 
-};
-
-/**
-* @brief Transfer file to RAM_G
-*
-* @param add Address on RAM_G
-* @param sectors Number of sector
-* @param afile File pointer
-*/
-void helperAppendToRAMG(uint32_t add, uint8_t sectors)
-{
-    uint8_t pbuff[512];
-    for (int z = 0; z < sectors; z++)
-    {
-        FileIO_File_Read(pbuff, 512);
-        EVE_Hal_wrMem(s_pHalContext, add, pbuff, 512L);
-        add += 512;
-    }
-}
-
-/**
-* @brief Load image into Coprocessor by CMD_INFLATE
-*
-* @param address
-* @param filename
-*/
-void helperLoadInflatImage(uint32_t address, const char* filename)
-{
-    FILE* afile;
-    uint32_t ftsize = 0;
-    uint8_t pbuff[8192];
-    uint16_t blocklen;
-
-    EVE_Cmd_wr32(s_pHalContext, CMD_INFLATE);
-    EVE_Cmd_wr32(s_pHalContext, address * 1024L);
-    afile = fopen(filename, "rb"); // read Binary (rb)
-    if (!afile)
-    {
-        return;
-    }
-    fseek(afile, 0, SEEK_END);
-    ftsize = ftell(afile);
-    fseek(afile, 0, SEEK_SET);
-    while (ftsize > 0)
-    {
-        blocklen = ftsize > 8192 ? 8192 : (uint16_t) ftsize;
-        fread(pbuff, 1, blocklen, afile);/* copy the data into pbuff and then transfter it to command buffer */
-        ftsize -= blocklen;
-        EVE_Cmd_wrMem(s_pHalContext, pbuff, blocklen);/* copy data continuously into command memory */
-    }
-    fclose(afile);/* close the opened jpg file */
-}
-
-/**
-* @brief API to demonstrate moving rectangle
-*
-* @param BRy Deprecated
-* @param MovingRy Moving rectangle y
-* @param EndPtReach Is end moving
-* @return int16_t Moving rectangle y
-*/
-int16_t helperMovingRect(int16_t MovingRy, uint8_t EndPtReach)
-{
-#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    if (MovingRy <= 0)
-    {
-        EndPtReach = 0;
-        MovingRy = 1;
-    }
-
-    if (EndPtReach == 1 && MovingRy > 0)
-        MovingRy -= 1; //the smaller rectangles are moved behind
-    else if (EndPtReach == 0)
-        MovingRy += 2; //the smaller rectangles are moved forward slightly faster
-    return MovingRy;
-#endif // capacity EVE
-}
-
 /**
 * @brief Calculate rectangle limits and positions
 *
 * @param context BouncingSquares context
 * @param Arrayno Rectangle id
 */
-void helperRectangleCalc(SAMAPP_BouncingSquares_t* context, uint8_t Arrayno)
+static void helperRectangleCalc(SAMAPP_BouncingSquares* context, uint8_t Arrayno)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    uint8_t Arr;
-    int16_t MovingRy1;
-    int16_t leap = 0;
+    if(context->RectTouched[Arrayno] == 1)
+	{
+		//the limits for the smaller rectangles forward and backward movement is set here
+		if (context->My[Arrayno] <= 0)
+			context->Decrease[Arrayno] = 0; //increase
+		else if (context->My[Arrayno] + 5 * 1 >= context->Ty[Arrayno])
+			context->Decrease[Arrayno] = 1; //decrease
 
-    if (context->RectNo[Arrayno] == 1)
-    {
-        Arr = Arrayno;
-        //the limits for the smaller rectangles forward and backward movement is set here
-        if (context->My[Arr] == 0 && (context->My[Arr] + 25) < context->BRy[Arr])
-            context->E[Arr] = 0; //inc
-        else if (context->My[Arr] + 25 >= context->BRy[Arr])
-            context->E[Arr] = 1; //dec
-
-                                 // the smaller rectangles are moved accordingly according to the flags set above ion this function call
-        MovingRy1 = helperMovingRect(context->My[Arr], context->E[Arr]);
-
-        if (context->BRy[Arr] == 0)
-            MovingRy1 = 4;
-        context->My[Arr] = MovingRy1;
-
-        if (context->My[Arr] > (context->BRy[Arr] - 15))
-        {
-            leap = context->My[Arr] - context->BRy[Arr];
-            context->My[Arr] = context->My[Arr] - (leap + 25);
-        }
-    }
+		// the smaller rectangles are moved accordingly according to the flags set above in this function call
+		if (context->Decrease[Arrayno] == 1)
+			context->My[Arrayno] -= 1; //the smaller rectangles are moved upwards
+		else if (context->Decrease[Arrayno] == 0) // increase
+			context->My[Arrayno] += 2 * 1; //the smaller rectangles are moved downwards slightly faster
+	}
 #endif // capacity EVE
-}
-
-/**
-* @brief Setup logo
-*
-* @param sptr Logo image
-* @param num Number of image
-*/
-void helperLogoIntialsetup(const SAMAPP_Logo_Img_t sptr[], uint8_t num)
-{
-    uint8_t z;
-    for (z = 0; z < num; z++)
-    {
-        helperLoadInflatImage(sptr[z].gram_address, sptr[z].name);
-    }
-
-    EVE_CoCmd_dlStart(s_pHalContext); // start
-    EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-    for (z = 0; z < num; z++)
-    {
-        EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(z));
-        EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(sptr[z].gram_address * 1024L));
-        EVE_Cmd_wr32(s_pHalContext,
-            BITMAP_LAYOUT(sptr[z].image_format, sptr[z].linestride, sptr[z].image_height));
-        EVE_Cmd_wr32(s_pHalContext,
-            BITMAP_SIZE(sptr[z].filter, BORDER, BORDER, sptr[z].linestride / 2,
-                sptr[z].image_height));
-
-    }
-    EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-    EVE_CoCmd_swap(s_pHalContext);
-    EVE_Cmd_waitFlush(s_pHalContext);
 }
 
 /**
 * @brief Beginning BouncingCircle section
 *
-* @param C1 Point size
-* @param R Deprecated
-* @param G Deprecated
-* @param B Deprecated
+* @param C Point size
 */
-void helperConcentricCircles(float C1, uint16_t R, uint16_t G, uint16_t B)
+static void helperDrawConcentricCircles(float C)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(NEVER, 0x00, 0x00));
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_OP(INCR, INCR));
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(FTPOINTS));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1 - 5) * 16))); //inner circle
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(240, 136, 0, 0));
+	EVE_CoDl_stencilFunc(s_pHalContext, NEVER, 0x00, 0x00);
+	EVE_CoDl_stencilOp(s_pHalContext, INCR, INCR);
+	EVE_CoDl_begin(s_pHalContext, POINTS);
+	EVE_CoDl_pointSize(s_pHalContext, (uint16_t)((C - 5) * 16)); //inner circle
+    EVE_CoDl_vertex2f(s_pHalContext, VP(240), VP(136));
 
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(NOTEQUAL, 0x01, 0x01));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1) * 16))); //outer circle
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(240, 136, 0, 0));
+    EVE_CoDl_stencilFunc(s_pHalContext, NOTEQUAL, 0x01, 0x01);
+	EVE_CoDl_pointSize(s_pHalContext, (uint16_t)((C)*16)); //outer circle
+    EVE_CoDl_vertex2f(s_pHalContext, VP(240), VP(136));
 
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(EQUAL, 0x01, 0x01));
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_OP(KEEP, KEEP));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(R, G, B));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1) * 16)));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(240, 136, 0, 0));
+    EVE_CoDl_stencilFunc(s_pHalContext, EQUAL, 0x01, 0x01);
+	EVE_CoDl_stencilOp(s_pHalContext, KEEP, KEEP);
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 0, 0);
+	EVE_CoDl_pointSize(s_pHalContext, (uint16_t)((C)*16));
+    EVE_CoDl_vertex2f(s_pHalContext, VP(240), VP(136));
 
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(ALWAYS, 0x01, 0x01));
-    EVE_Cmd_wr32(s_pHalContext, STENCIL_OP(KEEP, KEEP));
+    EVE_CoDl_stencilFunc(s_pHalContext, ALWAYS, 0x01, 0x01);
+	EVE_CoDl_stencilOp(s_pHalContext, KEEP, KEEP);
 
-    EVE_Cmd_wr32(s_pHalContext, END());
+	EVE_CoDl_end(s_pHalContext);
 #endif // capacity EVE
 }
 
@@ -272,55 +144,17 @@ void helperConcentricCircles(float C1, uint16_t R, uint16_t G, uint16_t B)
 * @param C1Y Point Y
 * @param i Point number
 */
-void helperTouchPoints(int16_t C1X, int16_t C1Y, uint8_t i)
+static void helperTouchPoints(int16_t CX, int16_t CY, uint8_t i)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     /* Draw the five white circles for the Touch areas with their rescpective numbers*/
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(FTPOINTS));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((14) * 16));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2II(C1X, C1Y, 0, 0));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(155, 155, 0));
-    EVE_CoCmd_number(s_pHalContext, C1X, C1Y, 29, OPT_CENTERX | OPT_CENTERY, i);
-#endif // capacity EVE
-}
-
-/**
-* @brief Draw plots
-*
-*/
-void helperPlotXY()
-{
-#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    uint8_t i = 0;
-    uint16_t PlotHt = 0;
-    uint16_t PlotWth = 0;
-    uint16_t X = 0;
-    uint16_t Y = 0;
-
-    PlotHt = (uint16_t) (s_pHalContext->Height / 10);
-    PlotWth = (uint16_t) (s_pHalContext->Width / 10);
-
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(36, 54, 125));
-    /* Horizontal Lines */
-    for (i = 1; i < 11; i++)
-    {
-        Y = i * PlotHt;
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(LINES));
-        EVE_Cmd_wr32(s_pHalContext, LINE_WIDTH(1 * 16));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F(0, Y * 16));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F(s_pHalContext->Width * 16, Y * 16));
-    }
-    /* Vertical Lines */
-    for (i = 1; i < 11; i++)
-    {
-        X = i * PlotWth;
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(LINES));
-        EVE_Cmd_wr32(s_pHalContext, LINE_WIDTH(1 * 16));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F(X * 16, 0));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F(X * 16, s_pHalContext->Height * 16));
-    }
-    EVE_Cmd_wr32(s_pHalContext, END());
+	EVE_CoDl_begin(s_pHalContext, POINTS);
+	EVE_CoDl_pointSize(s_pHalContext, 14 * 16);
+	EVE_CoDl_colorRgb(s_pHalContext, 255, 255, 0);
+    EVE_CoDl_vertex2f(s_pHalContext, VP(CX), VP(CY));
+	EVE_CoDl_end(s_pHalContext);
+	EVE_CoDl_colorRgb(s_pHalContext, 155, 155, 0);
+	EVE_CoCmd_number(s_pHalContext, CX, CY, 29, OPT_CENTERX | OPT_CENTERY, i);
 #endif // capacity EVE
 }
 
@@ -332,52 +166,32 @@ void helperPlotXY()
 * @param TouchNum Touch number
 * @param i Circle number
 */
-void helperCheckCircleTouchCood(SAMAPP_BouncingCircles_t* context, int32_t val, uint8_t TouchNum,
-    uint8_t i)
+static void helperCheckCircleTouchCood(SAMAPP_BouncingCircles* context, int32_t val, uint8_t TouchNum, uint8_t i)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    double CX = 0;
-    double CY = 0;
+	float CX = (float)(val >> 16);
+	float CY = (float)(val & 0xffff);
 
-    uint8_t AllClear = 0;
+    if (val == 0x80008000)
+	{
+		context->TN[i] = 0xFF;
+		return;
+	}
 
-    if ((val >> 16) == -32768)
+    if (context->TN[i] != TouchNum 
+		&& (CX > (context->CX[i] - 15)) && (CX < (context->CX[i] + 15))
+	    && (CY > (context->CY[i] - 30)) && (CY < context->CY[i] + 30))
     {
-        context->TN[TouchNum].F[i] = 0;
-        return;
+		context->CX[i] = CX;
+		context->CY[i] = CY;
+		context->TN[i] = TouchNum;
     }
 
-    CX = (val >> 16);
-    CY = (val & 0xffff);
-
-    for (int8_t j = 0; j < NO_OF_CIRCLE; j++)
-    {
-        if (context->TN[TouchNum].F[j] == 0)
-        {
-            if (AllClear != 10)
-                AllClear = j;
-        }
-        else
-            AllClear = 10;
-    }
-
-    if (AllClear != 10)
-        AllClear = 1;
-
-    if (AllClear == 1 && context->TN[TouchNum].F[i] != 1 && (CX > (context->C1X[i] - 15))
-        && (CX < (context->C1X[i] + 15)) && (CY > (context->C1Y[i] - 30))
-        && (CY < context->C1Y[i] + 30))
-    {
-        context->C1X[i] = (float) CX;
-        context->C1Y[i] = (float) CY;
-        context->TN[TouchNum].F[i] = 1;
-    }
-
-    if (context->TN[TouchNum].F[i] == 1)
-    {
-        context->C1X[i] = (float) CX;
-        context->C1Y[i] = (float) CY;
-    }
+    if (context->TN[i] == TouchNum)
+	{
+		context->CX[i] = CX;
+		context->CY[i] = CY;
+	}
 #endif // capacity EVE
 }
 
@@ -388,36 +202,17 @@ void helperCheckCircleTouchCood(SAMAPP_BouncingCircles_t* context, int32_t val, 
 * @param X Touch X
 * @param Y Touch Y
 * @param Val Circle number
-* @return uint16_t radius of circle
+* @return
 */
-uint16_t helperCirclePlot(SAMAPP_BouncingCircles_t* context, uint16_t X, uint16_t Y, uint8_t Val)
+static void helperCirclePlot(SAMAPP_BouncingCircles* context, uint8_t Val)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    double Xsq1[NO_OF_CIRCLE];
-    double Ysq1[NO_OF_CIRCLE];
-    Xsq1[Val] = (X - (s_pHalContext->Width / 2)) * (X - (s_pHalContext->Width / 2));
-    Ysq1[Val] = (Y - (s_pHalContext->Height / 2)) * (Y - (s_pHalContext->Height / 2));
-    context->Tsq1[Val] = (float) (Xsq1[Val] + Ysq1[Val]);
-    context->Tsq1[Val] = (float) sqrt(context->Tsq1[Val]);
-    return (uint16_t) context->Tsq1[Val];
-#endif // capacity EVE
-}
-
-/**
-* @brief Store touches to context
-*
-* @param context BouncingSquares context
-* @param Touchval Touch value
-* @param TouchNo Touch number
-*/
-void helperStoreTouch(SAMAPP_BouncingCircles_t* context, int32_t Touchval, uint8_t TouchNo)
-{
-#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    if (Touchval >> 16 != -32768)
-    {
-        context->TouchX[TouchNo] = (float) (Touchval >> 16);
-        context->TouchY[TouchNo] = (float) (Touchval & 0xffff);
-    }
+	uint32_t Xsq;
+	uint32_t Ysq;
+	Xsq = (uint32_t)((uint16_t)context->CX[Val] - (s_pHalContext->Width / 2)) * ((uint16_t)context->CX[Val] - (s_pHalContext->Width / 2));
+	Ysq = (uint32_t)((uint16_t)context->CY[Val] - (s_pHalContext->Height / 2)) * ((uint16_t)context->CY[Val] - (s_pHalContext->Height / 2));
+	context->R[Val] = (float)(Xsq + Ysq);
+	context->R[Val] = (float)sqrt(context->R[Val]);
 #endif // capacity EVE
 }
 
@@ -430,7 +225,7 @@ void helperStoreTouch(SAMAPP_BouncingCircles_t* context, int32_t Touchval, uint8
 * @param rate
 * @return int16_t
 */
-int16_t helperLinear(float p1, float p2, uint16_t t, uint16_t rate)
+static int16_t helperLinear(float p1, float p2, uint16_t t, uint16_t rate)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     float st = (float) t / rate;
@@ -444,37 +239,44 @@ int16_t helperLinear(float p1, float p2, uint16_t t, uint16_t rate)
 * @param k Point set
 * @param i POint number
 */
-void helperColorSelection(int16_t k, int16_t i)
+static void helperColorSelection(int16_t k, int16_t i)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    if (k == 0)
-    {
-        if (i & 1)
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(128, 0, 255)); //purple
-        else
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 43, 149)); //pink
-    }
-    if (k == 1)
-    {
-        if (i & 1)
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0)); //red
-        else
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 255, 0)); //green
-    }
-    if (k == 2)
-    {
-        if (i & 1)
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 128, 64)); //orange
-        else
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 255, 255)); //blue
-    }
-    if (k == 3)
-    {
-        if (i & 1)
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(128, 0, 0)); //orange
-        else
-            EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 128)); //blue
-    }
+	if (k == 0)
+	{
+		if (i & 1)
+			EVE_CoDl_colorRgb(s_pHalContext, 116, 27, 124); //purple
+		else
+			EVE_CoDl_colorRgb(s_pHalContext, 248, 134, 173); //pink
+	}
+	if (k == 1)
+	{
+		if (i & 1)
+			EVE_CoDl_colorRgb(s_pHalContext, 232, 35, 25); //red
+		else
+			EVE_CoDl_colorRgb(s_pHalContext, 240, 135, 132); //light red
+	}
+	if (k == 2)
+	{
+		if (i & 1)
+			EVE_CoDl_colorRgb(s_pHalContext, 248, 130, 58); //orange
+		else
+			EVE_CoDl_colorRgb(s_pHalContext, 255, 253, 85); //yellow
+	}
+	if (k == 3)
+	{
+		if (i & 1)
+			EVE_CoDl_colorRgb(s_pHalContext, 0, 35, 245); //blue
+		else
+			EVE_CoDl_colorRgb(s_pHalContext, 115, 251, 253); //light blue
+	}
+	if (k == 4)
+	{
+		if (i & 1)
+			EVE_CoDl_colorRgb(s_pHalContext, 55, 126, 71); //green
+		else
+			EVE_CoDl_colorRgb(s_pHalContext, 161, 251, 142); //light green
+	}
 #endif // capacity EVE
 }
 
@@ -487,38 +289,32 @@ void helperColorSelection(int16_t k, int16_t i)
 * @param Y Touch Y
 * @param t Point number
 */
-void helperPointsCalc(SAMAPP_MovingPoints_t* context, uint8_t* t)
+static void helperPointsCalc(SAMAPP_MovingPoints* context)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    int16_t pointset = 0;
+	uint8_t touchNo = 0;
     int16_t tempDeltaX;
     int16_t tempDeltaY;
 
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE(20 * 16));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_A(120));
-
     /* For total number of points calculate the offsets of movement */
-    for (int16_t k = 0; k < NO_OF_POINTS * 4L; k++)
+	for (int16_t k = 0; k < NO_OF_POINTS * NO_OF_TOUCH; k++)
     {
-        pointset = k / NO_OF_POINTS;
-        if (t[k] > NO_OF_POINTS)
+		touchNo = k / NO_OF_POINTS;
+		if (context->t[k] > NO_OF_POINTS)
         {
             context->t[k] = 0;
-            context->X[k] = (context->val[pointset] >> 16) & 0xffff;
-            context->Y[k] = (context->val[pointset] & 0xffff);
+			context->X[k] = (context->val[touchNo] >> 16) & 0xffff;
+			context->Y[k] = (context->val[touchNo] & 0xffff);
         }
 
-        helperColorSelection(pointset, k);
-
-        if (context->X[k] != -32768)
+        if ((context->X[k] != 0x8000) && (context->Y[k] != 0x8000))
         {
-            tempDeltaX = helperLinear(context->X[k], context->SmallX[pointset], context->t[k],
-                NO_OF_POINTS);
-            tempDeltaY = helperLinear(context->Y[k], context->SmallY, context->t[k], NO_OF_POINTS);
-            EVE_Cmd_wr32(s_pHalContext, VERTEX2F(tempDeltaX * 16L, tempDeltaY * 16L));
+			tempDeltaX = helperLinear(context->X[k], context->StopX[touchNo], context->t[k], NO_OF_POINTS);
+			tempDeltaY = helperLinear(context->Y[k], context->StopY, context->t[k], NO_OF_POINTS);
+			helperColorSelection(touchNo, k);
+            EVE_CoDl_vertex2f(s_pHalContext, VP(tempDeltaX), VP(tempDeltaY));
         }
-        t[k]++;
+		context->t[k]++;
     }
 #endif // capacity EVE
 }
@@ -529,12 +325,12 @@ void helperPointsCalc(SAMAPP_MovingPoints_t* context, uint8_t* t)
 * @param pBInst Blob instance
 * @param TouchXY Touch value
 */
-void helperBlobColor(SAMAPP_BlobsInst_t* pBInst, int32_t TouchXY)
+static void helperBlobColor(SAMAPP_BlobsInst* pBInst, int32_t TouchXY)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     uint8_t j = 0;
     // if there is touch store the values
-    if ((TouchXY >> 16) != -32768)
+	if (TouchXY != 0x80008000)
     {
         pBInst->blobs[pBInst->CurrIdx].x = (TouchXY >> 16) & 0xffff;
         pBInst->blobs[pBInst->CurrIdx].y = (TouchXY & 0xffff);
@@ -548,72 +344,23 @@ void helperBlobColor(SAMAPP_BlobsInst_t* pBInst, int32_t TouchXY)
     //calculate the current index
     pBInst->CurrIdx = (pBInst->CurrIdx + 1) & (NBLOBS - 1);
 
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(FTPOINTS));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(60, 166, 117));
+    EVE_CoDl_begin(s_pHalContext, POINTS);
+	EVE_CoDl_colorRgb(s_pHalContext, 60, 166, 117);
     for (uint8_t i = 0; i < NBLOBS; i++)
     {
         // Blobs fade away and swell as they age
-        EVE_Cmd_wr32(s_pHalContext, COLOR_A(i << 1));
-
-        EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((68) + (i << 3)));
+		EVE_CoDl_colorA(s_pHalContext, i << 1);
+		EVE_CoDl_pointSize(s_pHalContext, 68 + (i << 3));
 
         // Random color for each blob, keyed from (blob_i + i)
         j = (pBInst->CurrIdx + i) & (NBLOBS - 1);
 
         // Draw it!
         if (pBInst->blobs[j].x != OFFSCREEN)
-            EVE_Cmd_wr32(s_pHalContext,
-                VERTEX2F((pBInst->blobs[j].x) * 16, (pBInst->blobs[j].y) * 16));
+            EVE_CoDl_vertex2f(s_pHalContext,
+                VP(pBInst->blobs[j].x), VP(pBInst->blobs[j].y));
     }
-#endif // capacity EVE
-}
-
-/**
-* @brief Check user touches
-*
-* @param context BouncingSquares context
-* @param Tx1 Touch x position
-* @param val1 Multi touch value
-*/
-void helperCheckTouch(SAMAPP_BouncingSquares_t* context, int16_t Tx1, int32_t val1)
-{
-#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    uint8_t Arrayno = -1;
-
-    // Check which rectangle is being touched according to the coordinates
-    if (Tx1 >= 60 && Tx1 <= 105)
-        Arrayno = 0;
-    if (Tx1 >= 140 && Tx1 <= 185)
-        Arrayno = 1;
-    if (Tx1 >= 220 && Tx1 <= 265)
-        Arrayno = 2;
-    if (Tx1 >= 300 && Tx1 <= 345)
-        Arrayno = 3;
-    if (Tx1 >= 380 && Tx1 <= 425)
-        Arrayno = 4;
-
-    //Set the flag for the rectangle being touched
-    if (Arrayno < 255)
-    {
-        context->RectNo[Arrayno] = 1;
-
-        //store the vertices of the rectangle selected according to the flag
-        if ((val1 >> 16) != -32768)
-        {
-            context->BRx[Arrayno] = (val1 >> 16) & 0xffff;
-            context->BRy[Arrayno] = (val1 & 0xffff);
-        }
-
-        //limit the Bigger rectangle's height
-        if (context->BRy[Arrayno] <= 60)
-            context->BRy[Arrayno] = 60;
-    }
-
-    //According to the bigger rectangle values move the smaller rectangles
-    for (int i = 0; i < NO_OF_RECTS; i++)
-    {
-        helperRectangleCalc(context, (uint8_t) i);
-    }
+	EVE_CoDl_end(s_pHalContext);
 #endif // capacity EVE
 }
 
@@ -624,36 +371,73 @@ void helperCheckTouch(SAMAPP_BouncingSquares_t* context, int16_t Tx1, int32_t va
 * @param TouchXY TouchXY value
 * @param TouchNo Touch number order
 */
-void helperTouchTest(SAMAPP_Squares_t* Sq, int32_t TouchXY, uint8_t TouchNo)
+static void helperDrawTouchPt(SAMAPP_Squares_t *Sq, int32_t TouchXY, uint8_t TouchNo)
 {
-    static int32_t RowNo[5];
-    static int32_t ColNo[5];
+#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
+	if (TouchXY != 0x80008000)
+	{
+		Sq->x = TouchXY >> 16;
+		Sq->y = (TouchXY & 0xffff);
+		Volume = (TouchNo + 1) * 255 / NO_OF_TOUCH;
+	}
+	else
+	{
+		Sq->x = OFFSCREEN;
+		Sq->y = OFFSCREEN;
+	}
+	EVE_CoDl_begin(s_pHalContext, BITMAPS);
+	EVE_CoCmd_setBitmap(s_pHalContext, 0, RGB565, 66, 66);
+	EVE_CoDl_vertex2f(s_pHalContext, VP(Sq->x - 66 / 2), VP(Sq->y - 66 / 2));
+	EVE_CoDl_end(s_pHalContext);
+#endif
+}
 
-    if ((TouchXY >> 16) != -32768)
-    {
-        Sq->x = TouchXY >> 16;
-        Sq->y = (TouchXY & 0xffff);
-        Volume = (TouchNo + 1) * 51;
-        for (int i = 0; i < s_pHalContext->Width / ImH; i++)
-        {
-            /* find row number*/
-            if ((Sq->y > i * (ImH + 2)) && (Sq->y < (i + 1) * (ImH + 2)))
-                RowNo[TouchNo] = i;
-            if (((Sq->x) > (i * (ImW + 2))) && ((Sq->x) < ((i + 1) * (ImW + 2))))
-                ColNo[TouchNo] = i;
-        }
-    }
-    else
-    {
-        RowNo[TouchNo] = -1000;
-        ColNo[TouchNo] = -1000;
-    }
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
-    EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(0));
+/**
+* @brief Check user touches
+*
+* @param context BouncingSquares context
+* @param val Multi touch value
+*/
+static void helperCheckTouch(SAMAPP_BouncingSquares *context, int32_t val)
+{
+#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
+	uint8_t Arrayno = -1;
 
-    EVE_Cmd_wr32(s_pHalContext,
-        VERTEX2F(((ImW + 2) * ColNo[TouchNo]) * 16, ((ImH + 2) * RowNo[TouchNo]) * 16));
+	if (val != 0x80008000)
+	{
+		uint16_t Tx = (val >> 16) & 0xffff;
+
+		// Check which rectangle is being touched according to the coordinates
+		if (Tx >= 60 && Tx <= 105)
+			Arrayno = 0;
+		if (Tx >= 140 && Tx <= 185)
+			Arrayno = 1;
+		if (Tx >= 220 && Tx <= 265)
+			Arrayno = 2;
+		if (Tx >= 300 && Tx <= 345)
+			Arrayno = 3;
+		if (Tx >= 380 && Tx <= 425)
+			Arrayno = 4;
+
+		if (Arrayno != -1)
+		{
+			context->RectTouched[Arrayno] = 1; // rectangle touched
+
+			//store the touch point's Y-coordinate
+			context->Ty[Arrayno] = (val & 0xffff);
+
+			//Limit the height of the larger rectangle to reserve space for the smaller one
+			if (context->Ty[Arrayno] <= 60)
+				context->Ty[Arrayno] = 60;
+		}
+	}
+
+	//According to the bigger rectangle values move the smaller rectangles
+	for (int i = 0; i < NO_OF_RECTS; i++)
+	{
+		helperRectangleCalc(context, (uint8_t)i);
+	}
+#endif // capacity EVE
 }
 
 /**
@@ -664,88 +448,120 @@ void helperTouchTest(SAMAPP_Squares_t* Sq, int32_t TouchXY, uint8_t TouchNo)
 * @param MovingRy
 * @param SqNumber
 */
-void helperBouncingSquaresCall(int16_t BRx, int16_t BRy, int16_t MovingRy, uint8_t SqNumber)
+static void helperDrawBouncingSquares(SAMAPP_BouncingSquares *context, int16_t *RectX)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    int16_t MovingRx;
+	int8_t R1 = 0;
+	int8_t G1 = 0;
+	int8_t B1 = 0;
+	int8_t R2 = 0;
+	int8_t G2 = 0;
+	int8_t B2 = 0;
 
-    int16_t R1;
-    int16_t G1;
-    int16_t B_1;
-    int16_t R2;
-    int16_t G2;
-    int16_t B2;
-    MovingRx = BRx;
+	for (int i = 0; i < NO_OF_RECTS; i++)
+	{
+		//different colours are set for the different rectangles
+		if (i == 0)
+		{
+			R1 = 63;
+			G1 = 72;
+			B1 = 204;
+			R2 = 0;
+			G2 = 255;
+			B2 = 255;
+		}
 
-    if (BRy <= 60)
-        BRy = 60;
-    if (BRy >= 260)
-        BRy = 260;
+		if (i == 1)
+		{
+			R1 = 255;
+			G1 = 255;
+			B1 = 0;
+			R2 = 246;
+			G2 = 89;
+			B2 = 12;
+		}
 
-    //different colours are set for the different rectangles
-    if (SqNumber == 0)
-    {
-        R1 = 63;
-        G1 = 72;
-        B_1 = 204;
-        R2 = 0;
-        G2 = 255;
-        B2 = 255;
-    }
+		if (i == 2)
+		{
+			R1 = 255;
+			G1 = 0;
+			B1 = 0;
+			R2 = 200;
+			G2 = 28;
+			B2 = 36;
+		}
 
-    if (SqNumber == 1)
-    {
-        R1 = 255;
-        G1 = 255;
-        B_1 = 0;
-        R2 = 246;
-        G2 = 89;
-        B2 = 12;
-    }
+		if (i == 3)
+		{
+			R1 = 131;
+			G1 = 171;
+			B1 = 9;
+			R2 = 8;
+			G2 = 100;
+			B2 = 50;
+		}
 
-    if (SqNumber == 2)
-    {
-        R1 = 255;
-        G1 = 0;
-        B_1 = 0;
-        R2 = 237;
-        G2 = 28;
-        B2 = 36;
-    }
+		if (i == 4)
+		{
+			R1 = 90;
+			G1 = 40;
+			B1 = 120;
+			R2 = 177;
+			G2 = 156;
+			B2 = 217;
+		}
 
-    if (SqNumber == 3)
-    {
-        R1 = 131;
-        G1 = 171;
-        B_1 = 9;
-        R2 = 8;
-        G2 = 145;
-        B2 = 76;
-    }
+		// Draw the rectanles here
+		EVE_CoDl_begin(s_pHalContext, RECTS);
+		EVE_CoDl_lineWidth(s_pHalContext, 2 * 16);
 
-    if (SqNumber == 4)
-    {
-        R1 = 141;
-        G1 = 4;
-        B_1 = 143;
-        R2 = 176;
-        G2 = 3;
-        B2 = 89;
-    }
+		EVE_CoDl_colorRgb(s_pHalContext, R1, G1, B1);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(RectX[i]), VP(context->Ty[i]));
+		EVE_CoDl_vertex2f(s_pHalContext, VP(RectX[i] + 45), VP(s_pHalContext->Height / 2));
 
-    // Draw the rectanles here
-    EVE_Cmd_wr32(s_pHalContext, BEGIN(RECTS));
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(R1, G1, B_1));
-    EVE_Cmd_wr32(s_pHalContext, LINE_WIDTH(10 * 16));
+		EVE_CoDl_colorRgb(s_pHalContext, R2, G2, B2);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(RectX[i]), VP(context->My[i]));
+		EVE_CoDl_vertex2f(s_pHalContext, VP(RectX[i] + 45), VP(context->My[i] + 2));
+		EVE_CoDl_end(s_pHalContext);
+	}
+#endif // capacity EVE
+}
 
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(BRx * 16, (BRy) * 16));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F((BRx + 45) * 16, (260) * 16));
+/**
+* @brief Draw plots
+*
+*/
+static void helperDrawPlotXY()
+{
+#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
+	uint8_t i = 0;
+	uint16_t PlotHt = 0;
+	uint16_t PlotWth = 0;
+	uint16_t X = 0;
+	uint16_t Y = 0;
 
-    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(R2, G2, B2));
-    EVE_Cmd_wr32(s_pHalContext, LINE_WIDTH(5 * 16));
+	PlotHt = (uint16_t)(s_pHalContext->Height / 10);
+	PlotWth = (uint16_t)(s_pHalContext->Width / 10);
 
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(MovingRx * 16, (MovingRy) * 16));
-    EVE_Cmd_wr32(s_pHalContext, VERTEX2F((MovingRx + 45) * 16, (MovingRy + 5) * 16));
+	EVE_CoDl_colorRgb(s_pHalContext, 36, 54, 125);
+	EVE_CoDl_begin(s_pHalContext, LINES);
+	/* Horizontal Lines */
+	for (i = 1; i < 11; i++)
+	{
+		Y = i * PlotHt;
+		EVE_CoDl_lineWidth(s_pHalContext, 1 * 16);
+		EVE_CoDl_vertex2f(s_pHalContext, 0, VP(Y));
+		EVE_CoDl_vertex2f(s_pHalContext, VP(s_pHalContext->Width), VP(Y));
+	}
+	/* Vertical Lines */
+	for (i = 1; i < 11; i++)
+	{
+		X = i * PlotWth;
+		EVE_CoDl_lineWidth(s_pHalContext, 1 * 16);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(X), 0);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(X), VP(s_pHalContext->Height));
+	}
+	EVE_CoDl_end(s_pHalContext);
 #endif // capacity EVE
 }
 
@@ -757,42 +573,30 @@ void SAMAPP_Touch_touchToPlaySong()
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     Draw_Text(s_pHalContext, "Example for: Touch test\n\n\nPlease touch on screen (1-5 fingers)");
-    uint32_t val[6];
-
-    int32_t ftsize = 0;
-    int32_t AddrOffset;
-
-    int32_t rp = 0;
-    int32_t audioval;
-    int32_t wp = 0;
+    uint32_t val[5];
 
     SAMAPP_Squares_t SqCall;
 
-    helperLogoIntialsetup(Main_Icons, 1);
-    EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_EXTENDED);
+#if defined(EVE_SUPPORT_CAPACITIVE)
+	EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_EXTENDED);
+#endif
     EVE_sleep(30);
-    AddrOffset = 102400L;
 
+	EVE_Util_loadRawFile(s_pHalContext, 0, TEST_DIR "\\yellow_66x66_RGB565.raw");
     /*Audio*/
-    ftsize = FileIO_File_Open(TEST_DIR "\\Devil_Ride_30_44100_ulaw.wav", FILEIO_E_FOPEN_READ);
-    helperAppendToRAMG(AddrOffset + 0UL, 64 * 2);
-
-    wp = 1024;
-    ftsize -= 1024;
+	EVE_Util_loadRawFile(s_pHalContext, 1024 * 100, TEST_DIR "\\Devil_Ride_30_44100_ulaw.wav");
 
     EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_FREQ, 44100);
-    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, AddrOffset);
+	EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, 1024 * 100);
     EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_FORMAT, ULAW_SAMPLES);
     EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LENGTH, APPBUFFERSIZE);
     EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LOOP, 1);
-    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, (uint8_t) Volume);
+    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 0);
     EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PLAY, 1);
 
     for (int j = 0; j < 1500; j++)
     {
-        EVE_Cmd_wr32(s_pHalContext, CMD_DLSTART);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0, 0, 0));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 0, 0, 0 }, (uint8_t[]) { 255, 255, 255 });
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 30, 26, OPT_CENTER,
             "Touch to play song"); //text info
 
@@ -805,33 +609,21 @@ void SAMAPP_Touch_touchToPlaySong()
 
         for (int8_t i = 0; i < NO_OF_TOUCH; i++)
         {
-            helperTouchTest(&SqCall, (int32_t) val[i], i);
+			helperDrawTouchPt(&SqCall, (int32_t)val[i], i);
         }
-        if ((val[0] == 2147516416) && (val[1] == 2147516416) && (val[2] == 2147516416)
-            && (val[3] == 2147516416) && (val[4] == 2147516416))
+        if ((val[0] == 0x80008000) && (val[1] == 0x80008000) && (val[2] == 0x80008000)
+            && (val[3] == 0x80008000) && (val[4] == 0x80008000))
             Volume = 0;
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        EVE_Cmd_waitFlush(s_pHalContext);
-
-        rp = EVE_Hal_rd16(s_pHalContext, REG_PLAYBACK_READPTR);
-        audioval = APPBUFFERSIZEMINUSONE & (rp - wp);
-        if (audioval > 1024)
-        {
-            uint16_t n = min(1024, (uint16_t )ftsize);
-            helperAppendToRAMG(AddrOffset + wp, 2);
-            wp = (wp + 1024) & APPBUFFERSIZEMINUSONE;
-            ftsize -= n;
-            EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, (uint8_t) Volume);
-
-        }
-        if (wp > APPBUFFERSIZE)
-            break; //Add to prevent over buffer
+		EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, Volume);
+		Display_End(s_pHalContext);
     }
     EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 0);
-    EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PLAY, 0);
+	EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LENGTH, 0);
+    EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PLAY, 1);
 
-    EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
+#if defined(EVE_SUPPORT_CAPACITIVE)
+	EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
+#endif
     SAMAPP_DELAY_NEXT;
 #endif
 }
@@ -846,7 +638,7 @@ void SAMAPP_Touch_BouncingSquares()
     int16_t RectX[5];
     int32_t val[5];
 
-    SAMAPP_BouncingSquares_t context;
+    SAMAPP_BouncingSquares context;
 
     Draw_Text(s_pHalContext, "Example for: Draw Bouncing squares\n\n\nPlease touch on screen (1-5 fingers)");
 
@@ -859,10 +651,10 @@ void SAMAPP_Touch_BouncingSquares()
 
     for (int i = 0; i < 5; i++)
     {
-        context.BRy[i] = 0;
+        context.Ty[i] = 0;
         context.My[i] = 0;
-        context.RectNo[i] = 0;
-        context.E[i] = 0;
+		context.RectTouched[i] = 0;
+		context.Decrease[i] = 0;
     }
 
 #if defined(EVE_SUPPORT_CAPACITIVE)
@@ -873,36 +665,25 @@ void SAMAPP_Touch_BouncingSquares()
     {
         /* first touch*/
         val[0] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH0_XY);
-
         /*second touch*/
         val[1] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH1_XY);
-
         /*third touch*/
         val[2] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH2_XY);
-
         /*fourth  touch*/
         val[3] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH3_XY);
-
         /*fifth  touch*/
         val[4] = ((uint32_t) EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_X) << 16L)
             | (EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_Y) & 0xffffL);
 
-        EVE_CoCmd_dlStart(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(0, 0, 0));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-
         //Check which rectangle is being touched using the coordinates and move the respective smaller rectangle
-        for (int8_t i = 0; i < NO_OF_RECTS; i++)
+        for (int8_t i = 0; i < NO_OF_TOUCH; i++)
         {
-            helperCheckTouch(&context, (val[i] >> 16) & 0xffffL, val[i]);
-            helperBouncingSquaresCall(RectX[i], context.BRy[i], context.My[i], i);
+            helperCheckTouch(&context, val[i]);
         }
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        EVE_Cmd_waitFlush(s_pHalContext);
-        context.Count++;
-
+        Display_StartColor(s_pHalContext, (uint8_t[]) { 0, 0, 0 }, (uint8_t[]) { 255, 255, 255 });
+		helperDrawBouncingSquares(&context, RectX);
+		Display_End(s_pHalContext);
     }
 #if defined(EVE_SUPPORT_CAPACITIVE)
     EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
@@ -919,7 +700,7 @@ void SAMAPP_Touch_BouncingCircles()
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     int32_t Touchval[NO_OF_CIRCLE];
-    SAMAPP_BouncingCircles_t context;
+    SAMAPP_BouncingCircles context;
 
     Draw_Text(s_pHalContext, "Example for: Draw Bouncing Circles\n\n\nPlease touch on screen (1-5 fingers)");
 
@@ -928,22 +709,18 @@ void SAMAPP_Touch_BouncingCircles()
 #endif
     EVE_sleep(30);
     /* calculate the intital radius of the circles before the touch happens*/
-    context.Tsq1[0] = 50;
-    context.C1X[0] = 190;
-    context.C1Y[0] = 136;
+    context.R[0] = 50;
+    context.CX[0] = 190;
+    context.CY[0] = 136;
     for (int8_t i = 1; i < NO_OF_CIRCLE; i++)
     {
-        context.Tsq1[i] = context.Tsq1[i - 1] + 30;
-        context.C1X[i] = context.C1X[i - 1] - 30;
-        context.C1Y[i] = 136;
+        context.R[i] = context.R[i - 1] + 30;
+        context.CX[i] = context.CX[i - 1] - 30;
+        context.CY[i] = 136;
     }
 
     for (int32_t k = 0; k < 150; k++)
     {
-        EVE_CoCmd_dlStart(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(100, 255, 100));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
         /* values of the five touches are stored here */
         Touchval[0] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH0_XY);
         Touchval[1] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH1_XY);
@@ -952,42 +729,38 @@ void SAMAPP_Touch_BouncingCircles()
         Touchval[4] = ((int32_t) EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_X) << 16)
             | (EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_Y));
 
-        for (int8_t i = 0; i < NO_OF_CIRCLE; i++)
-        {
-            helperStoreTouch(&context, Touchval[i], i);
-        }
-        /* The plot is drawn here */
-        helperPlotXY();
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 100, 255, 100 }, (uint8_t[]) { 255, 255, 255 });
+		/* The plot is drawn here */
+		helperDrawPlotXY();
 
         /* check which circle has been touched based on the coordinates and store the[0] number of the circle touched*/
 
         for (int8_t i = 0; i < NO_OF_CIRCLE; i++)
         {
-            helperCheckCircleTouchCood(&context, Touchval[0], 0, i);
-            helperCheckCircleTouchCood(&context, Touchval[1], 1, i);
-            helperCheckCircleTouchCood(&context, Touchval[2], 2, i);
-            helperCheckCircleTouchCood(&context, Touchval[3], 3, i);
-            helperCheckCircleTouchCood(&context, Touchval[4], 4, i);
+			for (int8_t j = 0; j < NO_OF_TOUCH; j++)
+			{
+				helperCheckCircleTouchCood(&context, Touchval[j], j, i);
+			}
         }
         /* calculate the radius of each circle according to the touch of each individual circle */
 
         for (int8_t i = 0; i < NO_OF_CIRCLE; i++)
         {
-            context.Tsq1[i] = (float) helperCirclePlot(&context, (uint16_t) context.C1X[i],
-                (uint16_t) context.C1Y[i], i);
+            helperCirclePlot(&context, i);
         }
         /* with the calculated radius draw the circles as well as the Touch points */
 
         for (int8_t i = 0; i < (NO_OF_CIRCLE); i++)
         {
-            helperConcentricCircles(context.Tsq1[i], 255, 0, 0);
-            helperTouchPoints((int16_t) context.C1X[i], (int16_t) context.C1Y[i], i + 1);
+            helperDrawConcentricCircles(context.R[i]);
+            helperTouchPoints((int16_t) context.CX[i], (int16_t) context.CY[i], i + 1);
         }
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        EVE_Cmd_waitFlush(s_pHalContext);
+        Display_End(s_pHalContext);
     }
+#if defined(EVE_SUPPORT_CAPACITIVE)
+	EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
+#endif
 #endif // capacity EVE
 }
 /* End BouncingCircle section */
@@ -1000,8 +773,8 @@ void SAMAPP_Touch_BouncingPoints()
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
     int32_t val[5];
-    SAMAPP_BlobsInst_t gBlobsInst[APP_BLOBS_NUMTOUCH];
-    SAMAPP_BlobsInst_t* pBInst;
+	SAMAPP_BlobsInst gBlobsInst[NO_OF_TOUCH];
+	SAMAPP_BlobsInst *pBInst;
 
     Draw_Text(s_pHalContext, "Example for: Draw Bouncing points\n\n\nPlease touch on screen (1-5 fingers)");
 
@@ -1012,7 +785,7 @@ void SAMAPP_Touch_BouncingPoints()
     pBInst = &gBlobsInst[0];
 
     //set all coordinates to OFFSCREEN position
-    for (uint8_t j = 0; j < APP_BLOBS_NUMTOUCH; j++)
+	for (uint8_t j = 0; j < NO_OF_TOUCH; j++)
     {
         for (uint8_t i = 0; i < NBLOBS; i++)
         {
@@ -1032,27 +805,16 @@ void SAMAPP_Touch_BouncingPoints()
         val[4] = (((int32_t) EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_X) << 16)
             | (EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_Y) & 0xffff));
 
-        EVE_Cmd_wr32(s_pHalContext, CMD_DLSTART);
-#if 1
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(43, 73, 59));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, BLEND_FUNC(SRC_ALPHA, ONE));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_MASK(1, 1, 1, 0));
-#else
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(255, 255, 255));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
-#endif
+        Display_StartColor(s_pHalContext, (uint8_t[]) { 43, 73, 59 }, (uint8_t[]) { 255, 255, 255 });
+		EVE_CoDl_blendFunc(s_pHalContext, SRC_ALPHA, ONE);
+		EVE_CoDl_colorMask(s_pHalContext, 1, 1, 1, 0);
 
         // draw blobs according to the number of touches
-        for (uint16_t j = 0; j < APP_BLOBS_NUMTOUCH; j++)
+		for (uint16_t j = 0; j < NO_OF_TOUCH; j++)
         {
             helperBlobColor(&gBlobsInst[j], val[j]);
         }
-
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        EVE_Cmd_waitFlush(s_pHalContext);
+        Display_End(s_pHalContext);
     }
 
 #if defined(EVE_SUPPORT_CAPACITIVE)
@@ -1069,8 +831,7 @@ void SAMAPP_Touch_BouncingPoints()
 void SAMAPP_Touch_MovingPoints()
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    SAMAPP_MovingPoints_t context;
-    context.Flag = 1;
+    SAMAPP_MovingPoints context;
 
     Draw_Text(s_pHalContext, "Example for: Draw Moving points\n\n\nPlease touch on screen (1-5 fingers)");
 
@@ -1079,46 +840,42 @@ void SAMAPP_Touch_MovingPoints()
 #endif
     EVE_sleep(30);
     /* Initialize all coordinates */
-    for (uint16_t j = 0; j < 4; j++)
+	for (uint16_t j = 0; j < NO_OF_TOUCH; j++)
     {
         for (uint16_t i = 0; i < NO_OF_POINTS; i++)
         {
             context.t[i + j * NO_OF_POINTS] = (uint8_t) i;
-            context.X[i + j * NO_OF_POINTS] = -32768;
+			context.X[i + j * NO_OF_POINTS] = OFFSCREEN;
+			context.Y[i + j * NO_OF_POINTS] = OFFSCREEN;
         }
     }
 
-    context.SmallX[0] = 180;
-    context.SmallY = 20;
-    for (uint16_t i = 0; i < 5; i++)
+	context.StopY = 20;
+	for (uint16_t i = 0; i < NO_OF_TOUCH; i++)
     {
-        context.SmallX[i + 1] = context.SmallX[i] + 50;
+		context.StopX[i] = 180 + i * 50;
     }
 
 #if defined(FT900_PLATFORM) || defined(FT93X_PLATFORM)
     for (uint16_t k = 0; k < 800; k++)
-#elif defined(ARDUINO_PLATFORM)
-    for (uint16_t i = 0; i < 700; i++)
 #else
-    for (uint16_t k = 0; k < 150; k++)
+    for (uint16_t k = 0; k < 300; k++)
 #endif
     {
-        EVE_Cmd_wr32(s_pHalContext, CMD_DLSTART);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(255, 255, 255));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-
         context.val[0] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH0_XY);
         context.val[1] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH1_XY);
         context.val[2] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH2_XY);
         context.val[3] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH3_XY);
+		context.val[4] = (((int32_t)EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_X) << 16)
+		    | (EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_Y) & 0xffff));
 
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(FTPOINTS));
-
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
-        helperPointsCalc(&context, &context.t[0]);
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        EVE_Cmd_waitFlush(s_pHalContext);
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 0, 0, 0 });
+		EVE_CoDl_begin(s_pHalContext, POINTS);
+		EVE_CoDl_pointSize(s_pHalContext, 20 * 16);
+		EVE_CoDl_colorA(s_pHalContext, 120);
+        helperPointsCalc(&context);
+		EVE_CoDl_end(s_pHalContext);
+		Display_End(s_pHalContext);
     }
 #if defined(EVE_SUPPORT_CAPACITIVE)
     EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
@@ -1133,6 +890,7 @@ void SAMAPP_Touch_MovingPoints()
 */
 void SAMAPP_Touch_multiTracker()
 {
+#if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
 #if defined(FT81X_ENABLE) // FT81X only
     uint32_t trackers[5];
     uint32_t delayLoop = 300;
@@ -1167,13 +925,16 @@ void SAMAPP_Touch_multiTracker()
 
     Draw_Text(s_pHalContext, "Example for: Multi touch on a single tracked object\n\n\nPlease touch on screen (1-5 fingers)");
 
+#if defined(EVE_SUPPORT_CAPACITIVE)
+	EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_EXTENDED);
+#endif
+	EVE_sleep(30);
+
     EVE_CoCmd_track(s_pHalContext, RDialX, RDialY, 1, 1, RDialTag);
     EVE_CoCmd_track(s_pHalContext, GDialX, GDialY, 1, 1, GDialTag);
     EVE_CoCmd_track(s_pHalContext, BDialX, BDialY, 1, 1, BDialTag);
     EVE_CoCmd_track(s_pHalContext, ADialX, ADialY, 1, 1, ADialTag);
-#ifndef RESISTANCE_THRESHOLD
-    EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_EXTENDED);
-#endif
+
     while (delayLoop != 0)
     {
         trackers[0] = EVE_Hal_rd32(s_pHalContext, REG_TRACKER);
@@ -1206,180 +967,49 @@ void SAMAPP_Touch_multiTracker()
                 ADialTrackVal = (uint16_t) trackerVal;
             }
         }
-        EVE_CoCmd_dlStart(s_pHalContext); // clear screen
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_A(255));
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(1));
-        EVE_Cmd_wr32(s_pHalContext, TAG(RDialTag));
-        EVE_CoCmd_dial(s_pHalContext, RDialX, RDialY, DialR, 0, RDialTrackVal);
-        EVE_Cmd_wr32(s_pHalContext, TAG(GDialTag));
-        EVE_CoCmd_dial(s_pHalContext, GDialX, GDialY, DialR, 0, GDialTrackVal);
-        EVE_Cmd_wr32(s_pHalContext, TAG(BDialTag));
-        EVE_CoCmd_dial(s_pHalContext, BDialX, BDialY, DialR, 0, BDialTrackVal);
-        EVE_Cmd_wr32(s_pHalContext, TAG(ADialTag));
-        EVE_CoCmd_dial(s_pHalContext, ADialX, ADialY, DialR, 0, ADialTrackVal);
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(0));
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 255, 255, 255 });
+		EVE_CoDl_colorA(s_pHalContext, 255);
+		EVE_CoDl_tagMask(s_pHalContext, 1);
+		EVE_CoDl_tag(s_pHalContext, RDialTag);
+		EVE_CoCmd_dial(s_pHalContext, RDialX, RDialY, DialR, 0, RDialTrackVal);
+		EVE_CoDl_tag(s_pHalContext, GDialTag);
+		EVE_CoCmd_dial(s_pHalContext, GDialX, GDialY, DialR, 0, GDialTrackVal);
+		EVE_CoDl_tag(s_pHalContext, BDialTag);
+		EVE_CoCmd_dial(s_pHalContext, BDialX, BDialY, DialR, 0, BDialTrackVal);
+		EVE_CoDl_tag(s_pHalContext, ADialTag);
+		EVE_CoCmd_dial(s_pHalContext, ADialX, ADialY, DialR, 0, ADialTrackVal);
+		EVE_CoDl_tagMask(s_pHalContext, 0);
 
         EVE_CoCmd_text(s_pHalContext, RDialX, RDialY, 28, OPT_CENTER, "Red");//text info
         EVE_CoCmd_text(s_pHalContext, GDialX, GDialY, 28, OPT_CENTER, "Green");//text info
         EVE_CoCmd_text(s_pHalContext, BDialX, BDialY, 28, OPT_CENTER, "Blue");//text info
         EVE_CoCmd_text(s_pHalContext, ADialX, ADialY, 28, OPT_CENTER, "Alpha");//text info
 
-        EVE_Cmd_wr32(s_pHalContext, BEGIN(RECTS));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(rectRed, rectGreen, rectBlue));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_A(rectAlpha));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F(rectX * 16, rectY * 16));
-        EVE_Cmd_wr32(s_pHalContext, VERTEX2F((rectX + rectWidth) * 16, (rectY + rectHeight) * 16));
+        EVE_CoDl_begin(s_pHalContext, RECTS);
+		EVE_CoDl_colorRgb(s_pHalContext, rectRed, rectGreen, rectBlue);
+		EVE_CoDl_colorA(s_pHalContext, rectAlpha);
+		EVE_CoDl_vertex2f(s_pHalContext, VP(rectX), VP(rectY));
+		EVE_CoDl_vertex2f(s_pHalContext, VP(rectX + rectWidth), VP(rectY + rectHeight));
+		EVE_CoDl_end(s_pHalContext);
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-        /* Wait till coprocessor completes the operation */
-        EVE_Cmd_waitFlush(s_pHalContext);
+		Display_End(s_pHalContext);
 
         delayLoop--;
     }
+#if defined(EVE_SUPPORT_CAPACITIVE)
+	EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
+#endif
+#endif
 #endif
 }
 
 /**
-* @brief explain the usage of touch engine of FT801 and FT811
+* @brief explain the usage of touch engine of EVE
 * 
 */
-void SAMAPP_Touch_touchInfoFT801FT811()
+void SAMAPP_Touch_touchInfo()
 {
-    Draw_Text(s_pHalContext, "Example for: Touch raw, touch screen, touch tag, raw adc of FT801 and FT811\n\n\nPlease touch on screen");
-
-#if defined(FT801_ENABLE) || defined(FT811_ENABLE)
-    int32_t LoopFlag = 0;
-    int32_t wbutton;
-    int32_t hbutton;
-    int32_t tagval;
-    int32_t tagoption;
-    char8_t StringArray[100], StringArray1[100];
-    uint32_t ReadWord;
-    int16_t xvalue;
-    int16_t yvalue;
-    int16_t pendown;
-
-
-    /*************************************************************************/
-    /* Below code demonstrates the usage of touch function. Display info     */
-    /* touch raw, touch screen, touch tag, raw adc and resistance values     */
-    /*************************************************************************/
-    LoopFlag = 300;
-    wbutton = s_pHalContext->Width / 8;
-    hbutton = s_pHalContext->Height / 8;
-    EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_EXTENDED);
-    while (LoopFlag--)
-    {
-        EVE_CoCmd_dlStart(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(64, 64, 64));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(0));
-
-        StringArray[0] = '\0';
-        strcat(StringArray, "Touch Screen XY0 (");
-        ReadWord = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH0_XY);
-        /*yvalue = (uint16_t)(ReadWord & 0xffff);
-        xvalue = (uint16_t)((ReadWord>>16) & 0xffff);*/
-        yvalue = (ReadWord & 0xffff);
-        xvalue = (ReadWord >> 16);
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)xvalue);
-        strcat(StringArray, ",");
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)yvalue);
-        strcat(StringArray, ")");
-        EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 50, 26, OPT_CENTER, StringArray);
-
-        StringArray[0] = '\0';
-        strcat(StringArray, "Touch Screen XY1 (");
-        ReadWord = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH1_XY);
-        yvalue = (ReadWord & 0xffff);
-        xvalue = (ReadWord >> 16);
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)xvalue);
-        strcat(StringArray, ",");
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)yvalue);
-        strcat(StringArray, ")");
-        EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 70, 26, OPT_CENTER, StringArray);
-
-        StringArray[0] = '\0';
-        strcat(StringArray, "Touch Screen XY2 (");
-        ReadWord = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH2_XY);
-        yvalue = (ReadWord & 0xffff);
-        xvalue = (ReadWord >> 16);
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)xvalue);
-        strcat(StringArray, ",");
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)yvalue);
-        strcat(StringArray, ")");
-        EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 90, 26, OPT_CENTER, StringArray);
-
-        StringArray[0] = '\0';
-        strcat(StringArray, "Touch Screen XY3 (");
-        ReadWord = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH3_XY);
-        yvalue = (ReadWord & 0xffff);
-        xvalue = (ReadWord >> 16);
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)xvalue);
-        strcat(StringArray, ",");
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)yvalue);
-        strcat(StringArray, ")");
-        EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 110, 26, OPT_CENTER, StringArray);
-
-        StringArray[0] = '\0';
-        StringArray1[0] = '\0';
-        strcat(StringArray, "Touch Screen XY4 (");
-        xvalue = EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_X);
-        yvalue = EVE_Hal_rd16(s_pHalContext, REG_CTOUCH_TOUCH4_Y);
-
-        Gpu_Hal_Dec2Ascii(StringArray, (int32_t)xvalue);
-        strcat(StringArray, ",");
-        Gpu_Hal_Dec2Ascii(StringArray1, (int32_t)yvalue);
-        strcat(StringArray1, ")");
-        strcat(StringArray, StringArray1);
-        EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 130, 26, OPT_CENTER, StringArray);
-
-        StringArray[0] = '\0';
-        strcat(StringArray, "Touch TAG (");
-        ReadWord = EVE_Hal_rd8(s_pHalContext, REG_TOUCH_TAG);
-        Gpu_Hal_Dec2Ascii(StringArray, ReadWord);
-        strcat(StringArray, ")");
-        EVE_CoCmd_text(s_pHalContext, (int16_t)(s_pHalContext->Width / 2), 170, 26, OPT_CENTER, StringArray);
-        tagval = ReadWord;
-
-        EVE_CoCmd_fgColor(s_pHalContext, 0x008000);
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(1));
-
-        EVE_Cmd_wr32(s_pHalContext, TAG(13));
-        tagoption = 0;
-        if (13 == tagval)
-        {
-            tagoption = OPT_FLAT;
-        }
-        EVE_CoCmd_button(s_pHalContext, (s_pHalContext->Width / 2) - (wbutton / 2), (s_pHalContext->Height * 3 / 4) - (hbutton / 2), wbutton, hbutton, 26, tagoption, "Tag13");
-
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-
-        /* Wait till coprocessor completes the operation */
-        EVE_Cmd_waitFlush(s_pHalContext);
-        EVE_sleep(30);
-
-    }
-
-    EVE_Hal_wr8(s_pHalContext, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
-    EVE_sleep(30);
-#endif
-}
-
-/**
-* @brief explain the usage of touch engine of EVE other than FT801 and FT811
-* 
-*/
-void SAMAPP_Touch_touchInfoOther()
-{
-    Draw_Text(s_pHalContext, "Example for: Touch raw, touch screen, touch tag, raw adc\n\n\nPlease touch on screen");
-
-#if !defined(FT801_ENABLE) && !defined(FT811_ENABLE)
+	Draw_Text(s_pHalContext, "Example for: Touch raw, touch screen, touch tag, raw adc\n\n\nPlease touch on screen");
     int32_t LoopFlag = 0;
     int32_t wbutton;
     int32_t hbutton;
@@ -1400,93 +1030,90 @@ void SAMAPP_Touch_touchInfoOther()
     hbutton = s_pHalContext->Height / 8;
     while (LoopFlag--)
     {
-        EVE_CoCmd_dlStart(s_pHalContext);
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(64, 64, 64));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(0));
+		Display_StartColor(s_pHalContext, (uint8_t[]) { 64, 64, 64 }, (uint8_t[]) { 255, 255, 255 });
+		EVE_CoDl_tagMask(s_pHalContext, 0);
         /* Draw informative text at width/2,20 location */
         StringArray[0] = '\0';
-        strcat(StringArray, "Touch Raw XY (");
+		strcat_s(StringArray, sizeof(StringArray), "Touch Raw XY (");
         ReadWord = EVE_Hal_rd32(s_pHalContext, REG_TOUCH_RAW_XY);
         yvalue = (uint16_t) (ReadWord & 0xffff);
         xvalue = (uint16_t) ((ReadWord >> 16) & 0xffff);
         Gpu_Hal_Dec2Ascii(StringArray, (uint32_t) xvalue);
-        strcat(StringArray, ",");
+		strcat_s(StringArray, sizeof(StringArray), ",");
         Gpu_Hal_Dec2Ascii(StringArray, (uint32_t) yvalue);
-        strcat(StringArray, ")");
+		strcat_s(StringArray, sizeof(StringArray), ")");
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 10, 26, OPT_CENTER,
             StringArray);
 
         StringArray[0] = '\0';
-        strcat(StringArray, "Touch RZ (");
+		strcat_s(StringArray, sizeof(StringArray), "Touch RZ (");
         ReadWord = EVE_Hal_rd16(s_pHalContext, REG_TOUCH_RZ);
         Gpu_Hal_Dec2Ascii(StringArray, ReadWord);
-        strcat(StringArray, ")");
+		strcat_s(StringArray, sizeof(StringArray), ")");
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 25, 26, OPT_CENTER,
             StringArray);
 
         StringArray[0] = '\0';
-        strcat(StringArray, "Touch Screen XY (");
+		strcat_s(StringArray, sizeof(StringArray), "Touch Screen XY (");
         ReadWord = EVE_Hal_rd32(s_pHalContext, REG_TOUCH_SCREEN_XY);
         yvalue = (int16_t) (ReadWord & 0xffff);
         xvalue = (int16_t) ((ReadWord >> 16) & 0xffff);
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) xvalue);
-        strcat(StringArray, ",");
+		strcat_s(StringArray, sizeof(StringArray), ",");
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) yvalue);
-        strcat(StringArray, ")");
+		strcat_s(StringArray, sizeof(StringArray), ")");
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 40, 26, OPT_CENTER,
             StringArray);
 
         StringArray[0] = '\0';
-        strcat(StringArray, "Touch TAG (");
+		strcat_s(StringArray, sizeof(StringArray), "Touch TAG (");
         ReadWord = EVE_Hal_rd8(s_pHalContext, REG_TOUCH_TAG);
         Gpu_Hal_Dec2Ascii(StringArray, ReadWord);
-        strcat(StringArray, ")");
+		strcat_s(StringArray, sizeof(StringArray), ")");
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 55, 26, OPT_CENTER,
             StringArray);
         tagval = ReadWord;
         StringArray[0] = '\0';
-        strcat(StringArray, "Touch Direct XY (");
+		strcat_s(StringArray, sizeof(StringArray), "Touch Direct XY (");
         ReadWord = EVE_Hal_rd32(s_pHalContext, REG_TOUCH_DIRECT_XY);
         yvalue = (int16_t) (ReadWord & 0x03ff);
         xvalue = (int16_t) ((ReadWord >> 16) & 0x03ff);
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) xvalue);
-        strcat(StringArray, ",");
+		strcat_s(StringArray, sizeof(StringArray), ",");
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) yvalue);
         pendown = (int16_t) ((ReadWord >> 31) & 0x01);
-        strcat(StringArray, ",");
+		strcat_s(StringArray, sizeof(StringArray), ",");
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) pendown);
-        strcat(StringArray, ")");
+		strcat_s(StringArray, sizeof(StringArray), ")");
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 70, 26, OPT_CENTER,
             StringArray);
 
         StringArray[0] = '\0';
-        strcat(StringArray, "Touch Direct Z1Z2 (");
+		strcat_s(StringArray, sizeof(StringArray), "Touch Direct Z1Z2 (");
         ReadWord = EVE_Hal_rd32(s_pHalContext, REG_TOUCH_DIRECT_Z1Z2);
         yvalue = (int16_t) (ReadWord & 0x03ff);
         xvalue = (int16_t) ((ReadWord >> 16) & 0x03ff);
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) xvalue);
-        strcat(StringArray, ",");
+		strcat_s(StringArray, sizeof(StringArray), ",");
         Gpu_Hal_Dec2Ascii(StringArray, (int32_t) yvalue);
-        strcat(StringArray, ")");
+		strcat_s(StringArray, sizeof(StringArray), ")");
 
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2), 85, 26, OPT_CENTER,
             StringArray);
 
         EVE_CoCmd_fgColor(s_pHalContext, 0x008000);
-        EVE_Cmd_wr32(s_pHalContext, TAG_MASK(1));
+		EVE_CoDl_tagMask(s_pHalContext, 1);
         tagoption = 0;
         if (12 == tagval)
         {
             tagoption = OPT_FLAT;
         }
 
-        EVE_Cmd_wr32(s_pHalContext, TAG(12));
+        EVE_CoDl_tag(s_pHalContext, 12);
         EVE_CoCmd_button(s_pHalContext, (int16_t) ((s_pHalContext->Width / 4) - (wbutton / 2)),
             (int16_t) ((s_pHalContext->Height * 2 / 4) - (hbutton / 2)), (int16_t) wbutton,
             (int16_t) hbutton, 26, (int16_t) tagoption, "Tag12");
-        EVE_Cmd_wr32(s_pHalContext, TAG(13));
+		EVE_CoDl_tag(s_pHalContext, 13);
         tagoption = 0;
         if (13 == tagval)
         {
@@ -1496,14 +1123,10 @@ void SAMAPP_Touch_touchInfoOther()
             (int16_t) ((s_pHalContext->Height * 3 / 4) - (hbutton / 2)), (int16_t) wbutton,
             (int16_t) hbutton, 26, (int16_t) tagoption, "Tag13");
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-
         /* Wait till coprocessor completes the operation */
-        EVE_Cmd_waitFlush(s_pHalContext);
+        Display_End(s_pHalContext);
         EVE_sleep(30);
     }
-#endif
 }
 
 /**
@@ -1571,9 +1194,6 @@ void SAMAPP_Touch_objectTrack()
         }
 
         /* Display a rotary dial, horizontal slider and vertical scroll */
-
-        EVE_Cmd_wr32(s_pHalContext, CMD_DLSTART);
-
         int32_t tmpval0;
         int32_t tmpval1;
         int32_t tmpval2;
@@ -1589,14 +1209,12 @@ void SAMAPP_Touch_objectTrack()
         sldval = tmpval1 & 0xff;
         scrlval = tmpval2 & 0xff;
 
-        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(angval, sldval, scrlval));
-        EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
+        Display_StartColor(s_pHalContext, (uint8_t[]) { angval, sldval, scrlval }, (uint8_t[]) { 255, 255, 255 });
 
         /* Draw dial with 3d effect */
         EVE_CoCmd_fgColor(s_pHalContext, 0x00ff00);
         EVE_CoCmd_bgColor(s_pHalContext, 0x800000);
-        EVE_Cmd_wr32(s_pHalContext, TAG(10));
+        EVE_CoDl_tag(s_pHalContext, 10);
         EVE_CoCmd_dial(s_pHalContext, (int16_t) (s_pHalContext->Width / 2),
             (int16_t) (s_pHalContext->Height / 2), (int16_t) (s_pHalContext->Width / 8), 0,
             angleval);
@@ -1604,19 +1222,19 @@ void SAMAPP_Touch_objectTrack()
         /* Draw slider with 3d effect */
         EVE_CoCmd_fgColor(s_pHalContext, 0x00a000);
         EVE_CoCmd_bgColor(s_pHalContext, 0x800000);
-        EVE_Cmd_wr32(s_pHalContext, TAG(11));
+        EVE_CoDl_tag(s_pHalContext, 11);
         EVE_CoCmd_slider(s_pHalContext, 40, (int16_t) (s_pHalContext->Height - 40),
             (int16_t) (s_pHalContext->Width - 80), 8, 0, slideval, 65535);
 
         /* Draw scroll with 3d effect */
         EVE_CoCmd_fgColor(s_pHalContext, 0x00a000);
         EVE_CoCmd_bgColor(s_pHalContext, 0x000080);
-        EVE_Cmd_wr32(s_pHalContext, TAG(12));
+        EVE_CoDl_tag(s_pHalContext, 12);
         EVE_CoCmd_scrollbar(s_pHalContext, (int16_t) (s_pHalContext->Width - 40), 40, 8,
             (int16_t) (s_pHalContext->Height - 80), 0, scrollval, (uint16_t) (65535 * 0.2), 65535);
 
         EVE_CoCmd_fgColor(s_pHalContext, TAG_MASK(0));
-        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
+		EVE_CoDl_colorRgb(s_pHalContext, 0xff, 0xff, 0xff);
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width / 2),
             (int16_t) ((s_pHalContext->Height / 2) + (s_pHalContext->Width / 8) + 8), 26,
             OPT_CENTER, "Rotary track");
@@ -1625,23 +1243,10 @@ void SAMAPP_Touch_objectTrack()
         EVE_CoCmd_text(s_pHalContext, (int16_t) (s_pHalContext->Width - 50), 20, 26, OPT_CENTER,
             "Vertical track");
 
-        EVE_Cmd_wr32(s_pHalContext, DISPLAY());
-        EVE_CoCmd_swap(s_pHalContext);
-
-        /* Wait till coprocessor completes the operation */
-        EVE_Cmd_waitFlush(s_pHalContext);
+        Display_End(s_pHalContext);
 
         EVE_sleep(10);
     }
-
-    /* Set the tracker for 3 bojects */
-
-    EVE_CoCmd_track(s_pHalContext, 240, 136, 0, 0, 10);
-    EVE_CoCmd_track(s_pHalContext, 40, 232, 0, 0, 11);
-    EVE_CoCmd_track(s_pHalContext, 400, 40, 0, 0, 12);
-
-    /* Wait till coprocessor completes the operation */
-    EVE_Cmd_waitFlush(s_pHalContext);
 }
 
 void SAMAPP_Touch() {
@@ -1651,8 +1256,7 @@ void SAMAPP_Touch() {
     SAMAPP_Touch_BouncingPoints();
     SAMAPP_Touch_MovingPoints();
     SAMAPP_Touch_multiTracker();
-    SAMAPP_Touch_touchInfoFT801FT811();
-    SAMAPP_Touch_touchInfoOther();
+    SAMAPP_Touch_touchInfo();
     SAMAPP_Touch_objectTrack();
 }
 

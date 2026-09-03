@@ -39,8 +39,7 @@ Esd_Calibrate
 Ft_QueueCmd                         
 Ft_QueueString                      
 Ft_FlushCmd                         
-
-Ft_Gpu_HorizontalScanoutFilter      
+  
 Ft_Gpu_CoCmd_FlashWriteExt          
 Ft_Gpu_CoCmd_FlashHelper_Erase      
 Ft_Gpu_CoCmd_FlashHelper_ClearCache 

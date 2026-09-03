@@ -32,9 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <!--# filter source list-->
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT88X.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_RP2040.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
@@ -116,9 +113,6 @@
     <ClCompile Include="..\..\..\..\common\application\Maths.c">
       <Filter>Common\application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\FlashHelper.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_IO.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
@@ -131,19 +125,10 @@
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoDl.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT81X.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT80X.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT81X.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMUC.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MULTI.c">
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_FlashHelper.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
   </ItemGroup>
@@ -275,9 +260,6 @@
     <ClInclude Include="..\..\..\..\common\application\Maths.h">
       <Filter>Common\application</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\FlashHelper.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
@@ -298,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\common\application\fatfs\source\ffconf.h">
       <Filter>Common\application\fatfs\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_FlashHelper.h">
+      <Filter>Common\eve_hal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

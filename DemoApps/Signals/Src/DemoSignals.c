@@ -62,9 +62,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoSignals();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
-
+		Gpu_Release(s_pHalContext);
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
 #if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1

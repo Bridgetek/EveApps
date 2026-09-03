@@ -34,6 +34,7 @@
 
 #include "FileIo.h"
 #include "FileTransfer.h"
+#include "EVE_FlashHelper.h"
 #include "Common.h"
 
  /// Alignment						    
@@ -52,7 +53,7 @@
 
 #if defined(BT815_ENABLE)
 #define FILE_BLOB             (EVE_FLASH_DIR "\\BT815-unified.blob")
-#elif defined(BT817_ENABLE)
+#elif defined(BT817_ENABLE) || defined(BT817A_ENABLE)
 #define FILE_BLOB             (EVE_FLASH_DIR "\\BT817-unified.blob")
 #else
 /// Use BT815 blob as default

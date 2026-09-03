@@ -50,11 +50,11 @@
             - Run (F5)
 
 4. CONFIGURATION INSTRUCTIONS
-    Host platform: Defined with ESD_TARGET_PLATFORM, such as:
+    Host platform: The host platform defines the system where the application runs, such as:
         - Window host: EVE_PLATFORM_FT4222, EVE_PLATFORM_MPSSE
         - FT9X host: MM900EV1A, MM900EV1B...
     
-    EVE platform: Defined with ESD_TARGET_GRAPHICS, such as:
+    EVE platform: EVE chip definition, such as:
         EVE_GRAPHICS_BT815, EVE_GRAPHICS_BT816, EVE_GRAPHICS_BT817, 
         EVE_GRAPHICS_BT818...
     

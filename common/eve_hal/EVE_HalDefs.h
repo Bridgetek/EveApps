@@ -83,6 +83,7 @@ typedef enum EVE_CHIPID_T
 	EVE_CHIPID_BT815 = EVE_BT815, /**< EVE_BT815 */
 	EVE_CHIPID_BT816 = EVE_BT816, /**< EVE_BT816 */
 	EVE_CHIPID_BT817 = EVE_BT817, /**< EVE_BT817 */
+	EVE_CHIPID_BT817A = EVE_BT817A, /**< EVE_BT817A */
 	EVE_CHIPID_BT818 = EVE_BT818, /**< EVE_BT818 */
 } EVE_CHIPID_T;
 
@@ -99,34 +100,6 @@ typedef bool (*EVE_Callback)(EVE_HalContext *phost);
 typedef int (*EVE_CoCmdHook)(EVE_HalContext *phost, uint32_t cmd, uint32_t state);
 /** Hook into coprocessor reset */
 typedef void (*EVE_ResetCallback)(EVE_HalContext *phost, bool fault);
-
-#if defined(EVE_MULTI_GRAPHICS_TARGET)
-typedef struct EVE_GpuDefs
-{
-	uint32_t RegId;
-	uint32_t RegCpuReset;
-	uint32_t RegJ1Int;
-	uint32_t RegCmdRead;
-	uint32_t RegTouchTransformA;
-	uint32_t RegCrc;
-	uint32_t RegTrim;
-	uint32_t RegTouchDirectXY;
-	uint32_t RegDatestamp;
-	uint32_t RegCmdBSpace;
-	uint32_t RegTracker;
-	uint32_t RamDl;
-	uint32_t RomFontTableAddress;
-	uint32_t RamGSize;
-	uint32_t LowFreqBound;
-	uint32_t BitmapAddrMask;
-	uint32_t ScissorSizeShift;
-} EVE_GpuDefs;
-
-extern EVE_GpuDefs EVE_GpuDefs_FT80X;
-extern EVE_GpuDefs EVE_GpuDefs_FT81X;
-extern EVE_GpuDefs EVE_GpuDefs_BT88X;
-extern EVE_GpuDefs EVE_GpuDefs_BT81X;
-#endif
 
 typedef enum EVE_HOST_T
 {
@@ -155,10 +128,6 @@ typedef struct EVE_HalParameters
 
 	/** Called anytime the code is waiting during CMD write. Return false to abort wait */
 	EVE_Callback CbCmdWait;
-
-#if defined(EVE_MULTI_PLATFORM_TARGET)
-	EVE_HOST_T Host;
-#endif
 
 #if defined(BT8XXEMU_PLATFORM)
 	void *EmulatorParameters; /**< BT8XXEMU_EmulatorParameters */
@@ -194,7 +163,7 @@ typedef struct EVE_HalParameters
 
 } EVE_HalParameters;
 
-#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 #define EVE_DL_STATE phost->DlState[phost->DlStateIndex]
 typedef struct EVE_HalDlState
 {
@@ -207,7 +176,7 @@ typedef struct EVE_HalDlState
 	int16_t LineWidth;
 	int16_t PointSize;
 #endif
-#if (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_SUPPORT_CHIPID < EVE_FT810)
 	int16_t VertexTranslateX;
 	int16_t VertexTranslateY;
 #endif
@@ -234,7 +203,7 @@ typedef struct EVE_HalContext
 	/** Pointer to user context */
 	void *UserContext;
 
-	/** Pointer to a support library context (e.g. ESD Framework context) */
+	/** Pointer to a support library context */
 	void *LibraryContext;
 
 	/** Called anytime the code is waiting during CMD write. Return false to abort wait */
@@ -248,15 +217,6 @@ typedef struct EVE_HalContext
 #endif
 
 	EVE_STATUS_T Status;
-
-#if defined(EVE_MULTI_PLATFORM_TARGET)
-	EVE_HOST_T Host;
-#endif
-#if defined(EVE_MULTI_GRAPHICS_TARGET)
-	EVE_CHIPID_T ChipId;
-	uint16_t Revision;
-	const EVE_GpuDefs *GpuDefs;
-#endif
 
 	uint8_t PCLK;
 
@@ -311,7 +271,7 @@ typedef struct EVE_HalContext
 	uint8_t SpiWrBuf[0xFFFF];
 	uint32_t SpiWrBufIndex;
 	uint32_t SpiRamGAddr; /**< Current RAM_G address of ongoing SPI write transaction */
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if !defined(EVE_SUPPORT_CMDB)
 	/** Coprocessor write pointer buffer complementary to write buffer */
 	bool SpiWpWriting;
 	bool SpiWpWritten;
@@ -326,7 +286,7 @@ typedef struct EVE_HalContext
 	uint8_t CmdBufferIndex;
 
 	uint16_t CmdSpace; /**< Free space, cached value */
-#if !defined(EVE_SUPPORT_CMDB) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if !defined(EVE_SUPPORT_CMDB)
 	uint16_t CmdWp; /**< Write pointer, only valid when CMDB is not used */
 #endif
 	///@}
@@ -347,7 +307,7 @@ typedef struct EVE_HalContext
 
 	/** @name Display list optimization and compatibility caches */
 	///@{
-#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if (EVE_DL_OPTIMIZE) || (EVE_DL_CACHE_SCISSOR) || (EVE_SUPPORT_CHIPID < EVE_FT810)
 	EVE_HalDlState DlState[EVE_DL_STATE_STACK_SIZE];
 	uint8_t DlStateIndex;
 #endif
@@ -390,36 +350,36 @@ typedef struct EVE_HalPlatform
 ///@{
 
 /** Initialize HAL platform */
-EVE_HAL_EXPORT EVE_HalPlatform *EVE_Hal_initialize();
+EVE_HalPlatform *EVE_Hal_initialize();
 
 /** Release HAL platform */
-EVE_HAL_EXPORT void EVE_Hal_release();
+void EVE_Hal_release();
 
 /** List the available devices */
-EVE_HAL_EXPORT size_t EVE_Hal_list();
+size_t EVE_Hal_list();
 
 /** Get info of the specified device. Devices of type EVE_HOST_UNKNOWN should be ignored */
-EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx);
+void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx);
 
 /** Check whether the context is the specified device */
-EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx);
+bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx);
 
 /** Get the default configuration parameters */
-EVE_HAL_EXPORT void EVE_Hal_defaults(EVE_HalParameters *parameters);
+void EVE_Hal_defaults(EVE_HalParameters *parameters);
 
 /** Get the default configuration parameters.
 Use `deviceIdx` to choose the connected device, or set to -1 to get the first available device. */
-EVE_HAL_EXPORT void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t deviceIdx);
+void EVE_Hal_defaultsEx(EVE_HalParameters *parameters, size_t deviceIdx);
 
 /** Opens a new HAL context using the specified parameters */
-EVE_HAL_EXPORT bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters *parameters);
+bool EVE_Hal_open(EVE_HalContext *phost, const EVE_HalParameters *parameters);
 
 /** Close a HAL context */
-EVE_HAL_EXPORT void EVE_Hal_close(EVE_HalContext *phost);
+void EVE_Hal_close(EVE_HalContext *phost);
 
 /** Idle. Call regularly to update frequently changing internal state.
 This is also called while waiting for cmd, in addition to the user idle callback */
-EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost);
+void EVE_Hal_idle(EVE_HalContext *phost);
 ///@}
 
 /*************
@@ -429,17 +389,17 @@ EVE_HAL_EXPORT void EVE_Hal_idle(EVE_HalContext *phost);
 /** @name TRANSFER */
 ///@{
 
-EVE_HAL_EXPORT void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t addr);
-EVE_HAL_EXPORT uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value);
-EVE_HAL_EXPORT uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value);
-EVE_HAL_EXPORT uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value);
-EVE_HAL_EXPORT void EVE_Hal_transferMem(EVE_HalContext *phost, uint8_t *result, const uint8_t *buffer, uint32_t size);
-EVE_HAL_EXPORT void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem_const uint8_t *buffer, uint32_t size);
-EVE_HAL_EXPORT uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t index, uint32_t size, uint32_t padMask);
-EVE_HAL_EXPORT void EVE_Hal_endTransfer(EVE_HalContext *phost);
+void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T rw, uint32_t addr);
+uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value);
+uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value);
+uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value);
+void EVE_Hal_transferMem(EVE_HalContext *phost, uint8_t *result, const uint8_t *buffer, uint32_t size);
+void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem_const uint8_t *buffer, uint32_t size);
+uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char *str, uint32_t index, uint32_t size, uint32_t padMask);
+void EVE_Hal_endTransfer(EVE_HalContext *phost);
 
 /** Flush any pending write transfers */
-EVE_HAL_EXPORT void EVE_Hal_flush(EVE_HalContext *phost);
+void EVE_Hal_flush(EVE_HalContext *phost);
 ///@}
 
 /*********************
@@ -449,17 +409,17 @@ EVE_HAL_EXPORT void EVE_Hal_flush(EVE_HalContext *phost);
 /** @name TRANSFER HELPERS */
 ///@{
 
-EVE_HAL_EXPORT uint8_t EVE_Hal_rd8(EVE_HalContext *phost, uint32_t addr);
-EVE_HAL_EXPORT uint16_t EVE_Hal_rd16(EVE_HalContext *phost, uint32_t addr);
-EVE_HAL_EXPORT uint32_t EVE_Hal_rd32(EVE_HalContext *phost, uint32_t addr);
-EVE_HAL_EXPORT void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32_t addr, uint32_t size);
+uint8_t EVE_Hal_rd8(EVE_HalContext *phost, uint32_t addr);
+uint16_t EVE_Hal_rd16(EVE_HalContext *phost, uint32_t addr);
+uint32_t EVE_Hal_rd32(EVE_HalContext *phost, uint32_t addr);
+void EVE_Hal_rdMem(EVE_HalContext *phost, uint8_t *result, uint32_t addr, uint32_t size);
 
-EVE_HAL_EXPORT void EVE_Hal_wr8(EVE_HalContext *phost, uint32_t addr, uint8_t v);
-EVE_HAL_EXPORT void EVE_Hal_wr16(EVE_HalContext *phost, uint32_t addr, uint16_t v);
-EVE_HAL_EXPORT void EVE_Hal_wr32(EVE_HalContext *phost, uint32_t addr, uint32_t v);
-EVE_HAL_EXPORT void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const uint8_t *buffer, uint32_t size);
-EVE_HAL_EXPORT void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_progmem_const uint8_t *buffer, uint32_t size);
-EVE_HAL_EXPORT void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const char *str, uint32_t index, uint32_t size, uint32_t padMask);
+void EVE_Hal_wr8(EVE_HalContext *phost, uint32_t addr, uint8_t v);
+void EVE_Hal_wr16(EVE_HalContext *phost, uint32_t addr, uint16_t v);
+void EVE_Hal_wr32(EVE_HalContext *phost, uint32_t addr, uint32_t v);
+void EVE_Hal_wrMem(EVE_HalContext *phost, uint32_t addr, const uint8_t *buffer, uint32_t size);
+void EVE_Hal_wrProgMem(EVE_HalContext *phost, uint32_t addr, eve_progmem_const uint8_t *buffer, uint32_t size);
+void EVE_Hal_wrString(EVE_HalContext *phost, uint32_t addr, const char *str, uint32_t index, uint32_t size, uint32_t padMask);
 ///@}
 
 /*********
@@ -494,15 +454,6 @@ static inline bool EVE_Hal_supportFlash(EVE_HalContext *phost)
 {
 #ifdef EVE_SUPPORT_FLASH
 	return EVE_CHIPID >= EVE_BT815;
-#else
-	return false;
-#endif
-}
-
-static inline bool EVE_Hal_supportCmdB(EVE_HalContext *phost)
-{
-#ifdef EVE_SUPPORT_CMDB
-	return EVE_CHIPID >= EVE_FT810;
 #else
 	return false;
 #endif
@@ -557,6 +508,7 @@ static inline EVE_CHIPID_T EVE_extendedChipId(int chipId)
 	case EVE_BT816 & 0xFFFF:
 		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x30000);
 	case EVE_BT817 & 0xFFFF:
+	case EVE_BT817A & 0xFFFF:
 	case EVE_BT818 & 0xFFFF:
 		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x40000);
 	default:
@@ -591,6 +543,7 @@ static inline int EVE_gen(EVE_CHIPID_T chipId)
 	case EVE_BT816:
 		return EVE3;
 	case EVE_BT817:
+	case EVE_BT817A:
 	case EVE_BT818:
 		return EVE4;
 	default:
@@ -607,23 +560,23 @@ static inline int EVE_gen(EVE_CHIPID_T chipId)
 /** @name UTILITY */
 ///@{
 
-EVE_HAL_EXPORT void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd);
+void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd);
 
 /** This API sends a 3byte command to the phost */
-EVE_HAL_EXPORT void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd);
+void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd);
 
 /** Toggle PD_N pin of FT800 board for a power cycle. Returns false on failure */
-EVE_HAL_EXPORT bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up);
+bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up);
 
 /** Switch EVE to different SPI channel mode */
-EVE_HAL_EXPORT void EVE_Hal_setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T numchnls, uint8_t numdummy);
+void EVE_Hal_setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T numchnls, uint8_t numdummy);
 
 /** Restore platform to previously configured EVE SPI channel mode */
-EVE_HAL_EXPORT void EVE_Hal_restoreSPI(EVE_HalContext *phost);
+void EVE_Hal_restoreSPI(EVE_HalContext *phost);
 
-EVE_HAL_EXPORT uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost);
+uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost);
 
-EVE_HAL_EXPORT int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t lowFreq);
+int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t lowFreq);
 ///@}
 
 /*********
@@ -633,30 +586,30 @@ EVE_HAL_EXPORT int32_t EVE_Hal_clockTrimming(EVE_HalContext *phost, uint32_t low
 /** @name HOST */
 ///@{
 
-EVE_HAL_EXPORT void EVE_Host_clockSelect(EVE_HalContext *phost, EVE_PLL_SOURCE_T pllsource);
-EVE_HAL_EXPORT void EVE_Host_pllFreqSelect(EVE_HalContext *phost, EVE_PLL_FREQ_T freq);
-EVE_HAL_EXPORT void EVE_Host_powerModeSwitch(EVE_HalContext *phost, EVE_POWER_MODE_T pwrmode);
-EVE_HAL_EXPORT void EVE_Host_coreReset(EVE_HalContext *phost);
+void EVE_Host_clockSelect(EVE_HalContext *phost, EVE_PLL_SOURCE_T pllsource);
+void EVE_Host_pllFreqSelect(EVE_HalContext *phost, EVE_PLL_FREQ_T freq);
+void EVE_Host_powerModeSwitch(EVE_HalContext *phost, EVE_POWER_MODE_T pwrmode);
+void EVE_Host_coreReset(EVE_HalContext *phost);
 
 /** This API can only be called when PLL is stopped(SLEEP mode).
 For compatibility, set frequency to the EVE_GPU_12MHZ option in the EVE_SETPLLSP1_T table. */
-EVE_HAL_EXPORT void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FREQ_T freq);
+void EVE_Host_selectSysClk(EVE_HalContext *phost, EVE_81X_PLL_FREQ_T freq);
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 /* Power down or up ROMs and ADCs.*/
-EVE_HAL_EXPORT void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t val);
+void EVE_Host_powerOffComponents(EVE_HalContext *phost, uint8_t val);
 
 /* This API sets the current strength of supported GPIO/IO group(s) */
-EVE_HAL_EXPORT void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPIO_DRIVE_STRENGTH_T strength, EVE_81X_GPIO_GROUP_T group);
+void EVE_Host_padDriveStrength(EVE_HalContext *phost, EVE_81X_GPIO_DRIVE_STRENGTH_T strength, EVE_81X_GPIO_GROUP_T group);
 
 /* This API will hold the system reset active,
 EVE_Host_resetRemoval() must be called to release the system reset. */
-EVE_HAL_EXPORT void EVE_Host_resetActive(EVE_HalContext *phost);
+void EVE_Host_resetActive(EVE_HalContext *phost);
 
 /* This API will release the system reset,
 and the system will exit reset and behave as after POR,
 settings done through SPI commands will not be affected. */
-EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost);
+void EVE_Host_resetRemoval(EVE_HalContext *phost);
 #endif
 ///@}
 
@@ -669,7 +622,7 @@ EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost);
 
 /** Display a fullscreen debug message using TEXT8X8.
 Uses the back of RAM_G. */
-EVE_HAL_EXPORT void EVE_Hal_displayMessage(EVE_HalContext *phost, const char *str, uint16_t size);
+void EVE_Hal_displayMessage(EVE_HalContext *phost, const char *str, uint16_t size);
 
 /** Display a fullscreen debug message using TEXT8X8.
 Uses the back of RAM_G. */
@@ -683,9 +636,9 @@ Uses the back of RAM_G. */
 /** @name MISC */
 ///@{
 
-EVE_HAL_EXPORT uint32_t EVE_millis();
-EVE_HAL_EXPORT uint64_t EVE_millis64();
-EVE_HAL_EXPORT void EVE_sleep(uint32_t ms);
+uint32_t EVE_millis();
+uint64_t EVE_millis64();
+void EVE_sleep(uint32_t ms);
 ///@}
 
 #endif /* #ifndef EVE_HAL_INCL__H */

@@ -65,8 +65,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoWashingMachine();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -334,7 +333,7 @@ void Logo_Intial_setup(SAMAPP_Logo_Img_t sptr[], uint8_t num)
 
 	for (z = 0; z < num; z++)
 	{
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, sptr[z].name, sptr[z].gram_address * 1024, INFLATE);
+		EVE_Util_loadInflateFile(s_pHalContext, sptr[z].gram_address * 1024, sptr [z].name);
 	}
 
 	EVE_CoCmd_dlStart(s_pHalContext);        // start

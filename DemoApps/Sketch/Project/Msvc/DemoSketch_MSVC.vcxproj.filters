@@ -2,15 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <!--# filter list-->
-    <Filter Include="Common\eve_flash">
-      <UniqueIdentifier>{2a4c4c37-64e7-4484-84bf-8c588d32fa5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\application\fatfs">
-      <UniqueIdentifier>{8c52bd50-1a33-41bb-b624-b5773473f1ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\application\fatfs\source">
-      <UniqueIdentifier>{1455e3b4-3f05-4f7c-a368-9d356c980342}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{5f9f3603-966d-4559-a3ff-41a5ebd6e93a}</UniqueIdentifier>
     </Filter>
@@ -18,28 +9,52 @@
       <UniqueIdentifier>{0795fa58-8447-4dc7-bc7a-5c2353a25619}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common">
-      <UniqueIdentifier>{07a1764e-8ac0-463e-86a8-5edc2b2bf934}</UniqueIdentifier>
+      <UniqueIdentifier>{dc1b2a16-78ab-4151-a887-bcc8c6241e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\eve_flash">
+      <UniqueIdentifier>{624d16a4-94ec-407f-b2be-98c746d4d973}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\application">
-      <UniqueIdentifier>{49f4fdc6-29f5-4315-8a12-15b6ad0ae4ab}</UniqueIdentifier>
+      <UniqueIdentifier>{8c1bbb28-1f2a-4af3-a27b-cb86259a5a37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\application\fatfs">
+      <UniqueIdentifier>{1a7a4723-56ab-4110-8416-aeec90239ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\application\fatfs\source">
+      <UniqueIdentifier>{988ebf91-0acb-48f0-b806-69fd556cdea4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\eve_hal">
-      <UniqueIdentifier>{55f6b58f-6aed-4277-a5dc-45590815e591}</UniqueIdentifier>
+      <UniqueIdentifier>{f1cc5622-5aad-4e94-8123-edca3a0657a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\eve_hal\Hdr">
-      <UniqueIdentifier>{4047e9cb-b4bc-48db-9d3f-49528ac12d01}</UniqueIdentifier>
+      <UniqueIdentifier>{362ded62-308a-4b21-944f-9282e9a0118e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <!--# filter source list-->
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT88X.c">
-      <Filter>Common\eve_hal</Filter>
+    <ClCompile Include="..\..\Src\DemoSketch.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_RP2040.c">
-      <Filter>Common\eve_hal</Filter>
+    <ClCompile Include="..\..\..\..\common\application\Common.c">
+      <Filter>Common\application</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_RP2040.c">
-      <Filter>Common\eve_hal</Filter>
+    <ClCompile Include="..\..\..\..\common\application\FileIo.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\FileTransfer.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Gesture.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Image.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Logo.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Maths.c">
+      <Filter>Common\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\common\application\fatfs\source\diskio_ft9xx.c">
       <Filter>Common\application\fatfs\source</Filter>
@@ -59,65 +74,8 @@
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Cmd.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Hal.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMU.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT9XX.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT4222.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MPSSE.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_WIN32.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_FT9XX.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_FATFS.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_STDIO.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Util.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd.c">
       <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.c">
-      <Filter>Common\eve_hal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\DemoSketch.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\FileIo.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\FileTransfer.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\Gesture.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\Common.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\Logo.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\Maths.c">
-      <Filter>Common\application</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\common\application\FlashHelper.c">
-      <Filter>Common\application</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_IO.c">
       <Filter>Common\eve_hal</Filter>
@@ -131,28 +89,103 @@
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoDl.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT81X.c">
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_FlashHelper.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT80X.c">
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Hal.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT81X.c">
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMU.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMUC.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MULTI.c">
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT9XX.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT4222.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_LINUX.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MPSSE.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_RP2040.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_WIN32.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_FT9XX.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_RP2040.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_FATFS.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_STDIO.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Util.c">
       <Filter>Common\eve_hal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <!--# filter header list-->
+    <ClInclude Include="..\..\Hdr\DemoSketch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Common.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\FileIo.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\FileTransfer.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Gesture.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Image.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Logo.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Maths.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\fatfs\source\diskio.h">
+      <Filter>Common\application\fatfs\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\fatfs\source\ff.h">
+      <Filter>Common\application\fatfs\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\fatfs\source\ffconf.h">
+      <Filter>Common\application\fatfs\source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Cmd.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoCmd.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Config.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_FlashHelper.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_GpuDefs.h">
@@ -162,6 +195,9 @@
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Hal.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalDefs.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalImpl.h">
@@ -179,6 +215,9 @@
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_LoadFile.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
@@ -191,7 +230,13 @@
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_FT4222.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_LINUX.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_MPSSE.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_RP2040.h">
       <Filter>Common\eve_hal</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_WIN32.h">
@@ -227,6 +272,9 @@
     <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu.h">
       <Filter>Common\eve_hal\Hdr</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_CoCmd.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_Hal.h">
       <Filter>Common\eve_hal\Hdr</Filter>
     </ClInclude>
@@ -245,75 +293,28 @@
     <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\WinTypes.h">
       <Filter>Common\eve_hal\Hdr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoCmd.h">
-      <Filter>Common\eve_hal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.h">
-      <Filter>Common\eve_hal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Hdr\DemoSketch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\Common.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\FileIo.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\FileTransfer.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\Gesture.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\Logo.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\Maths.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\FlashHelper.h">
-      <Filter>Common\application</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h">
-      <Filter>Common\eve_hal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalDefs.h">
-      <Filter>Common\eve_hal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_CoCmd.h">
-      <Filter>Common\eve_hal\Hdr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_RP2040.h">
-      <Filter>Common\eve_hal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\fatfs\source\diskio.h">
-      <Filter>Common\application\fatfs\source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\fatfs\source\ff.h">
-      <Filter>Common\application\fatfs\source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\common\application\fatfs\source\ffconf.h">
-      <Filter>Common\application\fatfs\source</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <!--# 2nd filter header list-->
     <None Include="..\..\..\..\common\eve_flash\BT815-unified.blob">
       <Filter>Common\eve_flash</Filter>
     </None>
     <None Include="..\..\..\..\common\eve_flash\BT817-unified.blob">
       <Filter>Common\eve_flash</Filter>
     </None>
+    <None Include="..\..\..\..\common\eve_hal\.clang-format">
+      <Filter>Common\eve_hal</Filter>
+    </None>
+    <None Include="..\..\..\..\common\eve_hal\.editorconfig">
+      <Filter>Common\eve_hal</Filter>
+    </None>
+    <None Include="..\..\..\..\common\eve_hal\.project">
+      <Filter>Common\eve_hal</Filter>
+    </None>
     <None Include="..\..\..\..\common\eve_hal\EVE_Hal.md">
       <Filter>Common\eve_hal</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <!--# 3rd filter header list-->
-    <Text Include="..\..\..\..\common\eve_hal\CMakeLists.txt">
-      <Filter>Common\eve_hal</Filter>
-    </Text>
     <Text Include="..\..\..\..\common\application\fatfs\CMakeLists.txt">
       <Filter>Common\application\fatfs</Filter>
     </Text>
@@ -331,6 +332,9 @@
     </Text>
     <Text Include="..\..\..\..\common\application\fatfs\source\CMakeLists.txt">
       <Filter>Common\application\fatfs\source</Filter>
+    </Text>
+    <Text Include="..\..\..\..\common\eve_hal\CMakeLists.txt">
+      <Filter>Common\eve_hal</Filter>
     </Text>
   </ItemGroup>
   <!--# filter end header list-->

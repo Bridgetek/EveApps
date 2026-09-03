@@ -73,7 +73,7 @@ void EVE_HalImpl_release()
  * @brief List the available devices
  *
  */
-EVE_HAL_EXPORT size_t EVE_Hal_list()
+size_t EVE_Hal_list()
 {
 	return 1;
 }
@@ -84,7 +84,7 @@ EVE_HAL_EXPORT size_t EVE_Hal_list()
  * @param deviceInfo
  * @param deviceIdx
  */
-EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
+void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
 {
 	memset(deviceInfo, 0, sizeof(EVE_DeviceInfo));
 	strcpy_s(deviceInfo->DisplayName, sizeof(deviceInfo->DisplayName), "FT9XX");
@@ -100,7 +100,7 @@ EVE_HAL_EXPORT void EVE_Hal_info(EVE_DeviceInfo *deviceInfo, size_t deviceIdx)
  * @return true True if ok
  * @return false False if error
  */
-EVE_HAL_EXPORT bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
+bool EVE_Hal_isDevice(EVE_HalContext *phost, size_t deviceIdx)
 {
 	return true;
 }
@@ -194,10 +194,6 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 	phost->PowerDownPin = parameters->PowerDownPin;
 	eve_printf_debug("EVE open PWD: %d, SS: %d\n",
 	    (unsigned int)phost->PowerDownPin, (unsigned int)s_SpimGpioSS[phost->SpiCsPin]);
-
-#ifdef EVE_MULTI_GRAPHICS_TARGET
-	phost->GpuDefs = &EVE_GpuDefs_FT80X;
-#endif
 
 	gpio_function(phost->PowerDownPin, pad_func_0);
 	gpio_dir(phost->PowerDownPin, pad_dir_output);
@@ -685,7 +681,6 @@ uint32_t EVE_Hal_currentFrequency(EVE_HalContext *phost)
 static void initSdHost()
 {
 #ifndef PANL_APPLET
-#if 1
 	/* All SD Host pins except CLK need a pull-up to work. The MM900EV*A module does not have external pull-up, so enable internal one */
 	gpio_function(GPIO_SD_CLK, pad_sd_clk);
 	gpio_pull(GPIO_SD_CLK, pad_pull_none);
@@ -706,9 +701,6 @@ static void initSdHost()
 
 	/* Start up the SD Card */
 	sys_enable(sys_device_sd_card);
-#else
-	sdhost_sys_init();
-#endif
 	sdhost_init();
 #endif
 }

@@ -63,8 +63,7 @@ int main(int argc, char* argv[])
 		WelcomeScreen(s_pHalContext, info);
 		DemoMainmenu();
 		EVE_Util_clearScreen(s_pHalContext);
-		EVE_Hal_close(s_pHalContext);
-		EVE_Hal_release();
+		Gpu_Release(s_pHalContext);
 
 		/* Init HW Hal for next loop*/
 		Gpu_Init(s_pHalContext);
@@ -90,7 +89,7 @@ int main(int argc, char* argv[])
 #else
 #warning "Should select a GPU chip in Platform.h"
 #endif
-#define SIZE_HOME_START_ICON (460) 
+#define SIZE_HOME_START_ICON HOME_START_ICON_SIZE
 #define SIZE_LOGO (6703)
 
 #define START_ICON_ADDR (RAM_G_END_ADDR  - SIZE_HOME_START_ICON*10) //*6 to Reserve space for inflate images.
@@ -98,8 +97,6 @@ int main(int argc, char* argv[])
 
 #define START_ICON_HANDLE 14
 #define LOGO_ICON_HANDLE 15
-
-extern PROGMEM prog_uchar8_t home_start_icon[SIZE_HOME_START_ICON];
 
 #define BACKGROUND_ANIMATION_1
 //#define BACKGROUND_ANIMATION_2
@@ -594,11 +591,11 @@ void Backgroundanimation_1() {
 			iteration_cts[i] = random(200);
 		}
 #if defined(FT81X_ENABLE) && defined(DISPLAY_RESOLUTION_WVGA)
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts1.raw", 820 * 1024L, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts2.raw", 822 * 1024L, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts3.raw", 832 * 1024, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts4.raw", 842 * 1024, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\hline_H.raw", 855 * 1024L, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, 820 * 1024L, TEST_DIR "\\nts1.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 822 * 1024L, TEST_DIR "\\nts2.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 832 * 1024L, TEST_DIR "\\nts3.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 842 * 1024L, TEST_DIR "\\nts4.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 855 * 1024L, TEST_DIR "\\hline_H.raw");
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(4));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(820 * 1024L));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L4, 10, 50));
@@ -623,11 +620,11 @@ void Backgroundanimation_1() {
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H(800 >> 9, 600 >> 9));
 #endif
 #else
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts1.raw", 220 * 1024L, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts2.raw", 222 * 1024L, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts3.raw", 232 * 1024, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\nts4.raw", 242 * 1024, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\hline.raw", 255 * 1024L, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, 220 * 1024L, TEST_DIR "\\nts1.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 222 * 1024L, TEST_DIR "\\nts2.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 232 * 1024L, TEST_DIR "\\nts3.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 242 * 1024L, TEST_DIR "\\nts4.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 255 * 1024L, TEST_DIR "\\hline.raw");
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(4));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(220 * 1024L));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L4, 10, 50));
@@ -983,9 +980,9 @@ void Backgroundanimation_4() {
 	if (!init) {
 		/*Load background raw data*/
 #if defined(FT81X_ENABLE) && defined(DISPLAY_RESOLUTION_WVGA)
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\hline_H.raw", 855 * 1024L, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, 855 * 1024L, TEST_DIR "\\hline_H.raw");
 #else
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\hline.raw", 255 * 1024L, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, 255 * 1024L, TEST_DIR "\\hline.raw");
 #endif
 
 		init = 1;
@@ -1185,9 +1182,9 @@ void Backgroundanimation_5() {
 			firebubbles.radius_b[i] = random(10);
 			firebubbles.angle[i] = random(360);
 		}
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\fire.raw", 0 * 1024L, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\floor.raw", 7 * 1024L, LOAD);
-		Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\grad.raw", 17 * 1024L, LOAD);
+		EVE_Util_loadRawFile(s_pHalContext, 0 * 1024L, TEST_DIR "\\fire.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 7 * 1024L, TEST_DIR "\\floor.raw");
+		EVE_Util_loadRawFile(s_pHalContext, 17 * 1024L, TEST_DIR "\\grad.raw");
 
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(5));
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(0));
