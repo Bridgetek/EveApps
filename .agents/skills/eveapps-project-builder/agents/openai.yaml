@@ -1,0 +1,14 @@
+interface:
+  display_name: EveApps Project Builder
+  short_description: Build reliable EVE projects from EveApps samples
+  default_prompt: Use $eveapps-project-builder to build a validated EVE project from
+    existing EveApps samples.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
