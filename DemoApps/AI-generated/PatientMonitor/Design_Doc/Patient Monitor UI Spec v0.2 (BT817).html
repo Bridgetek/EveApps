@@ -1,0 +1,463 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}</style><style>:root{color-scheme:light dark;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}}:root[data-theme="dark"]{color-scheme:dark;--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}:root[data-theme="light"]{color-scheme:light}@media print{:root,:root[data-theme="dark"]{color-scheme:light;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}}body{background:var(--md-bg);color:var(--md-text);max-width:720px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:10px;font:14px/1.55 -apple-system,BlinkMacSystemFont,'SF Pro','Segoe UI',sans-serif;overflow-wrap:break-word}body>:first-child{margin-top:0}h1,h2,h3,h4,h5,h6{margin:6px 0 0;line-height:1.25;font-weight:600;text-wrap:balance}h1{font-size:1.35em}h2{font-size:1.15em;color:var(--md-muted)}h3,h4,h5,h6{font-size:1em}p,ul,ol,blockquote,table,pre,hr{margin:0}strong{font-weight:600}a{color:var(--md-link);text-decoration:none}a:hover{text-decoration:underline}ul,ol{display:flex;flex-direction:column;gap:6px;padding-left:22px}ul{list-style:disc}ol{list-style:decimal}:is(li,td,th)>*+:is(p,ul,ol,blockquote){margin-top:6px}blockquote{display:flex;flex-direction:column;gap:10px;border-left:2px solid var(--md-rule);padding-left:10px;color:var(--md-muted)}:not(pre)>code{background:var(--md-fill);padding:1px 3px;border-radius:4px;font:.92em 'SF Mono',ui-monospace,Menlo,Consolas,monospace}a>code{background:none;color:inherit}pre{background:var(--md-fill);padding:10px 12px;border-radius:6px;overflow-x:auto;font:12px/1.5 'SF Mono',ui-monospace,Menlo,Consolas,monospace;margin-block:4px}pre code{background:none;padding:0;font:inherit}table{width:100%;border-collapse:separate;border-spacing:2px;font:inherit}th,td{padding:6px 8px;border-radius:3px;text-align:left;vertical-align:top}th{background:var(--md-fill-strong);font-weight:600}td{background:var(--md-fill)}:is(th,td) :not(pre)>code{background:transparent}hr{border:0;border-top:1px solid var(--md-rule-strong);margin-block:10px}img{max-width:100%;height:auto;border-radius:4px}</style>
+</head><body>
+<h1>Bedside Patient Monitor UI: Engineering Design Spec v0.2 (BT817)</h1>
+<p><strong>Display:</strong> 1280 × 800 LCD, landscape, always dark
+<strong>Graphics controller:</strong> Bridgetek BT817 (EVE4, capacitive touch)
+<strong>Supersedes:</strong> v0.1 (generic, browser-prototype-based)
+<strong>Sources:</strong> BT817/8 Datasheet v1.4 (BRT_000302), ME817EV datasheet. Items marked <strong>[verify]</strong> come from my general knowledge of the EVE programming model and must be checked against the <em>BT81X Series Programming Guide</em> before you build on them. Items marked <em>(proposed)</em> are design choices, not facts from the datasheet.</p>
+<blockquote>
+<p><strong>Regulatory note.</strong> The BT817/8 datasheet says the product is not intended for medical appliances or systems where a failure might reasonably be expected to cause personal injury, and puts use in safety applications at the user's risk. A bedside monitor is a medical device. Before committing to this part, get written confirmation from Bridgetek and your regulatory team of what use is acceptable, and add hardware and software safeguards (§9.4).</p>
+</blockquote>
+<hr>
+<h2>1. What changes from v0.1</h2>
+<p>The v0.1 spec assumed a general-purpose framebuffer (canvas drawing, 60 fps redraw of everything). The BT817 works differently, so several decisions change:</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>v0.1</th>
+<th>v0.2 (BT817)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rendering</td>
+<td>Draw every pixel each frame</td>
+<td>BT817 renders from a display list, line by line. <strong>No frame buffer.</strong></td>
+</tr>
+<tr>
+<td>Waveforms</td>
+<td>Canvas line segments</td>
+<td>Per-lane byte arrays in RAM_G drawn as bar-graph bitmaps (§5)</td>
+</tr>
+<tr>
+<td>Display list</td>
+<td>Unlimited</td>
+<td><strong>8 KB (2048 words) hard limit.</strong> Waveforms as vertex lists would overflow it</td>
+</tr>
+<tr>
+<td>Fonts</td>
+<td>&quot;Bundle locally&quot;</td>
+<td>Custom fonts converted and stored in <strong>external NOR flash</strong> (§6)</td>
+</tr>
+<tr>
+<td>Touch</td>
+<td>Generic</td>
+<td>BT817 capacitive engine with hardware <strong>tag</strong> lookup (§7)</td>
+</tr>
+<tr>
+<td>Alarm audio</td>
+<td>Unspecified</td>
+<td>Built-in synthesizer plus <code>AUDIO_L</code> output, host-sequenced (§8)</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>Unspecified</td>
+<td>MCU over QSPI, up to 30 MHz (§9)</td>
+</tr>
+</tbody>
+</table>
+<h2>2. Hardware architecture</h2>
+<pre><code>                 QSPI (≤30 MHz), INT_N, PD_N
+   Host MCU  ◄─────────────────────────────►  BT817
+   - acquisition                               - 1 MB RAM_G
+   - alarm logic                               - 8 KB display list
+   - UI state                                  - 4 KB command FIFO
+                                               │        │        │       │
+                                  RGB parallel ▼   QSPI ▼    I²C ▼   AUDIO_L ▼
+                                  (LVDS bridge  NOR flash  cap-touch  filter/amp
+                                   if panel is  (fonts,    panel      → speaker
+                                   LVDS)        images)    module
+                                               BACKLIGHT (PWM) → LED driver
+</code></pre>
+<p><strong>Confirmed from the datasheet</strong></p>
+<ul>
+<li>1 MB integrated graphics RAM (RAM_G), no external frame buffer needed.</li>
+<li>Host interface is SPI mode 0, single, dual or quad, up to 30 MHz. Quad mode is limited to half the system clock.</li>
+<li>Display output is parallel RGB, 8 bits per channel maximum, panels up to about 1 megapixel and 2048 pixels wide. 1280 × 800 is listed as supported.</li>
+<li>External QSPI NOR flash up to 2 Gbit for fonts and images, read directly by the chip.</li>
+<li>Capacitive touch with up to 5 touch points and 255 hardware touch tags. Supported controllers are FocalTech, Hycontek and Goodix (plus host-driven &quot;touch host mode&quot;).</li>
+<li>Sound synthesizer and playback, mono sigma-delta output, PWM backlight output.</li>
+</ul>
+<p><strong>Panel interface.</strong> The chip outputs parallel RGB. If your 1280 × 800 panel takes LVDS, add an RGB-to-LVDS bridge (datasheet Fig. 7-2 shows an LVDS application circuit; Bridgetek's ME817EV eval board drives 40-pin LVDS panels up to 1280 × 800). The eval board is a good bring-up platform, and it carries 16 MB of NOR flash.</p>
+<h2>3. Display timing</h2>
+<p>Take exact timings from the panel datasheet. The example below only shows the arithmetic.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Example</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active area</td>
+<td>1280 × 800</td>
+<td><code>REG_HSIZE</code>, <code>REG_VSIZE</code></td>
+</tr>
+<tr>
+<td>Totals</td>
+<td>1440 × 823 <em>(example)</em></td>
+<td><code>REG_HCYCLE</code>, <code>REG_VCYCLE</code></td>
+</tr>
+<tr>
+<td>Refresh</td>
+<td>60 Hz</td>
+<td></td>
+</tr>
+<tr>
+<td>Pixel clock</td>
+<td>about 71 MHz</td>
+<td>72 MHz is a listed EXTSYNC value (<code>REG_PCLK_FREQ</code> = 8C1h)</td>
+</tr>
+<tr>
+<td>System clock</td>
+<td>72 MHz</td>
+<td><code>CLKSEL</code> command, set in SLEEP only. Update <code>REG_FREQUENCY</code> to match</td>
+</tr>
+<tr>
+<td>Mode</td>
+<td>EXTSYNC (<code>REG_PCLK</code> = 1)</td>
+<td>PCLK from PLL2</td>
+</tr>
+</tbody>
+</table>
+<p>Constraints from the datasheet:</p>
+<ul>
+<li>PCLK must not exceed 96 MHz, and PLL2 must not exceed 228 MHz.</li>
+<li>When PCLK is equal to or above the system clock, set <code>REG_PCLK_2X</code> = 1. In 2X mode <code>REG_HSIZE</code>, <code>REG_HOFFSET</code>, <code>REG_HCYCLE</code>, <code>REG_HSYNC0</code> and <code>REG_HSYNC1</code> must be <strong>even</strong>, dithering is not applied, and HSF (non-square pixel filter) is unavailable.</li>
+<li>At about 71 MHz PCLK this design will need 2X mode unless you can run PCLK below the system clock.</li>
+</ul>
+<p><strong>Line budget.</strong> The graphics engine runs the display list once per scanline. One line lasts about 1440 / 72 MHz = <strong>20 µs</strong>, or roughly 1440 system clocks. That is the real limit on how much can be drawn on any one row. It is the main risk in this design (§10).</p>
+<p><code>REG_UNDERRUN</code> counts lines the engine failed to finish, and <code>INT_UNDERRUN</code> can interrupt the host. <code>REG_ADAPTIVE_FRAMERATE</code> (on by default) lowers the frame rate rather than corrupting the picture when a frame is too complex. Log both during validation. <strong>The shipping design should have zero underruns.</strong></p>
+<h2>4. Screen layout</h2>
+<p>Unchanged from v0.1. All values are pixels, origin top-left.</p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>x</th>
+<th>y</th>
+<th>W</th>
+<th>H</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status bar</td>
+<td>0</td>
+<td>0</td>
+<td>1280</td>
+<td>30</td>
+</tr>
+<tr>
+<td>Waveform lanes (6 × 88)</td>
+<td>0</td>
+<td>30</td>
+<td>870</td>
+<td>528</td>
+</tr>
+<tr>
+<td>Numerics column A / B</td>
+<td>870 / 1075</td>
+<td>30</td>
+<td>205 each</td>
+<td>528</td>
+</tr>
+<tr>
+<td>NBP / STIndx row</td>
+<td>0</td>
+<td>558</td>
+<td>870</td>
+<td>92</td>
+</tr>
+<tr>
+<td>ICP, imCO₂ cells</td>
+<td>870</td>
+<td>558</td>
+<td>410</td>
+<td>92</td>
+</tr>
+<tr>
+<td>Info panel (bundle, clock, trend)</td>
+<td>8</td>
+<td>686</td>
+<td>1264</td>
+<td>60</td>
+</tr>
+<tr>
+<td>Soft-key bar</td>
+<td>8</td>
+<td>752</td>
+<td>1264</td>
+<td>44</td>
+</tr>
+</tbody>
+</table>
+<p>Lanes: II (<code>#2be34a</code>), Pleth (<code>#1fd6ee</code>), ABP (<code>#ff3b3b</code>), PAP (<code>#f4e22c</code>), CVP (<code>#1fd6ee</code>), CO₂ (<code>#f2f2f2</code>). Other value colors: NBP <code>#ff7d8c</code>, ICP <code>#e34ce8</code>, warning keys <code>#ffd21f</code>, dim text <code>#8a949e</code>. Colors are fixed, never themed.</p>
+<p>Use 8 bits per channel (<code>REG_OUTBITS</code> = 0) unless the panel is 6-bit. For a 6-bit panel set <code>REG_OUTBITS</code> to 6/6/6, and use dithering only if not in 2X mode.</p>
+<h2>5. Waveform engine</h2>
+<h3>5.1 Why not vertex lists</h3>
+<p>A 870-pixel trace drawn as a line strip needs about 870 vertices, so six lanes are about 5200 words. The display list holds 2048 words in total. Line strips are therefore only usable for heavily decimated traces.</p>
+<h3>5.2 Recommended method: hi/lo bar-graph pair per lane <em>(proposed, [verify])</em></h3>
+<p>The engine supports a bar-graph bitmap format, where each byte in RAM_G is the height of one one-pixel-wide bar. Because sweep mode maps <strong>array index = screen x</strong>, this fits well:</p>
+<ol>
+<li>Per lane, keep two byte arrays of 870 entries in RAM_G: <code>hi[x]</code> and <code>lo[x]</code>.</li>
+<li>For each new sample at column x, with y measured from the lane baseline, write <code>hi[x] = max(y_prev, y)</code> and <code>lo[x] = min(y_prev, y)</code>. This joins consecutive samples, so steep edges such as the ECG R wave stay connected.</li>
+<li>Draw the <code>hi</code> bar graph in the trace color, then the <code>lo</code> bar graph in the background color over it. The visible band is the trace. Widen the band by 1 px for line thickness.</li>
+<li>For the erase gap, write <code>hi = lo = 0</code> for the next 22 columns.</li>
+<li>For the CO₂ lane, draw only the <code>hi</code> array in the trace color for the filled-column look.</li>
+</ol>
+<p>Because the lane background is black, the second pass can be opaque. If you add grid lines or a colored lane background later, use blend or stencil operations instead <strong>[verify]</strong>.</p>
+<p><strong>Fallback.</strong> If the two-pass look is not right on the panel, decimate to about 100 to 150 points per lane and use line strips. That is roughly 900 words for six lanes, but it will look coarser.</p>
+<h3>5.3 Data rates and update path</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sweep speed</td>
+<td>150 px/s (≈25 mm/s, confirm against panel pixel pitch)</td>
+</tr>
+<tr>
+<td>Samples per frame at 60 fps</td>
+<td>2.5 px per lane</td>
+</tr>
+<tr>
+<td>RAM_G used</td>
+<td>6 lanes × 2 arrays × 870 B ≈ <strong>10.4 KB</strong> (1% of 1 MB)</td>
+</tr>
+<tr>
+<td>SPI traffic</td>
+<td>Tens of bytes per frame</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Waveform arrays are updated by direct RAM_G writes. <strong>The display list is not rebuilt for waveform updates</strong>, and no <code>CMD_SWAP</code> is needed. The bitmaps are read on every scan.</li>
+<li>Write new columns in ascending x order, ahead of the erase gap, so a mid-scan update is not visible as a tear.</li>
+<li>Double-buffer on the host: build the column updates in MCU RAM, then send them in one SPI burst per frame.</li>
+</ul>
+<h3>5.4 Signal handling</h3>
+<ul>
+<li>Resample each source stream to 150 samples/s per lane on the MCU before writing.</li>
+<li>Scale to the lane's configured min/max, clamp to 0 to 255 (lane height is 88 px).</li>
+<li>On signal loss draw a flat baseline and show the technical alarm text in the lane.</li>
+</ul>
+<h2>6. Numerics, fonts and assets</h2>
+<h3>6.1 Fonts</h3>
+<p>ROM fonts are limited in size and style. The condensed digits in the design (62 px and 48 px) need <strong>custom fonts</strong> <em>(proposed)</em>:</p>
+<ul>
+<li>Convert with Bridgetek's asset tools (EVE Asset Builder or the current equivalent <strong>[verify]</strong>) and store the font glyphs in external NOR flash.</li>
+<li>Include only what is needed: digits 0 to 9, <code>/</code>, <code>(</code>, <code>)</code>, <code>-</code>, <code>.</code>, <code>:</code>, plus the label and unit characters. This keeps flash use small.</li>
+<li>Use <strong>tabular (fixed-width) digits</strong> so a changing value never shifts neighbouring elements.</li>
+<li>The chip reads glyph bitmaps straight from flash. This needs the flash to be in full-speed mode.</li>
+<li>This also resolves the v0.1 concern about loading fonts from the internet: the fonts ship in the flash image.</li>
+</ul>
+<h3>6.2 Flash requirements (from the datasheet)</h3>
+<ul>
+<li>Flash must support XIP operation. Supported vendors include Cypress, Macronix, Winbond, Micron, ISSI and GigaDevice.</li>
+<li>Program the 4 KB flash blob first, then call <code>CMD_FLASHFAST</code> to reach <code>FLASH_STATE_FULL</code>. Direct bitmap rendering from flash only works in that state.</li>
+<li>After changing flash contents, call <code>CMD_CLEARCACHE</code>.</li>
+<li>Read throughput is up to 288 Mbit/s at system-clock speed in 4-bit mode.</li>
+<li>Store a version and checksum for the asset image, and verify at boot (§9.4).</li>
+</ul>
+<h3>6.3 Compression</h3>
+<p>ASTC is supported for images and large fonts. For photos or gradients it saves space, but at 8 × 8 block sizes it can soften small text. Use uncompressed L1, L4 or L8 glyph formats for the small text and ASTC only for large artwork <em>(proposed)</em>.</p>
+<h3>6.4 Static versus dynamic content</h3>
+<table>
+<thead>
+<tr>
+<th>Content</th>
+<th>Method</th>
+<th>Rebuild</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lane tags, scales, units, key caps, dividers</td>
+<td>Draw as objects, or as pre-rendered flash bitmaps if the line budget is tight</td>
+<td>Only on profile change</td>
+</tr>
+<tr>
+<td>Sepsis bundle text (about 250 characters at 9.5 px)</td>
+<td><strong>Pre-rendered flash bitmap.</strong> Text at this density would consume too many display list words</td>
+<td>On profile change</td>
+</tr>
+<tr>
+<td>Numerics (about 25 fields)</td>
+<td>Custom-font text</td>
+<td>On value change, at most 1 Hz</td>
+</tr>
+<tr>
+<td>Clock</td>
+<td>Custom-font text</td>
+<td>Each minute</td>
+</tr>
+<tr>
+<td>Waveforms</td>
+<td>RAM_G arrays</td>
+<td>Every frame, no DL rebuild</td>
+</tr>
+</tbody>
+</table>
+<h3>6.5 Display list budget <em>(rough estimate, measure it)</em></h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Approx. words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6 lanes, two passes each</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Numerics, about 25 fields × 5 glyphs</td>
+<td>400 to 600</td>
+</tr>
+<tr>
+<td>Static labels and chrome</td>
+<td>300 to 500</td>
+</tr>
+<tr>
+<td>Soft keys, 14</td>
+<td>150</td>
+</tr>
+<tr>
+<td>Reserve for alarm state and overlays</td>
+<td>300</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>about 1300 to 1700 of 2048</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Read <code>REG_CMD_DL</code> after building the list to get the true size. If it approaches 1800 words, move more static chrome into a pre-rendered bitmap.</p>
+<h2>7. Touch and soft keys</h2>
+<ul>
+<li>Use the BT817 capacitive engine with a supported touch controller (FocalTech, Hycontek or Goodix) on the panel's I²C touch module. Set the I²C address in <code>REG_TOUCH_CONFIG</code> to match the controller.</li>
+<li>Run calibration once and store the transform (<code>REG_CTOUCH_TRANSFORM_A</code> to <code>F</code>) with the unit's settings.</li>
+<li>Assign each key a hardware <strong>tag</strong> (1 to 255). The chip reports the tag under the touch point in <code>REG_TOUCH_TAG</code>, so the host never does hit-testing.</li>
+<li>Use compatibility (single-touch) mode by default, since it is simpler and sufficient for keys. Use extended mode only if gestures are added later <em>(proposed)</em>.</li>
+<li>Key minimum size is 44 px high. Show a pressed state for at least 100 ms on tag press <em>(proposed)</em>.</li>
+<li>Keep the <strong>Silence</strong> key on a reliable path. Do not depend on a multi-step menu to reach it.</li>
+<li><code>INT_TAG</code> and <code>INT_TOUCH</code> can wake the host. Note that in extended mode the touch-down interrupt is not set, so use <code>INT_CONV_COMPLETE</code> instead.</li>
+</ul>
+<h2>8. Alarms and audio</h2>
+<p><strong>Visual</strong></p>
+<ul>
+<li>Flash the alarming numeric using <code>REG_MACRO_0</code> / <code>MACRO(0)</code> <strong>[verify]</strong>. The host toggles one register value at the flash rate, with no display list rebuild.</li>
+<li>Show alarm text in the status bar with priority-based color.</li>
+</ul>
+<p><strong>Audio</strong></p>
+<ul>
+<li>The synthesizer includes alarm, beeping, warble, short-pip sequences (1 to 16 pips) and pitched MIDI-note effects. It can also play back samples from RAM_G (8-bit PCM, µ-law or IMA-ADPCM).</li>
+<li>Output is a mono sigma-delta signal on <code>AUDIO_L</code>. It needs an external filter and amplifier (the ME817EV includes both for a 1/8 W speaker).</li>
+<li>The host sequences the tones with <code>REG_SOUND</code> and <code>REG_PLAY</code>, and <code>INT_SOUND</code> signals the end of an effect.</li>
+<li><strong>The synthesizer does not by itself make the design compliant with any alarm standard</strong> (for example IEC 60601-1-8). Verify the melodies, timing, and sound pressure levels by measurement, and consider a dedicated audio path for high-priority alarms.</li>
+</ul>
+<p><strong>Logic</strong> stays on the host MCU: limits, priorities, silence timers, and latching. The BT817 only displays and sounds what the host tells it.</p>
+<h2>9. Host firmware</h2>
+<h3>9.1 Boot sequence (from the datasheet)</h3>
+<ol>
+<li>Power up: the chip starts in SLEEP. Hold <code>PD_N</code> low at least 5 ms if using it as a reset.</li>
+<li>Send <code>CLKEXT</code> if using an external clock, then <code>ACTIVE</code>.</li>
+<li>Wait for boot (<strong>up to 300 ms</strong>). During boot read only <code>REG_ID</code> (expect <code>0x7C</code>) and <code>REG_CPURESET</code>.</li>
+<li>Set <code>CLKSEL</code> (in SLEEP only) if changing from the 60 MHz default, then update <code>REG_FREQUENCY</code>.</li>
+<li>Attach flash, run <code>CMD_FLASHFAST</code>, check <code>REG_FLASH_STATUS</code>.</li>
+<li>Program display registers (§3), then start with <code>DISP</code> low and <code>REG_PWM_DUTY</code> = 0.</li>
+<li>Load the first display list, wait for the first frame, then raise <code>DISP</code> and ramp up the backlight.</li>
+<li>Enable quad SPI (<code>REG_SPI_WIDTH</code>) once basic bring-up works. Note that host commands are only accepted in single-channel mode.</li>
+</ol>
+<h3>9.2 Frame loop</h3>
+<pre><code>every frame (60 Hz, paced by INT_SWAP or a timer)
+  1. read new samples, build hi/lo column updates
+  2. write columns to RAM_G           (~tens of bytes)
+  3. service touch tag, keys, alarms
+every 1 s or on change
+  4. rebuild display list (numerics, alarm state), CMD_SWAP
+</code></pre>
+<ul>
+<li>Command FIFO is 4 KB. Use <code>REG_CMDB_SPACE</code> to check free space, and do not overrun.</li>
+<li>Keep waveform writes independent of display list rebuilds so a slow numeric update never stalls the sweep.</li>
+</ul>
+<h3>9.3 Backlight</h3>
+<p><code>REG_PWM_HZ</code> (250 to 10000 Hz) and <code>REG_PWM_DUTY</code> (0 to 128). Start with about 2 kHz to avoid visible flicker on cameras <em>(proposed)</em>, and check what the panel's LED driver accepts.</p>
+<h3>9.4 Safety and integrity <em>(proposed, needs regulatory input)</em></h3>
+<ul>
+<li><strong>Frozen-display detection.</strong> Read <code>REG_FRAMES</code> (frame counter) periodically. If it stops, restart the graphics engine or raise a technical alarm.</li>
+<li><strong>Render checks.</strong> <code>REG_TAP_CRC</code> gives a CRC of the live video output, computed on each display list swap. Investigate whether it can be compared with known-good values for static screens.</li>
+<li><strong>Underrun monitor.</strong> Alarm on a rising <code>REG_UNDERRUN</code> in service builds.</li>
+<li><strong>Asset integrity.</strong> Verify the flash image version and checksum at boot.</li>
+<li><strong>Independent alarm path.</strong> Audible alarms for high-priority conditions should not depend solely on the display chip working.</li>
+<li><strong>Watchdog.</strong> Host MCU watchdog resets the BT817 via <code>PD_N</code>, and reboot must restore a valid screen within a defined time.</li>
+</ul>
+<h2>10. Validation spikes (do these first)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Spike</th>
+<th>Pass criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Six lanes with synthetic waveforms at 150 px/s, full-screen 60 Hz</td>
+<td>Zero <code>REG_UNDERRUN</code>; lines look connected and clean</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Full numerics and chrome display list</td>
+<td><code>REG_CMD_DL</code> below about 1800 words; zero underruns with spike 1 running</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Custom fonts from flash at 62/48/44/30 px</td>
+<td>Readable at 3 m, no clipping, correct tabular alignment</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Pixel clock: 2X mode at panel timings</td>
+<td>Stable picture, no edge noise (check <code>REG_CSPREAD</code>, drive strength via <code>PINDRIVE</code>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Touch: tag reliability with the chosen panel</td>
+<td>All 14 keys hit correctly at edges</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Alarm audio through the real amplifier and speaker</td>
+<td>Measured levels and patterns match requirements</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Power cycle and brownout</td>
+<td>Valid screen returns within the target time; no garbage frame</td>
+</tr>
+</tbody>
+</table>
+<p>If spike 1 or 2 fail, the fallback order is: (a) move static chrome into pre-rendered flash bitmaps, (b) drop the two-pass trace to a single-pass filled bar graph for the pressure lanes, (c) decimate to line strips, (d) reduce the resolution or refresh rate the design needs.</p>
+<h2>11. Open questions</h2>
+<ol>
+<li>Which 1280 × 800 panel (interface RGB or LVDS, touch module, pixel timing)? This fixes §3 and the bridge choice.</li>
+<li>Host MCU part, SPI mode, and clock.</li>
+<li>Flash size and vendor, and where the production flash image is programmed.</li>
+<li>Alarm standard, required sound levels, and whether a separate audio path is needed.</li>
+<li>Written position from Bridgetek on medical use (see the note at the top), and the regulatory pathway for the whole system.</li>
+<li>Which trend data is stored, and where (host RAM versus external memory)?</li>
+<li>Final sweep speed options and the panel's physical pixel pitch.</li>
+</ol>
+
+</body></html>

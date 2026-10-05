@@ -1,7 +1,7 @@
 
 # EveApps
 
-EveApps is a collection of applications that use Eve Series chips (FT80X, FT81X, BT815/6, BT817/8) for reference purposes. The collection includes 28 demo applications and 11 sample applications, all written in ANSI C code, and the complete source code is provided.
+EveApps is a collection of applications that use Eve Series chips (FT80X, FT81X, BT815/6, BT817/8) for reference purposes. The collection includes 30 demo applications and 11 sample applications, all written in ANSI C code, and the complete source code is provided.
 
 The demo applications are designed to simulate real-world projects and are moderately complex. The sample applications are intended for instructional purposes and are simpler to understand, focusing on individual display lists or commands.
 
@@ -52,6 +52,9 @@ It should be noted that certain applications are specifically developed for part
     │    ├───Unicode         | Unicode keyboard demo
     │    ├───UnicodeRuntime  | Unicode demo with runtime determined characters
     │    ├───WashingMachine  | Washing machine UI demo
+    │    ├───AI-generated    | Additional evaluation demos
+    │    │    ├───EV_HMI     | EV charging HMI demo
+    │    │    └───PatientMonitor | Patient-monitor UI demo
     │    
     ├───SampleApp
     │    ├───Animation       | Sample usage of animation 
@@ -68,6 +71,9 @@ It should be noted that certain applications are specifically developed for part
     │            
     ├───Tools/EveApps_Configure  | An .NET GUI tool to help user select hardware quicly
 ```
+
+See [AI-generated applications](DemoApps/AI-generated/README.md) for build
+instructions and configuration details for EV_HMI and PatientMonitor.
 
 Note:
 - For Eve registers and commands/instructions definition, user can find it at the file common/eve_hal/EVE_GpuDef.h and common/eve_hal/Eve_CoCmd.h.
@@ -205,6 +211,8 @@ $ cmake --build ./
 | DemoUnicode        | .           | .            | .      | .      |.                |.        |
 | DemoUnicodeRuntime | .           | .            | x      | x      |.                |.        |
 | DemoWashingMachine | .           | .            | .      | .      |.                |.        |
+| EV_HMI             | x           | x            | x      | x      |.                |.        |
+| PatientMonitor     | x           | x            | x      | x      |.                |.        |
 | SampleApp          | .           | .            | .      | .      |.                |.        |
 x = unsupport
 . = support
@@ -247,6 +255,8 @@ x = unsupport
 | DemoUnicode        |  x     | .     | x            |
 | DemoUnicodeRuntime |  x     | .     | x            |
 | DemoWashingMachine |  .     | .     | .            |
+| EV_HMI             |  x     | .     | x            |
+| PatientMonitor     |  x     | .     | x            |
 | SampleApp          |  .     | .     | .            | 
 x = unsupport
 . = support
@@ -289,6 +299,8 @@ x = unsupport
 | DemoUnicode        | .               |.                |.                |x                 |x              | 
 | DemoUnicodeRuntime | .               |.                |.                |x                 |x              | 
 | DemoWashingMachine | x               |.                |.                |x                 |x              | 
+| EV_HMI             | x               |x                |.                |x                 |x              |
+| PatientMonitor     | x               |x                |x                |x                 |.              |
 | SampleApp          | .               |.                |.                |x                 |x              | 
 x = unsupport
 . = support

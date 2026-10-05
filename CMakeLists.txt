@@ -111,6 +111,7 @@ set(LIST_GRAPHICS DEFAULT
                   EVE_GRAPHICS_VM800C
                   EVE_GRAPHICS_VM810C
                   EVE_GRAPHICS_VM816C
+                  EVE_GRAPHICS_IDM2040
                   EVE_GRAPHICS_ME817EV
                   EVE_GRAPHICS_FT800
                   EVE_GRAPHICS_FT801
@@ -328,8 +329,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 # Suppress GCC 14 strict pointer type errors globally (temporary)
 add_compile_options(
-    -Wno-incompatible-pointer-types   # function pointer signature mismatches
-    -Wno-implicit-function-declaration # missing #include (malloc, sd_init_card, etc.)
+    $<$<AND:$<COMPILE_LANGUAGE:C>,$<C_COMPILER_ID:GNU>>:-Wno-incompatible-pointer-types> # function pointer signature mismatches
+    $<$<AND:$<COMPILE_LANGUAGE:C>,$<C_COMPILER_ID:GNU>>:-Wno-implicit-function-declaration> # missing #include (malloc, sd_init_card, etc.)
 )
 
 # Most graphics boards have a default display and platform specified in the configuration header

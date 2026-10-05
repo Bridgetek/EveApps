@@ -1,0 +1,10 @@
+Name                               : Offset  : Size   
+
+BT817-unified.blob                 : 0       : 4096   
+EDF Block                          : 4096    : 148    
+NotoSansCJKjp-Medium_24_ASTC.xfont : 4288    : 5942   
+NotoSansCJKjp-Medium_24_ASTC.glyph : 10240   : 453120 
+NotoSansCJKjp-Medium_32_ASTC.xfont : 463360  : 5942   
+NotoSansCJKjp-Medium_32_ASTC.glyph : 469312  : 1268736
+NotoSansCJKjp-Medium_48_ASTC.xfont : 1738048 : 5942   
+NotoSansCJKjp-Medium_48_ASTC.glyph : 1744000 : 1812480

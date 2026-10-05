@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>EV 充电桩 HMI — 800×480 线框</title>
+<style>
+  :root{
+    --base:#101418; --surface:#1A2028; --line:#2C3540;
+    --text:#F2F4F6; --dim:#9AA4B0;
+    --blue:#3B8BEB; --green:#2FBF71; --amber:#F0B23C; --red:#E5483F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#e9ebee;color:#222;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Source Han Sans SC","Helvetica Neue",Arial,sans-serif;padding:32px 24px 64px}
+  h1{font-size:22px;font-weight:600;margin-bottom:6px}
+  .lead{color:#555;font-size:14px;margin-bottom:20px;max-width:800px}
+  .controls{display:flex;gap:18px;margin-bottom:28px;font-size:14px}
+  .controls label{display:flex;align-items:center;gap:6px;cursor:pointer}
+  .shot{margin-bottom:44px}
+  .shot h2{font-size:16px;font-weight:600;margin-bottom:4px}
+  .shot p{font-size:13px;color:#555;margin-bottom:10px;max-width:800px}
+  .screen{position:relative;width:800px;height:480px;background:var(--base);color:var(--text);overflow:hidden;font-family:inherit;border:1px solid #bbb}
+  .screen *{position:absolute}
+  .screen .n{font-variant-numeric:tabular-nums}
+  .topbar{left:0;top:0;width:800px;height:70px;background:var(--surface);border-bottom:1px solid var(--line)}
+  .topbar .id{left:30px;top:23px;font-size:24px;color:var(--dim)}
+  .topbar .dot{top:31px;width:12px;height:12px;border-radius:6px}
+  .topbar .title{left:300px;top:19px;width:200px;text-align:center;font-size:32px}
+  .topbar .right{right:30px;top:23px;font-size:24px;color:var(--dim)}
+  .caption{font-size:24px;color:var(--dim)}
+  .body{font-size:32px}
+  .title48{font-size:48px}
+  .num96{font-size:96px;line-height:1;font-weight:500;letter-spacing:-2px}
+  .card{background:var(--surface);border-radius:16px}
+  .btn{border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px}
+  .btn.primary{background:var(--blue);color:var(--text)}
+  .btn.danger{border:2px solid var(--red);color:var(--red)}
+  .btn.ghost{border:2px solid var(--line);color:var(--dim)}
+  .btn.redfill{background:var(--red);color:var(--text)}
+  /* touch overlay */
+  .overlay{display:none;position:absolute;inset:0;pointer-events:none}
+  body.show-touch .overlay{display:block}
+  .overlay .tt{border:2px dashed rgba(240,178,60,.9);background:rgba(240,178,60,.12)}
+  .overlay .tt::after{content:attr(data-tag);position:absolute;right:4px;top:2px;font-size:12px;color:var(--amber)}
+  .overlay .dead{border:2px dashed rgba(229,72,63,.6);left:20px;top:20px;width:760px;height:440px}
+  body.show-grid .screen{background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:10px 10px}
+  /* pulse */
+  @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+  .pulse{animation:pulse 1s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+  svg{display:block}
+</style>
+</head>
+<body>
+
+<h1>EV 充电桩 HMI · 800×480 线框</h1>
+<p class="lead">按设计规范 1:1 绘制。浏览器缩放设为 100% 时即为实际像素尺寸。勾选"触控区"可查看每个控件的命中区域与 TAG 编号，以及四边 20 px 死区。</p>
+<div class="controls">
+  <label><input type="checkbox" id="touch"> 显示触控区 / TAG</label>
+  <label><input type="checkbox" id="grid"> 显示 10 px 网格</label>
+</div>
+
+<!-- ============ 1 IDLE ============ -->
+<section class="shot">
+  <h2>1 · Idle 空闲</h2>
+  <p>无可点控件。插枪图标 3 s 一次轻微上下呼吸，表示设备在线。</p>
+  <div class="screen">
+    <div class="topbar">
+      <div class="id">A-07</div>
+      <div class="dot" style="left:110px;background:var(--blue)"></div>
+      <div class="dot" style="left:130px;background:var(--blue)"></div>
+      <div class="title">欢迎使用</div>
+      <div class="right n">▲▲▲ 14:32</div>
+    </div>
+    <svg style="left:340px;top:100px" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="var(--blue)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="30" y="20" width="60" height="70" rx="12"/><path d="M45 90v18M75 90v18M60 10v10M40 45h40M40 62h40"/>
+    </svg>
+    <div class="title48" style="left:0;top:240px;width:800px;text-align:center">请插入充电枪</div>
+    <div class="card" style="left:30px;top:320px;width:360px;height:120px">
+      <div class="caption" style="left:30px;top:22px">电价</div>
+      <div class="body n" style="left:30px;top:60px">1.20 元/kWh</div>
+    </div>
+    <div class="card" style="left:410px;top:320px;width:360px;height:120px">
+      <div class="caption" style="left:30px;top:22px">最大功率</div>
+      <div class="body n" style="left:30px;top:60px">120 kW</div>
+    </div>
+    <div class="caption" style="left:0;top:440px;width:800px;text-align:center">支持 微信 · 支付宝 · 充电卡</div>
+    <div class="overlay"><div class="dead"></div><div class="tt" data-tag="TAG1 长按" style="left:30px;top:10px;width:120px;height:50px"></div></div>
+  </div>
+</section>
+
+<!-- ============ 2 CONNECTED ============ -->
+<section class="shot">
+  <h2>2 · Connected 授权</h2>
+  <p>左半二维码带 20 px 白色静区；右半刷卡提示与倒计时。60 s 未授权自动回 Idle。</p>
+  <div class="screen">
+    <div class="topbar">
+      <div class="id">A-07</div>
+      <div class="dot" style="left:110px;background:var(--amber)"></div>
+      <div class="dot" style="left:130px;background:var(--blue)"></div>
+      <div class="title">扫码或刷卡</div>
+      <div class="right n">▲▲▲ 14:32</div>
+    </div>
+    <div style="left:400px;top:70px;width:1px;height:410px;background:var(--line)"></div>
+    <div style="left:70px;top:110px;width:260px;height:260px;background:#fff;border-radius:8px">
+      <svg style="left:20px;top:20px" width="220" height="220" viewBox="0 0 41 41" shape-rendering="crispEdges" fill="#000">
+        <path d="M0 0h7v7H0zM1 1v5h5V1zM2 2h3v3H2zM34 0h7v7h-7zM35 1v5h5V1zM36 2h3v3h-3zM0 34h7v7H0zM1 35v5h5v-5zM2 36h3v3H2z"/>
+        <path d="M9 0h1v1H9zM11 0h2v1h-2zM15 1h1v2h-1zM18 0h1v1h-1zM21 2h2v1h-2zM25 0h1v3h-1zM28 1h2v1h-2zM31 3h1v1h-1zM9 3h3v1H9zM13 4h1v1h-1zM17 3h2v1h-2zM20 5h1v1h-1zM23 4h2v1h-2zM27 3h1v2h-1zM30 5h2v1h-2zM8 6h1v1H8zM10 7h1v1h-1zM12 6h1v2h-1zM14 7h2v1h-2zM19 6h1v1h-1zM22 7h1v1h-1zM24 6h2v1h-2zM28 7h1v1h-1zM31 6h1v1h-1z"/>
+        <path d="M0 9h1v1H0zM2 10h1v2H2zM4 9h2v1H4zM6 11h1v1H6zM1 13h1v1H1zM3 14h2v1H3zM5 12h1v1H5zM0 16h2v1H0zM3 17h1v1H3zM5 16h1v2H5zM1 19h1v1H1zM2 21h2v1H2zM4 20h1v1H4zM6 19h1v2H6zM0 23h1v1H0zM2 24h1v1H2zM4 23h2v1H4zM1 26h2v1H1zM3 27h1v1H3zM5 26h1v1H5zM6 28h1v1H6zM0 30h1v1H0zM2 31h1v1H2zM4 30h2v1H4zM6 32h1v1H6z"/>
+        <path d="M9 9h2v1H9zM12 10h1v1h-1zM14 9h1v2h-1zM16 11h2v1h-2zM19 9h1v1h-1zM21 10h2v1h-2zM24 9h1v2h-1zM26 11h1v1h-1zM28 9h2v1h-2zM31 10h1v1h-1zM33 9h1v1h-1zM35 11h2v1h-2zM38 9h1v2h-1zM40 10h1v1h-1zM9 13h1v1H9zM11 12h2v1h-2zM13 14h1v1h-1zM15 12h1v1h-1zM17 13h2v1h-2zM20 12h1v2h-1zM22 14h1v1h-1zM24 13h2v1h-2zM27 12h1v1h-1zM29 13h1v2h-1zM31 12h2v1h-2zM34 14h1v1h-1zM36 13h1v1h-1zM38 12h2v1h-2zM40 14h1v1h-1zM9 16h1v2H9zM11 17h2v1h-2zM14 16h1v1h-1zM16 17h1v1h-1zM18 16h2v1h-2zM21 17h1v1h-1zM23 16h1v2h-1zM25 17h2v1h-2zM28 16h1v1h-1zM30 17h2v1h-2zM33 16h1v2h-1zM35 17h1v1h-1zM37 16h2v1h-2zM40 17h1v1h-1zM9 20h2v1H9zM12 19h1v1h-1zM14 20h1v1h-1zM16 19h1v2h-1zM18 20h2v1h-2zM21 19h1v1h-1zM23 20h2v1h-2zM26 19h1v2h-1zM28 20h1v1h-1zM30 19h2v1h-2zM33 20h1v1h-1zM35 19h1v2h-1zM37 20h2v1h-2zM40 19h1v1h-1zM9 23h1v1H9zM11 22h1v2h-1zM13 23h2v1h-2zM16 22h1v1h-1zM18 23h1v1h-1zM20 22h2v1h-2zM23 23h1v2h-1zM25 22h1v1h-1zM27 23h2v1h-2zM30 22h1v1h-1zM32 23h1v2h-1zM34 22h2v1h-2zM37 23h1v1h-1zM39 22h1v2h-1zM9 26h2v1H9zM12 25h1v2h-1zM14 26h1v1h-1zM16 25h2v1h-2zM19 26h1v1h-1zM21 25h1v2h-1zM23 26h2v1h-2zM26 25h1v1h-1zM28 26h1v1h-1zM30 25h2v1h-2zM33 26h1v1h-1zM35 25h1v2h-1zM37 26h2v1h-2zM40 25h1v1h-1zM9 29h1v1H9zM11 28h2v1h-2zM13 30h1v1h-1zM15 29h1v1h-1zM17 28h2v1h-2zM20 29h1v2h-1zM22 28h1v1h-1zM24 29h2v1h-2zM27 28h1v2h-1zM29 29h1v1h-1zM31 28h2v1h-2zM34 29h1v2h-1zM36 28h1v1h-1zM38 29h2v1h-2zM40 28h1v1h-1z"/>
+        <path d="M9 34h1v1H9zM11 33h2v1h-2zM13 35h1v1h-1zM15 34h2v1h-2zM18 33h1v2h-1zM20 34h1v1h-1zM22 33h2v1h-2zM25 35h1v1h-1zM27 34h1v1h-1zM29 33h2v1h-2zM32 34h1v2h-1zM34 33h1v1h-1zM36 34h2v1h-2zM39 33h1v1h-1zM9 37h2v1H9zM12 36h1v2h-1zM14 38h1v1h-1zM16 37h1v1h-1zM18 36h2v1h-2zM21 37h1v2h-1zM23 36h1v1h-1zM25 37h2v1h-2zM28 38h1v1h-1zM30 36h1v2h-1zM32 37h2v1h-2zM35 36h1v1h-1zM37 37h1v2h-1zM39 36h2v1h-2zM9 40h1v1H9zM11 39h2v1h-2zM14 40h1v1h-1zM16 39h1v1h-1zM18 40h2v1h-2zM21 39h1v1h-1zM23 40h1v1h-1zM25 39h2v1h-2zM28 40h1v1h-1zM30 39h1v1h-1zM32 40h2v1h-2zM35 39h1v1h-1zM37 40h1v1h-1zM39 39h2v1h-2z"/>
+      </svg>
+    </div>
+    <div class="caption" style="left:0;top:390px;width:400px;text-align:center">微信 / 支付宝 扫码</div>
+    <svg style="left:550px;top:120px" width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="var(--amber)" stroke-width="5" stroke-linecap="round">
+      <rect x="10" y="25" width="80" height="50" rx="8"/><path d="M10 40h80M22 60h20"/>
+    </svg>
+    <div class="body" style="left:400px;top:240px;width:400px;text-align:center">或在此处刷卡</div>
+    <svg style="left:560px;top:290px" width="80" height="80" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r="34" fill="none" stroke="var(--line)" stroke-width="6"/>
+      <circle cx="40" cy="40" r="34" fill="none" stroke="var(--amber)" stroke-width="6" stroke-dasharray="213.6" stroke-dashoffset="8" transform="rotate(-90 40 40)" stroke-linecap="round"/>
+      <text x="40" y="49" text-anchor="middle" font-size="26" fill="var(--text)" font-family="inherit">58</text>
+    </svg>
+    <div class="btn ghost" style="left:530px;top:390px;width:240px;height:70px">取消</div>
+    <div class="overlay"><div class="dead"></div><div class="tt" data-tag="TAG10" style="left:530px;top:390px;width:240px;height:70px"></div></div>
+  </div>
+</section>
+
+<!-- ============ 3 CHARGING ============ -->
+<section class="shot">
+  <h2>3 · Charging 充电中</h2>
+  <p>左栏数据，右栏状态与唯一动作。车辆图标 1 Hz 脉动。功率 1 s、费用 5 s 刷新，仅重绘数字区。</p>
+  <div class="screen">
+    <div class="topbar">
+      <div class="id">A-07</div>
+      <div class="dot" style="left:110px;background:var(--green)"></div>
+      <div class="dot" style="left:130px;background:var(--blue)"></div>
+      <div class="title">充电中</div>
+      <div class="right n">▲▲▲ 14:55</div>
+    </div>
+    <div class="num96 n" style="left:30px;top:90px">12.4<span style="position:static;font-size:32px;font-weight:400;letter-spacing:0;margin-left:12px;color:var(--dim)">kWh</span></div>
+    <div class="caption" style="left:30px;top:190px">已充电量</div>
+
+    <div style="left:30px;top:240px;width:150px;height:80px"><div class="caption" style="left:0;top:0">功率</div><div class="body n" style="left:0;top:36px">58 kW</div></div>
+    <div style="left:190px;top:240px;width:150px;height:80px"><div class="caption" style="left:0;top:0">时长</div><div class="body n" style="left:0;top:36px">0:23</div></div>
+    <div style="left:350px;top:240px;width:150px;height:80px"><div class="caption" style="left:0;top:0">费用</div><div class="body n" style="left:0;top:36px">¥14.88</div></div>
+
+    <div style="left:30px;top:350px;width:470px;height:24px;background:var(--line);border-radius:12px">
+      <div style="left:0;top:0;width:62%;height:24px;background:var(--green);border-radius:12px"></div>
+    </div>
+    <div class="caption n" style="left:30px;top:384px">电池 62%</div>
+
+    <svg class="pulse" style="left:580px;top:110px" width="140" height="140" viewBox="0 0 140 140" fill="none" stroke="var(--green)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 85l14-32a10 10 0 0 1 9-6h54a10 10 0 0 1 9 6l14 32v25H20z"/><circle cx="42" cy="110" r="10"/><circle cx="98" cy="110" r="10"/><path d="M70 30l-10 22h20l-10 22" stroke-width="5"/>
+    </svg>
+    <div class="btn danger" style="left:520px;top:360px;width:250px;height:100px">停止充电</div>
+    <div class="overlay"><div class="dead"></div><div class="tt" data-tag="TAG11 长按1.5s" style="left:520px;top:360px;width:250px;height:100px"></div></div>
+  </div>
+</section>
+
+<!-- ============ 3b CONFIRM ============ -->
+<section class="shot">
+  <h2>3b · 停止确认弹窗</h2>
+  <p>弹窗按钮与原"停止充电"按钮位置不重叠。出现后 300 ms 忽略触控。</p>
+  <div class="screen">
+    <div class="topbar">
+      <div class="id">A-07</div>
+      <div class="dot" style="left:110px;background:var(--green)"></div>
+      <div class="dot" style="left:130px;background:var(--blue)"></div>
+      <div class="title">充电中</div>
+      <div class="right n">▲▲▲ 14:55</div>
+    </div>
+    <div class="num96 n" style="left:30px;top:90px;opacity:.35">12.4</div>
+    <div class="btn danger" style="left:520px;top:360px;width:250px;height:100px;opacity:.35">停止充电</div>
+    <div style="left:0;top:0;width:800px;height:480px;background:rgba(0,0,0,.6)"></div>
+    <div style="left:150px;top:120px;width:500px;height:240px;background:var(--surface);border-radius:20px;border:1px solid var(--line)">
+      <div class="title48" style="left:0;top:30px;width:500px;text-align:center">确定停止充电？</div>
+      <div class="caption n" style="left:0;top:90px;width:500px;text-align:center">当前费用 ¥14.88 将结算</div>
+      <div class="btn ghost" style="left:40px;top:140px;width:200px;height:80px">取消</div>
+      <div class="btn redfill" style="left:260px;top:140px;width:200px;height:80px">停止</div>
+    </div>
+    <div class="overlay"><div class="dead"></div>
+      <div class="tt" data-tag="TAG12" style="left:190px;top:260px;width:200px;height:80px"></div>
+      <div class="tt" data-tag="TAG13" style="left:410px;top:260px;width:200px;height:80px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 SUMMARY ============ -->
+<section class="shot">
+  <h2>4 · Summary 结算</h2>
+  <p>顶部 amber 提示条在拔枪后消失；30 s 无操作自动回 Idle。</p>
+  <div class="screen">
+    <div class="topbar">
+      <div class="id">A-07</div>
+      <div class="dot" style="left:110px;background:var(--amber)"></div>
+      <div class="dot" style="left:130px;background:var(--blue)"></div>
+      <div class="title">充电完成</div>
+      <div class="right n">▲▲▲ 15:10</div>
+    </div>
+    <div style="left:0;top:70px;width:800px;height:40px;background:var(--amber);color:var(--base);font-size:24px;line-height:40px;text-align:center">请拔出充电枪</div>
+    <div class="card" style="left:100px;top:130px;width:600px;height:220px">
+      <div class="caption" style="left:40px;top:28px">充电量</div><div class="body n" style="right:40px;top:24px">21.6 kWh</div>
+      <div class="caption" style="left:40px;top:84px">时长</div><div class="body n" style="right:40px;top:80px">0:38</div>
+      <div style="left:40px;top:130px;width:520px;height:1px;background:var(--line)"></div>
+      <div class="caption" style="left:40px;top:150px">费用<span style="position:static;margin-left:16px;font-size:20px">1.20 元/kWh</span></div>
+      <div class="n" style="right:40px;top:138px;font-size:48px;font-weight:500">¥25.92</div>
+    </div>
+    <div class="btn primary" style="left:250px;top:380px;width:300px;height:90px">完成</div>
+    <div class="overlay"><div class="dead"></div><div class="tt" data-tag="TAG14" style="left:250px;top:380px;width:300px;height:90px"></div></div>
+  </div>
+</section>
+
+<!-- ============ 5 FAULT ============ -->
+<section class="shot">
+  <h2>5 · Fault 故障</h2>
+  <p>静态红边框，不闪烁。文案只写用户可执行的动作，错误码用于客服定位。</p>
+  <div class="screen" style="box-shadow:inset 0 0 0 8px var(--red)">
+    <div class="topbar" style="left:8px;top:8px;width:784px;height:62px">
+      <div class="id" style="top:19px">A-07</div>
+      <div class="dot" style="left:110px;top:27px;background:var(--red)"></div>
+      <div class="dot" style="left:130px;top:27px;background:var(--blue)"></div>
+      <div class="title" style="top:15px">充电中断</div>
+      <div class="right n" style="top:19px">▲▲▲ 14:41</div>
+    </div>
+    <svg style="left:350px;top:100px" width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M50 12L90 84H10z"/><path d="M50 40v22M50 72v2"/>
+    </svg>
+    <div class="title48" style="left:0;top:220px;width:800px;text-align:center">充电枪未锁定，请重新插入</div>
+    <div class="caption n" style="left:0;top:290px;width:800px;text-align:center">E-021</div>
+    <div class="btn primary" style="left:250px;top:330px;width:300px;height:100px">重试</div>
+    <div class="caption n" style="left:0;top:438px;width:800px;text-align:center">客服 400-000-0000</div>
+    <div class="overlay"><div class="dead"></div><div class="tt" data-tag="TAG15" style="left:250px;top:330px;width:300px;height:100px"></div></div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('touch').addEventListener('change',e=>document.body.classList.toggle('show-touch',e.target.checked));
+  document.getElementById('grid').addEventListener('change',e=>document.body.classList.toggle('show-grid',e.target.checked));
+</script>
+</body>
+</html>

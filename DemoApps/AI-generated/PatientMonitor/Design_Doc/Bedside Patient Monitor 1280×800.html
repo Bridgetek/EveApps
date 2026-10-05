@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bedside Patient Monitor – 1280×800</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Barlow:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#000; --panel:#0c0f12; --line:#2a3138; --text:#d8dde2; --dim:#8a949e;
+  --ecg:#2be34a; --spo2:#1fd6ee; --abp:#ff3b3b; --pap:#f4e22c; --cvp:#1fd6ee;
+  --co2:#f2f2f2; --nbp:#ff7d8c; --icp:#e34ce8; --warn:#ffd21f;
+  --num:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --ui:"Barlow","Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);overflow:hidden}
+body{display:flex;align-items:center;justify-content:center;font-family:var(--ui);color:var(--text);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#stage{width:1280px;height:800px;flex:none;position:relative;background:var(--bg);transform-origin:center center}
+
+/* status bar */
+.status{position:absolute;inset:0 0 auto 0;height:30px;display:flex;align-items:center;gap:0;
+  background:#e9edf0;color:#111;font-size:13px;font-weight:600;padding:0 10px}
+.status span{flex:1;text-align:center}.status span:first-child{flex:.6;text-align:left}
+.status .adm{flex:1.6}
+
+/* main grid */
+.main{position:absolute;top:30px;left:0;width:1280px;display:grid;
+  grid-template-columns:870px 205px 205px;grid-template-rows:repeat(6,88px) 92px}
+.lane{position:relative;border-bottom:1px solid #12171b;grid-column:1}
+.lane canvas{display:block;width:870px;height:88px}
+.lane .tag{position:absolute;left:6px;top:4px;font-size:13px;font-weight:600;line-height:1}
+.lane .scale{position:absolute;left:6px;bottom:4px;font-size:10px;color:var(--dim)}
+.lane .note{position:absolute;right:10px;top:4px;font-size:10px;color:var(--dim)}
+
+.n{position:relative;display:flex;align-items:center;padding:0 8px;font-family:var(--num);font-weight:500;white-space:nowrap;border-bottom:1px solid #12171b}
+.n small{font-family:var(--ui);font-size:11px;font-weight:600;line-height:1.15;margin-right:6px;align-self:flex-start;margin-top:8px}
+.n b{font-weight:500;line-height:1}
+.big b{font-size:62px}.mid b{font-size:46px}.sm b{font-size:30px}
+.c1{grid-column:2}.c2{grid-column:3}.wide{grid-column:2 / 4}
+.wide b{font-size:48px}.wide b + b{margin-left:20px}
+.green{color:var(--ecg)}.cyan{color:var(--spo2)}.red{color:var(--abp)}.yellow{color:var(--pap)}
+.white{color:var(--co2)}.pink{color:var(--nbp)}.mag{color:var(--icp)}
+
+.st{display:grid;grid-template-columns:repeat(2,auto);gap:0 14px;font-family:var(--num);font-size:12px;color:var(--ecg);line-height:1.15}
+.st i{font-style:normal;color:var(--dim);margin-right:4px}
+.alm{display:inline-block;width:14px;height:14px;border:1px solid var(--abp);color:var(--abp);font-size:9px;line-height:12px;text-align:center;
+  font-family:var(--ui);position:absolute;left:8px;top:10px}
+
+.nbp{grid-column:1;grid-row:7;display:flex;align-items:center;gap:26px;padding:0 10px;font-family:var(--num);border-top:1px solid #12171b}
+.nbp .lbl{font-family:var(--ui);font-size:11px;font-weight:600;color:var(--nbp);line-height:1.2}
+.nbp .lbl em{display:block;font-style:normal;color:var(--dim);font-weight:500}
+.nbp b{font-weight:500;font-size:44px;color:var(--nbp);line-height:1}
+.nbp .m{margin-left:-14px}
+.nbp .mini{font-size:11px;font-family:var(--ui);color:var(--dim);line-height:1.3;font-weight:500}
+.nbp .stx{color:var(--ecg)}.nbp .stx b{color:var(--ecg);font-size:44px}
+.icp{grid-column:2;grid-row:7}.imco2{grid-column:3;grid-row:7}
+
+/* bottom info */
+.bundle{position:absolute;left:8px;top:686px;width:1264px;height:60px;border:1px solid #cfd6dc;display:flex;font-size:9.5px;line-height:1.35}
+.bundle .txt{flex:0 0 390px;padding:4px 8px;border-right:1px solid var(--line)}
+.bundle .txt h4{font-size:9.5px;font-weight:600;margin-bottom:2px}
+.bundle .clock{flex:0 0 120px;display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:34px;font-weight:500;color:#fff;border-right:1px solid var(--line)}
+.bundle .trend{flex:1;position:relative}
+.bundle svg{width:100%;height:100%;display:block}
+
+/* soft keys */
+.keys{position:absolute;left:8px;top:752px;width:1264px;height:44px;display:flex;gap:4px;align-items:stretch;background:#15191d;padding:3px;border-radius:3px}
+.k{flex:1;background:#2b3238;border:0;border-radius:2px;color:#cfd6dc;font:500 11px/1.1 var(--ui);cursor:pointer}
+.k:hover{background:#3a434b}.k:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.k.sil{flex:0 0 74px;background:var(--warn);color:#000;font-weight:600}
+.k.off{flex:0 0 74px;background:var(--warn);color:#000;font-weight:600}
+.k.blue{flex:0 0 72px;background:#1b73d9;color:#fff;font-weight:600}
+.k.nav{flex:0 0 30px}
+.k.act{outline:2px solid #fff}
+.sp{flex:0 0 60px;background:#0d1114;border-radius:2px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="status">
+    <span>bed-04</span><span class="adm">No Patient Admitted</span><span>Adult</span>
+    <span id="date">6 May 2018 9:07</span><span>Profiles</span><span>SSC Sepsis</span>
+  </div>
+
+  <div class="main" id="main">
+    <!-- lanes are injected -->
+    <div class="n c1 big green" style="grid-row:1"><small>HR<br>bpm</small><b id="hr">60</b></div>
+    <div class="n c2" style="grid-row:1"><div class="st">
+      <span><i>ST-I</i>0.2</span><span><i>ST-V1</i>-0.4</span><span><i>ST-II</i>0.1</span><span><i>ST-V2</i>-0.3</span>
+      <span><i>ST-III</i>-0.1</span><span><i>ST-V3</i>-0.7</span><span><i>ST-aVR</i>-0.2</span><span><i>ST-V4</i>0.4</span>
+      <span><i>ST-aVL</i>0.3</span><span><i>ST-V5</i>0.5</span><span><i>ST-aVF</i>0.0</span><span><i>ST-V6</i>0.2</span></div></div>
+
+    <div class="n c1 big cyan" style="grid-row:2"><small>SpO₂<br>%</small><b id="spo2">95</b></div>
+    <div class="n c2 big cyan" style="grid-row:2"><span class="alm">✕</span><small style="margin-left:22px">Pulse</small><b id="pulse">60</b></div>
+
+    <div class="n wide red" style="grid-row:3"><small>ABP<br>mmHg</small><b id="abp">120/70</b><b id="abpm">(91)</b></div>
+    <div class="n wide yellow" style="grid-row:4"><small>PAP<br>mmHg</small><b id="pap">28/15</b><b id="papm">(21)</b></div>
+
+    <div class="n c1 mid cyan" style="grid-row:5"><small>CVP<br>mmHg</small><b id="cvp">(9)</b></div>
+    <div class="n c2 sm red" style="grid-row:5"><small>UAP<br>mmHg</small><b>120/70</b><b style="margin-left:8px;font-size:22px">(91)</b></div>
+
+    <div class="n c1 sm white" style="grid-row:6"><small>etCO₂<br>mmHg</small><b id="etco2">30</b></div>
+    <div class="n c2 sm white" style="grid-row:6"><small>awRR<br>rpm</small><b id="rr">30</b></div>
+
+    <div class="nbp">
+      <div class="lbl">NBP<em>Auto</em></div>
+      <b>120/80</b><b class="m">(90)</b>
+      <div class="mini">09:01<br>Pulse 68</div>
+      <div class="stx"><div class="mini">STIndx</div><b>1.7</b></div>
+    </div>
+    <div class="n icp mid mag"><small>ICP<br>mmHg</small><b>(9)</b></div>
+    <div class="n imco2 sm white"><small>imCO₂<br>mmHg</small><b>2</b></div>
+  </div>
+
+  <div class="bundle">
+    <div class="txt"><h4>Sepsis Management Bundle</h4>
+      Give low-dose steroids for septic shock per policy<br>
+      Drotrecogin alfa per policy<br>
+      Maintain glucose &lt;8.3 mmol/l (150 mg/dl)<br>
+      Maintain insp. plateau pressure &lt;30 cmH₂O</div>
+    <div class="clock" id="clock">18:51</div>
+    <div class="trend"><svg viewBox="0 0 300 58" preserveAspectRatio="none">
+      <text x="6" y="10" fill="#8a949e" font-size="7" font-family="Barlow">NBPm</text>
+      <text x="6" y="54" fill="#8a949e" font-size="7" font-family="Barlow">60</text>
+      <text x="130" y="10" fill="#8a949e" font-size="7" font-family="Barlow">CVPm</text>
+      <rect x="112" y="18" width="14" height="10" fill="#ff5c6c"/>
+      <rect x="128" y="30" width="112" height="14" fill="#0e6a73"/>
+      <rect x="240" y="26" width="16" height="18" fill="#1fd6ee"/>
+      <line x1="20" y1="34" x2="112" y2="34" stroke="#8a949e" stroke-width=".6"/>
+      <line x1="20" y1="22" x2="290" y2="22" stroke="#2a3138" stroke-width=".6"/>
+      <text x="170" y="55" fill="#8a949e" font-size="6" font-family="Barlow">−4hrs</text>
+      <text x="245" y="55" fill="#8a949e" font-size="6" font-family="Barlow">−2hrs</text></svg></div>
+  </div>
+
+  <div class="keys" role="toolbar" aria-label="Monitor controls">
+    <button class="k sil" id="silence">Silence</button>
+    <button class="k off" id="alarmsoff">Alarms off</button>
+    <button class="k nav">‹‹</button>
+    <button class="k">Start/Stop<br>NBP</button><button class="k">Stop All</button>
+    <button class="k">Repeat<br>Time</button><button class="k">Adjust<br>Size</button>
+    <button class="k">Zero</button><button class="k">Enter<br>Values</button>
+    <button class="k">Record</button><button class="k">Vitals<br>Trend</button>
+    <button class="k nav">››</button>
+    <button class="k blue">Main<br>Setup</button><button class="k blue">Main<br>Screen</button>
+  </div>
+</div>
+
+<script>
+/* Fit the 1280×800 stage to any window; on the real LCD scale is 1 */
+const stage=document.getElementById('stage');
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/800);stage.style.transform='scale('+s+')';
+  stage.style.margin=((800*s-800)/2)+'px '+((1280*s-1280)/2)+'px'}
+addEventListener('resize',fit);fit();
+
+/* Waveform generators: t = position in cardiac cycle (0..1), r = respiratory phase (0..1). Output 0..1 */
+const g=(t,c,w,a)=>a*Math.exp(-((t-c)*(t-c))/(2*w*w));
+const W={
+  ecg:t=>0.42+g(t,.14,.03,.08)-g(t,.27,.008,.1)+g(t,.3,.01,.55)-g(t,.335,.012,.14)+g(t,.56,.035,.12),
+  pleth:t=>0.15+g(t,.22,.07,.55)+g(t,.5,.08,.16),
+  abp:t=>0.1+g(t,.2,.07,.7)+g(t,.52,.09,.22)-g(t,.42,.012,.05),
+  pap:t=>0.35+g(t,.22,.08,.3)+g(t,.5,.1,.22)+.05*Math.sin(t*6.28),
+  cvp:(t,r)=>0.4+g(t,.12,.04,.14)+g(t,.32,.03,.08)+g(t,.58,.05,.16)+.05*Math.sin(r*6.28),
+  co2:(t,r)=>{const p=r%1; return p<.08?p/.08*.9: p<.55?.9+.03*(p-.08): p<.62?.93*(1-(p-.55)/.07):.02}
+};
+const lanes=[
+ {k:'ecg',   tag:'II',   col:'--ecg', note:'SV Rhythm', scale:'', h:1.0},
+ {k:'pleth', tag:'Pleth',col:'--spo2',note:'', scale:'', h:.9},
+ {k:'abp',   tag:'ABP',  col:'--abp', note:'', scale:'150\n 50', h:.9},
+ {k:'pap',   tag:'PAP',  col:'--pap', note:'', scale:'30\n 0', h:.9},
+ {k:'cvp',   tag:'CVP',  col:'--cvp', note:'', scale:'30\n 0', h:.8},
+ {k:'co2',   tag:'CO₂',  col:'--co2', note:'', scale:'60', h:.9, fill:true}
+];
+const main=document.getElementById('main'),cs=getComputedStyle(document.documentElement);
+lanes.forEach((l,i)=>{
+  const d=document.createElement('div');d.className='lane';d.style.gridRow=i+1;
+  d.innerHTML='<canvas width="870" height="88"></canvas><div class="tag" style="color:var('+l.col+')">'+l.tag+'</div>'+
+    (l.note?'<div class="note">'+l.note+'</div>':'')+'<div class="scale">'+l.scale.replace('\n',' · ')+'</div>';
+  main.insertBefore(d,main.children[i]);
+  l.ctx=d.querySelector('canvas').getContext('2d');l.x=0;l.py=null;
+  l.color=cs.getPropertyValue(l.col).trim();
+});
+
+let hr=60,rr=30,tBeat=0,tResp=0,last=performance.now();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const PX=150; /* sweep speed px/s (≈ 25 mm/s) */
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  const px=Math.max(1,Math.round(PX*dt));
+  for(let s=0;s<px;s++){
+    tBeat=(tBeat+ (hr/60)/PX)%1; tResp=(tResp+(rr/60)/PX/1)%1;
+    lanes.forEach(l=>{
+      const c=l.ctx,H=88,pad=12;
+      let v=W[l.k](tBeat,tResp);
+      const y=H-pad-(v*l.h)*(H-pad*2);
+      c.clearRect(l.x+1,0,22,H);
+      c.strokeStyle=l.color;c.lineWidth=1.6;c.lineJoin='round';
+      if(l.fill){c.fillStyle=l.color;
+        c.fillRect(l.x,y,1.2,H-4-y); }
+      else{c.beginPath();c.moveTo(l.x-1,l.py===null?y:l.py);c.lineTo(l.x,y);c.stroke();}
+      l.py=y;l.x++;
+      if(l.x>=870){l.x=0;l.py=null}
+    });
+  }
+  if(!reduce||true)requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* Slowly drifting numerics */
+const $=id=>document.getElementById(id),j=(b,r)=>Math.round(b+(Math.random()*2-1)*r);
+setInterval(()=>{
+  hr=j(60,1);$('hr').textContent=hr;$('pulse').textContent=hr;
+  $('spo2').textContent=j(95,1);
+  const s=j(120,2),d=j(70,1);$('abp').textContent=s+'/'+d;$('abpm').textContent='('+Math.round((s+2*d)/3)+')';
+  const ps=j(28,1),pd=j(15,1);$('pap').textContent=ps+'/'+pd;$('papm').textContent='('+Math.round((ps+2*pd)/3)+')';
+  $('cvp').textContent='('+j(9,1)+')';$('etco2').textContent=j(30,1);
+},2000);
+
+/* Clock */
+function tick(){const n=new Date(),p=x=>String(x).padStart(2,'0');
+  $('clock').textContent=p(n.getHours())+':'+p(n.getMinutes());
+  $('date').textContent=n.getDate()+' '+n.toLocaleString('en',{month:'short'})+' '+n.getFullYear()+' '+n.getHours()+':'+p(n.getMinutes())}
+tick();setInterval(tick,10000);
+
+/* Alarm keys */
+$('silence').onclick=e=>e.currentTarget.classList.toggle('act');
+$('alarmsoff').onclick=e=>e.currentTarget.classList.toggle('act');
+</script>
+</body>
+</html>
