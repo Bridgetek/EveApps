@@ -795,6 +795,7 @@ int main(int argc, char *argv[])
 #endif
     s_ui.entered = EVE_millis();
     s_ui.last_activity = s_ui.entered;
+    /* Continuous list rebuild; see docs/best-practices/display-list-update-strategies.md. */
     while (TRUE) {
         s_ui.now = EVE_millis();
         update();

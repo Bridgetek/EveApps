@@ -22,6 +22,11 @@ measurements, a status area, and 14 touch-enabled soft keys.
 - Build target: `DemoApp_PatientMonitor`
 - Design documents: `DemoApps/AI-generated/PatientMonitor/Design_Doc`
 
+The UI rebuilds its display list on touch or numeric changes while waveform
+bitmap data changes in RAM_G. See
+[Display-list update strategies](../../../docs/best-practices/display-list-update-strategies.md)
+when using this application as a starting point.
+
 ## Hardware configuration
 
 The supplied configuration uses:
@@ -146,4 +151,3 @@ device connector. Check Windows Device Manager after restart.
 - The host interface uses single SPI, not QSPI.
 - Validate boot, display timing, touch accuracy, sustained rendering, console
   output, and power-cycle behavior on the final hardware before integration.
-

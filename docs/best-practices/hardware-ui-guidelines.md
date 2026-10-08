@@ -28,6 +28,12 @@ Use these checks for interactive EVE pages, especially when touch tags, localize
 - Rebind required bitmap, font, palette, scissor, blend, and color state in each independently generated display list; do not rely on state from a previous frame.
 - Keep firmware resource definitions, converted assets, flash layout/map, and the programmed flash image versioned as one compatible set.
 
+## Redraw scheduling
+
+- For a substantial HMI project, state why the host rebuilds the display list continuously, only when needed, or alongside live RAM_G updates. See [display-list update strategies](display-list-update-strategies.md).
+- In a change-triggered loop, mark the list dirty for every change that requires new display-list commands. A visible RAM_G bitmap update may use the retained list without setting `dirty`.
+- Treat reduced host work and FIFO traffic as possible benefits of fewer rebuilds. A retained list can still read external flash on every scanout frame; measure underrun and live-buffer tearing on target hardware.
+
 ## Layout, localization, and data
 
 - Align icons and labels by their visual centers while accounting for bitmap top-left coordinates and centered-text anchors.

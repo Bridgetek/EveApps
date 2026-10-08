@@ -21,6 +21,7 @@ Read the bundled references as needed:
 - Before porting EveApps to an MCU that has no existing host implementation, read `docs/development/porting-other-mcus.md`. Use `common/eve_hal/EVE_HalImpl_RP2040.c` as the embedded reference, but verify the new MCU's SPI pin multiplexing, SDK, timer, and GPIO behavior from its hardware documentation.
 - Before porting EveApps to an MCU that has no existing host implementation, read `docs/development/porting-other-mcus.md`. Use `common/eve_hal/EVE_HalImpl_RP2040.c` as the embedded reference, but verify the new MCU's SPI pin multiplexing, SDK, timer, and GPIO behavior from its hardware documentation.
 - Read `docs/best-practices/hardware-ui-guidelines.md` when implementing or diagnosing touch controls, localized layouts, external-flash graphics, RAM_G caches, or hardware-only display corruption.
+- For a substantial HMI project, read `docs/best-practices/display-list-update-strategies.md` and state whether the host rebuilds continuously, on changes, or uses live RAM_G content with either approach. Explain the selected redraw triggers and buffer update ownership; small instructional samples need only a brief comment.
 - Read `references/sample-selection.md` before selecting or combining examples.
 - Read `references/compatibility-checks.md` whenever the task changes or depends on an EVE IC, host, SPI mode, display, touch controller, storage medium, or toolchain.
 - Read `references/known-errors.md` before implementation review and when diagnosing a failure.
@@ -104,6 +105,8 @@ Perform every applicable layer:
 4. **Simulation**: run the supported emulator or simulator when it represents the selected features.
 5. **Hardware**: provide or execute a concise smoke test covering boot, display, touch, resources, and the new feature. Clearly distinguish performed tests from instructions for the user.
 6. **Regression**: ensure the reused baseline behavior and shared libraries were not unintentionally changed.
+
+For a new application targeting RP2040, use the emulator as an early gate when it can represent the application behavior. Build the emulator target, run a bounded startup/rendering smoke test, and run deterministic self-tests for applicable interactions and resource invariants. Resolve failures before adding RP2040-specific code and building the exact RP2040 target. Keep platform-dependent setup behind the existing HAL boundary. If a feature cannot be represented in the emulator, record that limitation and verify it on the target hardware. Follow `docs/development/adding-an-app.md` for the project-level test record and example checks.
 
 Never claim hardware validation unless it was actually performed on the named hardware.
 

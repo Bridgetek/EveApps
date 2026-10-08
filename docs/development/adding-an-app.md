@@ -61,7 +61,7 @@ Document:
 - Generated resource files
 - Resource licensing requirements
 
-For interactive hardware pages, also follow `docs/best-practices/hardware-ui-guidelines.md`. Document the complete RAM_G interval map, including metadata, temporary buffers, cached display lists, copied glyphs, media FIFO space, font caches, and library-reserved scratch areas.
+For interactive hardware pages, also follow `docs/best-practices/hardware-ui-guidelines.md` and choose a host redraw rule using `docs/best-practices/display-list-update-strategies.md`. Document the complete RAM_G interval map, including metadata, temporary buffers, cached display lists, copied glyphs, media FIFO space, font caches, and library-reserved scratch areas.
 
 ## 7. Update documentation
 
@@ -75,10 +75,10 @@ Update:
 
 ## 8. Validate
 
-- Configure the intended target
-- Build the exact application
-- Run the emulator when supported
-- Test on the intended hardware
+- For a new RP2040 application, establish the intended hardware configuration first. Keep emulator test hooks and platform-specific initialization behind the existing application/HAL boundary.
+- When the emulator represents the application behavior, configure and build its exact application target. Run a bounded smoke test for startup and sustained frame progress, then deterministic self-tests for applicable touch, state, and resource behavior. Fix failures before adding RP2040-specific implementation.
+- Record emulator configuration, build and test commands, exit status, and any generated frame or diagnostics. PatientMonitor provides an example in `DemoApps/AI-generated/PatientMonitor/README.md` (`--smoke` and `--self-test`). Document features the emulator cannot represent and define their hardware tests.
+- Configure and build the exact intended hardware target after the emulator gate passes, then test on that hardware.
 - Verify display, touch and resources
 - Exercise every page, modal, conditional layout, and supported language
 - On hardware, check touch calibration and any available underrun or scanout diagnostics
@@ -92,6 +92,7 @@ Update:
 - [ ] No bitmap/font handle conflict
 - [ ] Every control's complete hit area has the intended nonzero touch tag
 - [ ] Font subsets include runtime text, whitespace, units, and fallback characters
+- [ ] Emulator build, smoke test, and applicable self-tests passed before RP2040-specific work, or the emulator gap is documented
 - [ ] Emulator results and hardware touch/scanout results are distinguished
 - [ ] Hardware dependencies are documented
 - [ ] Application is registered in CMake

@@ -235,6 +235,7 @@ int main(void)
                 table+(s_fontIds[i]-16)*GPU_FONT_TABLE_SIZE,GPU_FONT_TABLE_SIZE);
     }
     printf("PatientMonitor: RAM_G wave arrays initialized (%lu bytes)\n", (unsigned long)PM_WAVE_BYTES);
+    /* Dirty list rebuild with live RAM_G waves; see docs/best-practices/display-list-update-strategies.md. */
     while(PatientMonitor_PlatformPump()) {
         now=EVE_millis();
         PM_WaveUpdate(s_pHalContext,now);
