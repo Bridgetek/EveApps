@@ -285,7 +285,7 @@ static int emulatorGraphics(BT8XXEMU_Emulator *sender, void *context, int output
         fflush(stderr);
         firstFrame = false;
     }
-    if (frameNumber == 120U)
+    if (frameNumber == 60U)
         saveDiagnosticFrame(buffer, width, height);
     PostMessage(window->Window, PM_FRAME_MESSAGE, 0, 0);
     return 1;

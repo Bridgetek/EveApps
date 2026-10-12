@@ -67,7 +67,7 @@ void PM_WaveInit(EVE_HalContext *host, uint32_t now)
         memset(s_columns[lane][0], 255, 22);
         memset(s_columns[lane][1], 255, 22);
     }
-    EVE_Hal_wrMem(host, RAM_G, (const uint8_t *)s_columns, sizeof(s_columns));
+    EVE_Hal_wrMem(host, PM_WAVE_BASE, (const uint8_t *)s_columns, sizeof(s_columns));
     s_cursor = 0;
     s_sample = PM_WAVE_WIDTH;
     s_lastMs = now;
@@ -104,7 +104,7 @@ void PM_WaveUpdate(EVE_HalContext *host, uint32_t now)
     for (lane = 0; lane < 6; ++lane)
         for (pass = 0; pass < 2; ++pass)
         {
-            uint32_t base = (lane*2UL+pass)*PM_WAVE_STRIDE;
+            uint32_t base = PM_WAVE_BASE + (lane*2UL+pass)*PM_WAVE_STRIDE;
             EVE_Hal_wrMem(host, base+start, &s_columns[lane][pass][start], first);
             if (count > first)
                 EVE_Hal_wrMem(host, base, s_columns[lane][pass], count-first);
@@ -121,7 +121,7 @@ void PM_WaveDraw(EVE_HalContext *host, uint8_t lane, int16_t y, uint32_t rgb)
     for (pass = 0; pass < (lane == 5 ? 1 : 2); ++pass)
     {
         EVE_CoDl_bitmapHandle(host, lane*2+pass);
-        EVE_CoDl_bitmapSource(host, (lane*2UL+pass)*PM_WAVE_STRIDE);
+        EVE_CoDl_bitmapSource(host, PM_WAVE_BASE + (lane*2UL+pass)*PM_WAVE_STRIDE);
         EVE_CoDl_bitmapLayout(host, BARGRAPH, PM_WAVE_STRIDE, 1);
         EVE_CoDl_bitmapSize(host, NEAREST, BORDER, BORDER, PM_WAVE_WIDTH, 88);
         EVE_CoDl_colorRgb_ex(host, pass ? 0 : rgb);

@@ -27,6 +27,10 @@ bitmap data changes in RAM_G. See
 [Display-list update strategies](../../../docs/best-practices/display-list-update-strategies.md)
 when using this application as a starting point.
 
+The top-bar language control switches between English and Simplified Chinese.
+The UI starts in English; the language choice lasts until restart. Measurement
+abbreviations and units remain in their conventional Latin notation.
+
 ## Hardware configuration
 
 The supplied configuration uses:
@@ -34,8 +38,29 @@ The supplied configuration uses:
 - Display: `EVE_DISPLAY_WXGA`, 1280 × 800
 - Interface: single SPI, 25 MHz in the RP2040 HAL
 - Touch: repository WXGA configuration for a Goodix controller
-- Resources: ROM fonts and RAM_G waveform data; no external graphics assets
+- Resources: ROM fonts, RAM_G waveform data, and an embedded Chinese font
+- Simplified Chinese font: generated from the repository's Noto CJK source and
+  loaded into RAM_G; no external-flash programming is required
 - Console: UART and USB CDC
+
+The font was generated with EVE Asset Builder 4.5.0 from
+`DemoApps/UnicodeRuntime/Test/NotoSans/NotoSansCJK-Regular.ttf`, using the
+characters in `Assets/chinese-subset.txt`, 18-pixel extended format, L4,
+and an explicit space glyph. The EAB `.xfont`, `.glyph`, metadata and preview
+are retained in `Assets`; `Src/PatientMonitorFontX.c` and
+`Src/PatientMonitorFontGlyph.c` embed the same data for both build targets.
+RAM_G reserves `[0, 5737)` for XFONT, `[16384, 180904)` for glyphs, and
+`[196608, 207072)` for waveforms.
+
+This sample embeds L4 glyph data in RAM_G and does not require programming
+external flash. Because EVE renders the glyphs from RAM_G, the ASTC 6x6
+priority for directly rendered flash assets does not apply. For another target,
+follow the repository's
+[Chinese bitmap font guidelines](../../../docs/best-practices/font-guidelines.md)
+and select the embedded font format according to generated size, RAM_G usage,
+transfer time, and representative glyph quality. The supplied L4 font has been
+exercised in the emulator; its appearance on the target LCD still requires
+hardware validation.
 
 Default RP2040 SPI0 GPIO assignments:
 
@@ -117,12 +142,15 @@ From the emulator deploy directory:
 
 ```powershell
 ./DemoApp_PatientMonitor.exe --smoke
+./DemoApp_PatientMonitor.exe --smoke-zh
 ./DemoApp_PatientMonitor.exe --self-test
 ```
 
-The smoke test runs for approximately four seconds. The emulator writes
-`PatientMonitor_Frame.bmp` at frame 120. The self-test checks all 14 touch tags
-at two interior edges per key and verifies release behavior.
+Each smoke test runs for approximately four seconds. The emulator writes
+`PatientMonitor_Frame.bmp` at frame 60; run the two modes separately because
+the later run replaces that file. The self-test checks all 14 soft-key touch
+tags at two interior edges per key, both language transitions, and release
+behavior.
 
 Diagnostics report display-list size, frame progress and underrun counters. The
 application enforces a 7,200-byte display-list budget. Emulator results do not
@@ -146,7 +174,8 @@ device connector. Check Windows Device Manager after restart.
 - Measurements, waveforms, timestamps, and trend graphics are demonstration data.
 - Real acquisition, clinical alarm logic/audio, trend storage, production
   settings, and calibration persistence are not implemented.
-- The interface uses ROM fonts. Custom external-flash fonts and pre-rendered
+- The interface uses ROM fonts for English and numeric text, plus an embedded
+  RAM_G font for Simplified Chinese. External-flash fonts and pre-rendered
   graphics are not included.
 - The host interface uses single SPI, not QSPI.
 - Validate boot, display timing, touch accuracy, sustained rendering, console
