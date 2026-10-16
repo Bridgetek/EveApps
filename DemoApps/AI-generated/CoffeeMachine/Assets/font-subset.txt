@@ -1,0 +1,5 @@
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+0123456789:%.°/+-·
+Ready Busy Error Cleaning Hot water Tap a drink to start Standby Touch anywhere to wake Strength Size Milk ratio Temperature Warm Extra hot Back Start Stop Grinding Brewing Milk Done Language English Simplified Chinese Controller heartbeat lost ml sec
+Espresso Lungo Americano Cappuccino Latte Flat White Hot Water Milk Foam
+就绪忙碌故障清洁热水轻触饮品开始待机屏幕唤醒浓度容量奶量温度烫返回停止研磨萃取打奶完成语言简体中文控制器通信中断意式浓缩长萃咖啡美式卡布奇诺拿铁澳白奶泡豆渣

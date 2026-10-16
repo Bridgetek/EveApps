@@ -1,0 +1,22 @@
+Name                              : Offset  : Padded Size
+
+default-fl.blob                   : 0       : 4096       
+EDF Block                         : 4096    : 364        
+NotoSansCJK-Regular_24_ASTC.xfont : 4480    : 3760       
+NotoSansCJK-Regular_24_ASTC.glyph : 8256    : 851200     
+NotoSansCJK-Regular_28_ASTC.xfont : 859456  : 3760       
+NotoSansCJK-Regular_28_ASTC.glyph : 863232  : 851200     
+NotoSansCJK-Regular_32_ASTC.xfont : 1714432 : 3760       
+NotoSansCJK-Regular_32_ASTC.glyph : 1718208 : 1094400    
+NotoSansCJK-Regular_44_ASTC.xfont : 2812608 : 3760       
+NotoSansCJK-Regular_44_ASTC.glyph : 2816384 : 1094400    
+NotoSansCJK-Regular_84_ASTC.xfont : 3910784 : 3760       
+NotoSansCJK-Regular_84_ASTC.glyph : 3914560 : 3404800    
+espresso.raw                      : 7319360 : 68400      
+lungo.raw                         : 7387776 : 68400      
+americano.raw                     : 7456192 : 68400      
+cappuccino.raw                    : 7524608 : 68400      
+latte.raw                         : 7593024 : 68400      
+flat_white.raw                    : 7661440 : 68400      
+hot_water.raw                     : 7729856 : 68400      
+milk_foam.raw                     : 7798272 : 68400      

@@ -54,7 +54,8 @@ It should be noted that certain applications are specifically developed for part
     │    ├───WashingMachine  | Washing machine UI demo
     │    ├───AI-generated    | Additional evaluation demos
     │    │    ├───EV_HMI     | EV charging HMI demo
-    │    │    └───PatientMonitor | Patient-monitor UI demo
+    │    │    ├───PatientMonitor | Patient-monitor UI demo
+    │    │    └───CoffeeMachine | Coffee-machine UI demo
     │    
     ├───SampleApp
     │    ├───Animation       | Sample usage of animation 
@@ -73,7 +74,8 @@ It should be noted that certain applications are specifically developed for part
 ```
 
 See [AI-generated applications](DemoApps/AI-generated/README.md) for build
-instructions and configuration details for EV_HMI and PatientMonitor.
+instructions and configuration details for EV_HMI, PatientMonitor, and
+CoffeeMachine.
 
 Note:
 - For Eve registers and commands/instructions definition, user can find it at the file common/eve_hal/EVE_GpuDef.h and common/eve_hal/Eve_CoCmd.h.
@@ -213,6 +215,7 @@ $ cmake --build ./
 | DemoWashingMachine | .           | .            | .      | .      |.                |.        |
 | EV_HMI             | x           | x            | x      | x      |.                |.        |
 | PatientMonitor     | x           | x            | x      | x      |.                |.        |
+| CoffeeMachine      | x           | x            | x      | x      |.                |.        |
 | SampleApp          | .           | .            | .      | .      |.                |.        |
 x = unsupport
 . = support
@@ -257,7 +260,8 @@ x = unsupport
 | DemoWashingMachine |  .     | .     | .            |
 | EV_HMI             |  x     | .     | x            |
 | PatientMonitor     |  x     | .     | x            |
-| SampleApp          |  .     | .     | .            | 
+| CoffeeMachine      |  x     | .     | x            |
+| SampleApp          |  .     | .     | .            |
 x = unsupport
 . = support
 
@@ -301,7 +305,8 @@ x = unsupport
 | DemoWashingMachine | x               |.                |.                |x                 |x              | 
 | EV_HMI             | x               |x                |.                |x                 |x              |
 | PatientMonitor     | x               |x                |x                |x                 |.              |
-| SampleApp          | .               |.                |.                |x                 |x              | 
+| CoffeeMachine      | x               |x                |x                |x                 |.              |
+| SampleApp          | .               |.                |.                |x                 |x              |
 x = unsupport
 . = support
 
