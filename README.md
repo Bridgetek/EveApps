@@ -327,10 +327,15 @@ EveApps has created an online documentation (https://Bridgetek.github.io/EveApps
 To customize it according to your setup, kindly refer to Docs/Doxygen folder.
 
 ## Version
-This version is v1.8.0-rc1
+This version is v1.9.0-rc1
         
 ## Release log
 ```
+v1.9.0-rc1
+  - Add BT817 AI-generated demos for an EV charging HMI, patient monitor, and coffee machine.
+  - Add Simplified Chinese support to the PatientMonitor demo.
+  - Add CMake integration, assets, design documents, and build instructions for the AI-generated demos.
+  - Add EveApps development guidance for application creation, MCU porting, fonts, hardware UI, display-list updates, compatibility checks, and common integration errors.
 v1.8.0-rc1
   - Remove legacy multi-target and ESD Core integration.
   - Move FlashHelper into the EVE HAL library.
