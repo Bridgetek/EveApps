@@ -68,8 +68,12 @@ IF (WIN32)
       ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/bt8xxemu.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-      ${CMAKE_CURRENT_SOURCE_DIR}/Bin/Simulation/x64/mx25lemu.dll
-      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/mx25lemu.dll)
+      ${CMAKE_CURRENT_SOURCE_DIR}/Bin/Simulation/x64/btflashemu.dll
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/btflashemu.dll)
+    ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${CMAKE_CURRENT_SOURCE_DIR}/Bin/Simulation/x64/zlib.dll
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/zlib.dll)
   ELSE()
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different

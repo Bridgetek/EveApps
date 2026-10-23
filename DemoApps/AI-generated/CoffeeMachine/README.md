@@ -207,6 +207,11 @@ flash image.
 
 ### Windows emulator
 
+The x64 build uses EVE Emulator v5.3.35 and its API 19 headers through the
+existing EveApps HAL adapter. The deployment directory includes `bt8xxemu.dll`,
+`btflashemu.dll`, and `zlib.dll`. Legacy x86 builds continue to use emulator
+v4.8.2 and API 12.
+
 ```powershell
 cmake -S . -B build-coffee-machine-vs -G "Visual Studio 17 2022" -A x64 -DEVE_APPS_PLATFORM=EVE_PLATFORM_BT8XXEMU -DEVE_APPS_GRAPHICS=EVE_GRAPHICS_BT817 -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA -DCOFFEE_MACHINE_DEMO=ON
 cmake --build build-coffee-machine-vs --config Release --target DemoApp_CoffeeMachine

@@ -353,6 +353,11 @@ ELSEIF(IS_PLATFORM_FT930)
 ENDIF()
 
 # Common setup #################################################################
+IF(IS_PLATFORM_EMULATOR AND WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+  # Emulator 5.3.35 is x64-only and requires its API 19 headers. Keep the
+  # existing API 12 headers as the x86 compatibility interface.
+  INCLUDE_DIRECTORIES(BEFORE "common/eve_hal/Hdr/x64")
+ENDIF()
 ADD_SUBDIRECTORY(common)
 INCLUDE_DIRECTORIES("common/eve_hal")
 INCLUDE_DIRECTORIES("common/eve_hal/Hdr")

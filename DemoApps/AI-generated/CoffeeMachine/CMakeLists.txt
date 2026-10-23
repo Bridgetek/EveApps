@@ -40,8 +40,17 @@ if(WIN32)
     set(COFFEE_ARCH x86)
   endif()
   file(GLOB COFFEE_DLLS
-    "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/${COFFEE_ARCH}/*.dll"
-    "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/${COFFEE_ARCH}/*.dll")
+    "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/${COFFEE_ARCH}/*.dll")
+  if(COFFEE_ARCH STREQUAL "x64")
+    list(APPEND COFFEE_DLLS
+      "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/bt8xxemu.dll"
+      "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/btflashemu.dll"
+      "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/zlib.dll")
+  else()
+    file(GLOB COFFEE_EMULATOR_DLLS
+      "${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x86/*.dll")
+    list(APPEND COFFEE_DLLS ${COFFEE_EMULATOR_DLLS})
+  endif()
   foreach(COFFEE_DLL IN LISTS COFFEE_DLLS)
     add_custom_command(TARGET DemoApp_CoffeeMachine POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${COFFEE_DLL}" "${COFFEE_DEPLOY}")
